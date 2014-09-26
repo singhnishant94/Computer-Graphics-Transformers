@@ -9,6 +9,7 @@ struct group_t{
   std::vector<body_t*> bodyList;             // the body for which this call back is defined
   int ptr;                              // the current body
   int totCount;                         //  all bodies
+  joint_t jName;
   
   //! constructor
   group_t(void);
@@ -28,8 +29,8 @@ struct group_t{
   //! return current body
   body_t* currentBody(void);
 
-
-
+  //! to select a given joint
+  int selectJoint(int);
 };
 
 namespace bot_t{

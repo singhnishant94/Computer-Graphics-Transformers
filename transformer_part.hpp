@@ -64,7 +64,8 @@ enum joint_t{
   ARM2SHOULDER,
   HAND1ARM1,
   HAND2ARM2,
-  DUMMY
+  DUMMY,
+  ROOT
 };
 
 struct body_t{

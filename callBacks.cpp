@@ -6,6 +6,7 @@ group_t::group_t(void){
   bodyList.push_back(temp);
   ptr = 0;
   totCount = 1;
+  jName = ROOT;
 }
 
 //! destructor
@@ -30,101 +31,61 @@ body_t* group_t::currentBody(void){
   return bodyList[ptr];
 }
 
-int validKeyEvent(int action){
+//! check if either press of repeat
+int keyValidEvent(int action){
   return (action == GLFW_PRESS || action == GLFW_REPEAT);
 }
 
+
+//! to select a given joint
+int group_t::selectJoint(int key){
+  if(key == GLFW_KEY_SPACE) jName = ROOT;
+  else if (key == GLFW_KEY_H) jName = TORSOHIP;
+  else if (key == GLFW_KEY_G) jName = THIGH1HIP;
+  else if (key == GLFW_KEY_J) jName = THIGH2HIP;
+  else if (key == GLFW_KEY_B) jName = LEG1THIGH1;
+  else if (key == GLFW_KEY_N) jName = LEG2THIGH2;
+  else if (key == GLFW_KEY_V) jName = FOOT1LEG1;
+  else if (key == GLFW_KEY_M) jName = FOOT2LEG2;
+  else if (key == GLFW_KEY_Y) jName = NECKSHOULDER;
+  else if (key == GLFW_KEY_T) jName = ARM1SHOULDER;
+  else if (key == GLFW_KEY_U) jName = ARM2SHOULDER;
+  else if (key == GLFW_KEY_R) jName = HAND1ARM1;
+  else if (key == GLFW_KEY_I) jName = HAND2ARM2;
+  else return 0;
+  return 1;
+}
+
+//! to do the key press action
 void group_t::performAction(int key, int action, int mods){
-  body_t* temp = currentBody();
-  double speedTranslate = 1.0f;
-  double speedRotate = 1.0f;
-  joint_t jname = DUMMY;
-  vertex_t theta;
-  theta.setVertex(0,0,0);
-  int k = 1;
-  if (mods == GLFW_MOD_CONTROL) k = -1;
-  if(validKeyEvent(action)){
-    if (key == GLFW_KEY_Q){  //!Translate along y
-      if(mods == GLFW_MOD_CONTROL) temp->translateBody(0.0f,-speedTranslate,0.0f);
-      else temp->translateBody(0.0f,speedTranslate,0.0f);
+
+  body_t* currBody = currentBody();
+  double speedTranslate = 1.0f, speedRotate = 1.0f, dir = 1;
+  vertex_t theta; theta.setVertex(0, 0, 0);
+  
+  if (mods == GLFW_MOD_CONTROL) dir = -1;
+  if (keyValidEvent(action)){
+    if (!selectJoint(key)){
+      if (jName == ROOT){
+	if (key == GLFW_KEY_Q) currBody->rotateBody(0, 0, dir * speedRotate);
+	else if (key == GLFW_KEY_W) currBody->rotateBody(dir  * speedRotate, 0, 0);
+	else if (key == GLFW_KEY_A) currBody->rotateBody(0, dir  * speedRotate, 0);
+	else if (key == GLFW_KEY_S) currBody->translateBody(0, dir * speedTranslate, 0);
+	else if (key == GLFW_KEY_Z) currBody->translateBody(0, 0, dir * speedTranslate);
+	else if (key == GLFW_KEY_X) currBody->translateBody(dir * speedTranslate, 0, 0);
+      }
+      else if(jName == HAND1ARM1 || jName == HAND2ARM2 || jName == LEG1THIGH1 || jName == LEG2THIGH2){
+	if (key == GLFW_KEY_A) theta.setVertex(0, dir * speedRotate, 0);
+	currBody->changeOrientation(jName, theta);
+      }
+      else {
+	if (key == GLFW_KEY_Q) theta.setVertex(0, 0, dir * speedRotate);
+	else if (key == GLFW_KEY_W) theta.setVertex(dir * speedRotate, 0, 0);
+	else if (key == GLFW_KEY_A) theta.setVertex(0, dir * speedRotate, 0);
+	currBody->changeOrientation(jName, theta);
+      }
     }
-    else if (key == GLFW_KEY_S){//!Translate along x
-      if(mods == GLFW_MOD_CONTROL) temp->translateBody(-speedTranslate,0.0f,0.0f);
-      else temp->translateBody(speedTranslate,0.0f,0.0f);
-    }
-    else if (key == GLFW_KEY_A){//!Translate along z
-      if(mods == GLFW_MOD_CONTROL) temp->translateBody(0.0f,0.0f,-speedTranslate);
-      else temp->translateBody(0.0f,0.0f,speedTranslate);
-    }
-    else if (key == GLFW_KEY_D){//!Rotate about y
-      if(mods == GLFW_MOD_CONTROL) temp->rotateBody(0.0f,-speedRotate,0.0f);
-      else temp->rotateBody(0.0f,speedRotate,0.0f);
-    }
-    else if (key == GLFW_KEY_X){//!Rotate about z
-      if(mods == GLFW_MOD_CONTROL) temp->rotateBody(0.0f, 0.0f, -speedRotate);
-      else temp->rotateBody(0.0f, 0.0f, speedRotate);
-    }
-    else if (key == GLFW_KEY_C){//!Rotate about x
-      if(mods == GLFW_MOD_CONTROL) temp->rotateBody(-speedRotate, 0.0f, 0.0f);
-      else temp->rotateBody(speedRotate, 0.0f, 0.0f);
-    }
-    //!LOWER PART
-    else if (key == GLFW_KEY_H){//!Torso-hip
-      jname = TORSOHIP; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_F){//!Thigh1-hip, x
-      jname = THIGH1HIP; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_G){//!Thigh1-hip, z
-      jname = THIGH1HIP; theta.setVertex(0,0,speedRotate);
-    }
-    else if (key == GLFW_KEY_B){//!Leg1-thigh1, x
-      jname = LEG1THIGH1; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_V){//!Foot1-leg1, z
-      jname = FOOT1LEG1; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_J){//!Thigh2-hip, x
-      jname = THIGH2HIP; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_K){//!Thigh2-hip, z
-      jname = THIGH2HIP; theta.setVertex(0,0,speedRotate);
-    }
-    else if (key == GLFW_KEY_N){//!Leg2-thigh2, x
-      jname = LEG2THIGH2; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_M){//!Foot2-leg2, x
-      jname = FOOT2LEG2; theta.setVertex(speedRotate,0,0);
-    }
-    //!UPPER PART
-    else if (key == GLFW_KEY_Y){//!Neck-shoulder, x
-      jname = NECKSHOULDER; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_U){//!Neck-shoulder, z
-      jname = NECKSHOULDER; theta.setVertex(0,0,speedRotate);
-    }
-    else if (key == GLFW_KEY_R){//!Arm1-Shoulder, z
-      jname = ARM1SHOULDER; theta.setVertex(0,0,speedRotate);
-    }
-    else if (key == GLFW_KEY_T){//!Arm1-Shoulder, y
-      jname = ARM1SHOULDER; theta.setVertex(0,speedRotate,0);
-    }
-    else if (key == GLFW_KEY_E){//!Hand1-Arm1
-      jname = HAND1ARM1; theta.setVertex(0,speedRotate,0);
-    }
-    else if (key == GLFW_KEY_I){//!Arm2-shoulder, x
-      jname = ARM2SHOULDER; theta.setVertex(speedRotate,0,0);
-    }
-    else if (key == GLFW_KEY_O){//!Arm2-shoulder, z
-      jname = ARM2SHOULDER; theta.setVertex(0,0,speedRotate);
-    }
-    else if (key == GLFW_KEY_P){//!Hand2-Arm2
-      jname = HAND2ARM2; theta.setVertex(0,speedRotate,0);
-    }
-  	
-    theta.scaleValue(k*1.0);
-    temp->changeOrientation(jname,theta);
-  }	
+  }
 }
 
 namespace bot_t{
