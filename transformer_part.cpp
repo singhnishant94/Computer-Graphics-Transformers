@@ -56,13 +56,13 @@ void part_t::drawPart(void){
 }
 
 //! function to change theta_y
-void part_t::change_theta_y(int val){
-  theta_y += val;
+void part_t::change_theta_y(double delta){
+  theta_y += delta;
 }
 
 //! function to change theta_z
-void part_t::change_theta_z(int val){
-  theta_z += val;
+void part_t::change_theta_z(double delta){
+  theta_z += delta;
 }
   
 
@@ -135,3 +135,27 @@ void body_t::drawBody(void){
   hip->drawPart();
   glPopMatrix();
 }
+
+//! function to move the joint
+void body_t::changeOrientation(joint_t jName, double delta_y, double delta_z){
+  part_t *_part = 0;
+  if(jName == THIGH1HIP)  _part = thigh1;
+  else if(jName == THIGH2HIP) _part = thigh2;
+  else if(jName == LEG1THIGH1) _part = leg1;
+  else if(jName == LEG2THIGH2) _part = leg2;
+  else if(jName == FOOT1LEG1) _part = foot1;
+  else if(jName == FOOT2LEG2) _part = foot2;
+  else if(jName == TORSOHIP) _part = torso;
+  else if(jName == SHOULDERTORSO) _part = shoulder;
+  else if(jName == NECKSHOULDER) _part = neck;
+  else if(jName == ARM1SHOULDER) _part = arm1;
+  else if(jName == ARM2SHOULDER) _part = arm2;
+  else if(jName == HAND1ARM1) _part = hand1;
+  else if(jName == HAND2ARM2) _part = hand2;
+  
+  if(_part != 0){
+    _part->change_theta_y(delta_y);
+    _part->change_theta_z(delta_z);
+  }
+}
+
