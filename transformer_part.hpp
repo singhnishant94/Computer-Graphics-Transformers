@@ -34,11 +34,27 @@ struct part_t{
   void drawPart(void);
   
   //! function to change theta_y
-  void change_theta_y(int);
+  void change_theta_y(double);
   
   //! function to change theta_z
-  void change_theta_z(int);
+  void change_theta_z(double);
   
+};
+
+enum joint_t{
+  THIGH1HIP, 
+  THIGH2HIP, 
+  LEG1THIGH1,
+  LEG2THIGH2,
+  FOOT1LEG1,
+  FOOT2LEG2,
+  TORSOHIP,
+  SHOULDERTORSO,
+  NECKSHOULDER,
+  ARM1SHOULDER,
+  ARM2SHOULDER,
+  HAND1ARM1,
+  HAND2ARM2
 };
 
 struct body_t{
@@ -66,8 +82,9 @@ struct body_t{
   //! doing dfs to make the given object
   void drawBody(void);
   
-  //! functions to move the different joint here
-  
+  //! function to move the joint here
+  void changeOrientation(joint_t, double, double);
 };
+
 
 #endif
