@@ -13,6 +13,12 @@ struct group_t{
   //! constructor
   group_t(void);
 
+  //!Destructor
+  ~group_t(void);
+
+  //!Perform Action
+  void performAction(int, int);
+
   //! add a body to the List
   void addBody(void);
   
@@ -21,6 +27,8 @@ struct group_t{
   
   //! return current body
   body_t* currentBody(void);
+
+
 
 };
 
