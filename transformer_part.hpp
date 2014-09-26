@@ -9,6 +9,12 @@ struct vertex_t{
   
   //! sets the vertex value
   void setVertex(double, double, double);
+  
+  //! change value
+  void updateValue(double, double, double);
+  
+  //! scale the vertices
+  void scaleValue(double);
 };
 
 struct part_t{
@@ -16,7 +22,7 @@ struct part_t{
   std::vector<part_t*> children;           //! pointer to children connected to this
   vertex_t end_A, end_B, center;           //! three points for joining
   vertex_t *anchorLocal, *anchorRemote;    //! anchorLocal -> pointer local anchor, anchorRemote -> anchor to the parent
-  double theta_y, theta_z;                 //! theta_y , theta_z denote the angle relative to parent
+  double theta_x, theta_y, theta_z;                 //! theta_y , theta_z denote the angle relative to parent
   
   //!contructor
   part_t(void);
@@ -28,10 +34,13 @@ struct part_t{
   void addChild(part_t*);
   
   //! connects this to the parent, 
-  void connect(vertex_t*, part_t*, vertex_t*, double, double);
+  void connect(vertex_t*, part_t*, vertex_t*, double, double, double);
   
   //! draw part function to draw it and the children
   void drawPart(void);
+  
+  //! function to change theta_x
+  void change_theta_x(double);
   
   //! function to change theta_y
   void change_theta_y(double);
@@ -54,7 +63,8 @@ enum joint_t{
   ARM1SHOULDER,
   ARM2SHOULDER,
   HAND1ARM1,
-  HAND2ARM2
+  HAND2ARM2,
+  DUMMY
 };
 
 struct body_t{
@@ -81,9 +91,15 @@ struct body_t{
   
   //! doing dfs to make the given object
   void drawBody(void);
+
+  //! translate the entire body
+  void translateBody(double, double, double);
+  
+  //! rotate the entire body
+  void rotateBody(double, double, double);
   
   //! function to move the joint here
-  void changeOrientation(joint_t, double, double);
+  void changeOrientation(joint_t, vertex_t);
 };
 
 
