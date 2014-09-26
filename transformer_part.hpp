@@ -13,7 +13,7 @@ struct vertex_t{
 
 struct part_t{
   
-  std::vector<part_t*> children;                //! pointer to children connected to this
+  std::vector<part_t*> children;           //! pointer to children connected to this
   vertex_t end_A, end_B, center;           //! three points for joining
   vertex_t *anchorLocal, *anchorRemote;    //! anchorLocal -> pointer local anchor, anchorRemote -> anchor to the parent
   double theta_y, theta_z;                 //! theta_y , theta_z denote the angle relative to parent
