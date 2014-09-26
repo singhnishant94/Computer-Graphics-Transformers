@@ -8,6 +8,13 @@ void vertex_t::setVertex(double _x, double _y, double _z){
   z = _z;
 }
 
+//!change value
+void vertex_t::updateValue(double dx, double dy, double dz){
+  x += dx;
+  y += dy;
+  z += dz;
+}
+
 //! constructor initialize the current part to unit length along x axis
 part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
@@ -27,10 +34,11 @@ void part_t::addChild(part_t* child){
 }
 
 //! establishes the connection using the parameters
-void part_t::connect(vertex_t* _anchorLocal, part_t* parent, vertex_t* _anchorRemote, double _theta_y, double _theta_z){
+void part_t::connect(vertex_t* _anchorLocal, part_t* parent, vertex_t* _anchorRemote, double _theta_x, double _theta_y, double _theta_z){
   anchorLocal = _anchorLocal;
   anchorRemote = _anchorRemote;
   parent->addChild(this);
+  theta_x = _theta_x;
   theta_y = _theta_y;
   theta_z = _theta_z;
 }
@@ -39,6 +47,7 @@ void part_t::connect(vertex_t* _anchorLocal, part_t* parent, vertex_t* _anchorRe
 void part_t::drawPart(void){
   glPushMatrix();
   glTranslatef(anchorRemote->x, anchorRemote->y, anchorRemote->z);
+  glRotatef(theta_x, 1, 0, 0);
   glRotatef(theta_y, 0, 1, 0);
   glRotatef(theta_z, 0, 0, 1);
   glTranslatef(-anchorLocal->x, -anchorLocal->y, -anchorLocal->z);
@@ -53,6 +62,11 @@ void part_t::drawPart(void){
   glVertex3f(end_B.x, end_B.y, end_B.z);
   glEnd();
   glPopMatrix();
+}
+
+//! function to change theta_x
+void part_t::change_theta_x(double delta){
+  theta_x += delta;
 }
 
 //! function to change theta_y
@@ -107,19 +121,19 @@ body_t::~body_t(void){
 
 //! forms the basic structure
 void body_t::makeBody(void){ 
-  thigh1->connect(&(thigh1->end_A), hip, &(hip->end_A), 0, -90);
-  thigh2->connect(&(thigh2->end_A), hip, &(hip->end_B), 0, -90);
-  leg1->connect(&(leg1->end_A), thigh1, &(thigh1->end_B), 0, 0);
-  leg2->connect(&(leg2->end_A), thigh2, &(thigh2->end_B), 0, 0);
-  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), 0, -90);
-  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 0, 90);
-  torso->connect(&(torso->end_A), hip, &(hip->center), 0, 90);
-  shoulder->connect(&(shoulder->center), torso, &(torso->end_B), 0, -90);
-  neck->connect(&(neck->end_A), shoulder, &(shoulder->center), 0, 90);
-  arm1->connect(&(arm1->end_A), shoulder, &(shoulder->end_A), 0, -180);
-  arm2->connect(&(arm2->end_A), shoulder, &(shoulder->end_B), 0, 0);
-  hand1->connect(&(hand1->end_A), arm1, &(arm1->end_B), 0, 0);
-  hand2->connect(&(hand2->end_A), arm2, &(arm2->end_B), 0, 0);
+  thigh1->connect(&(thigh1->end_A), hip, &(hip->end_A), 0, 0, -90);
+  thigh2->connect(&(thigh2->end_A), hip, &(hip->end_B), 0, 0, -90);
+  leg1->connect(&(leg1->end_A), thigh1, &(thigh1->end_B), 0, 0, 0);
+  leg2->connect(&(leg2->end_A), thigh2, &(thigh2->end_B), 0, 0, 0);
+  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), -90, 0, -90);
+  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 90, 0, 90);
+  torso->connect(&(torso->end_A), hip, &(hip->center), 0, 0, 90);
+  shoulder->connect(&(shoulder->center), torso, &(torso->end_B), 0, 0, -90);
+  neck->connect(&(neck->end_A), shoulder, &(shoulder->center), 0, 0, 90);
+  arm1->connect(&(arm1->end_A), shoulder, &(shoulder->end_A), 0, 0, -180);
+  arm2->connect(&(arm2->end_A), shoulder, &(shoulder->end_B), 0, 0, 0);
+  hand1->connect(&(hand1->end_A), arm1, &(arm1->end_B), 0, 0, 0);
+  hand2->connect(&(hand2->end_A), arm2, &(arm2->end_B), 0, 0, 0);
 }
 
 //! draws the body
@@ -137,7 +151,7 @@ void body_t::drawBody(void){
 }
 
 //! function to move the joint
-void body_t::changeOrientation(joint_t jName, double delta_y, double delta_z){
+void body_t::changeOrientation(joint_t jName, vertex_t delta){
   part_t *_part = 0;
   if(jName == THIGH1HIP)  _part = thigh1;
   else if(jName == THIGH2HIP) _part = thigh2;
@@ -154,8 +168,20 @@ void body_t::changeOrientation(joint_t jName, double delta_y, double delta_z){
   else if(jName == HAND2ARM2) _part = hand2;
   
   if(_part != 0){
-    _part->change_theta_y(delta_y);
-    _part->change_theta_z(delta_z);
+    _part->change_theta_x(delta.x);
+    _part->change_theta_y(delta.y);
+    _part->change_theta_z(delta.z);
   }
 }
 
+//! translate the given body
+void body_t::translateBody(double dx, double dy, double dz){
+  center.updateValue(dx, dy, dx);
+}
+
+//! rotate the given body
+void body_t::rotateBody(double dx, double dy, double dz){
+  theta_x += dx;
+  theta_y += dy;
+  theta_z += dz;
+}
