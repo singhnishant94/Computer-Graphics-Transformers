@@ -15,6 +15,13 @@ void vertex_t::updateValue(double dx, double dy, double dz){
   z += dz;
 }
 
+//! scale value
+void scaleValue(double m){
+  x *= m;
+  y *= m;
+  z *= m;
+}
+
 //! constructor initialize the current part to unit length along x axis
 part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
