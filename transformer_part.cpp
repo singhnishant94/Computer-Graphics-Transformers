@@ -16,7 +16,7 @@ void vertex_t::updateValue(double dx, double dy, double dz){
 }
 
 //! scale value
-void scaleValue(double m){
+void vertex_t::scaleValue(double m){
   x *= m;
   y *= m;
   z *= m;

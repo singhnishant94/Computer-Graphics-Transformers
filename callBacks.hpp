@@ -17,7 +17,7 @@ struct group_t{
   ~group_t(void);
 
   //!Perform Action
-  void performAction(int, int);
+  void performAction(int, int, int);
 
   //! add a body to the List
   void addBody(void);
@@ -34,6 +34,7 @@ struct group_t{
 
 namespace bot_t{
   //!GLFW keyboard callback
+  extern group_t autoBots;
   void key_callback(GLFWwindow*, int, int, int, int);
 };
 

@@ -3,15 +3,15 @@
 #include <iostream>
 #include <string>
 
-#include "gl_framework.hpp"
-#include "transformer_part.hpp"
-
-body_t *transformer1;
+#include "callBacks.hpp"
+group_t bot_t::autoBots;
 
 //GLFW display callback
 void renderGL(GLFWwindow* window)
 {
-  transformer1->drawBody();
+  glClearColor(0, 0, 0, 1);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  bot_t::autoBots.bodyList[0]->drawBody();
 }
 
 int main (int argc, char *argv[]) 
@@ -37,12 +37,13 @@ int main (int argc, char *argv[])
       glfwTerminate();
       return -1;
     }
+
   
   //! Make the window's context current 
   glfwMakeContextCurrent(window);
-
+  
   //Keyboard Callback
-  glfwSetKeyCallback(window, cs475::key_callback);
+  glfwSetKeyCallback(window, bot_t::key_callback);
   //Framebuffer resize callback
   glfwSetFramebufferSizeCallback(window, cs475::framebuffer_size_callback);
 
@@ -54,7 +55,6 @@ int main (int argc, char *argv[])
   //Initialize GL state
   cs475::initGL();
   
-  transformer1 = new body_t();
   // Loop until the user closes the window
   while (glfwWindowShouldClose(window) == 0)
     {
@@ -68,7 +68,6 @@ int main (int argc, char *argv[])
       // Poll for and process events
       glfwPollEvents();
     }
-  delete transformer1;
 
   glfwDestroyWindow(window);
   glfwTerminate();
