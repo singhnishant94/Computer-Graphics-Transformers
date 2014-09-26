@@ -12,6 +12,9 @@ struct vertex_t{
   
   //! change value
   void updateValue(double, double, double);
+  
+  //! scale the vertices
+  void scaleValue(double);
 };
 
 struct part_t{
