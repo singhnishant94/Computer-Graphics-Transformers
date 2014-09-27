@@ -22,11 +22,20 @@ void vertex_t::scaleValue(double m){
   z *= m;
 }
 
+//! dummy to draw frame
+void drawFrame(void){
+  glBegin(GL_LINES);
+  glVertex3f(-1, 0, 0);
+  glVertex3f(1, 0, 0);
+  glEnd();
+}
+
 //! constructor initialize the current part to unit length along x axis
 part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
   end_B.setVertex(1, 0, 0);
   center.setVertex(0, 0, 0);
+  completeFrame  = drawFrame;
 }
 
 //! sets the length to scale to later
@@ -64,10 +73,7 @@ void part_t::drawPart(void){
     children[i]->drawPart();
   }
   
-  glBegin(GL_LINES);
-  glVertex3f(end_A.x, end_A.y, end_A.z);
-  glVertex3f(end_B.x, end_B.y, end_B.z);
-  glEnd();
+  completeFrame();
   glPopMatrix();
 }
 

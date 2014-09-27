@@ -48,6 +48,8 @@ struct part_t{
   //! function to change theta_z
   void change_theta_z(double);
   
+  //! function to complete frame
+  void (*completeFrame)(void);
 };
 
 enum joint_t{
