@@ -19,6 +19,7 @@ struct vertex_t{
 
 struct part_t{
   
+  int partNum;                             //! the part number for denoting the list numebr
   std::vector<part_t*> children;           //! pointer to children connected to this
   vertex_t end_A, end_B, center;           //! three points for joining
   vertex_t *anchorLocal, *anchorRemote;    //! anchorLocal -> pointer local anchor, anchorRemote -> anchor to the parent
@@ -29,6 +30,9 @@ struct part_t{
 
   //! set to a given length
   void setLength(double);
+  
+  //! set part number
+  void setPartNum(int);
   
   //! add child
   void addChild(part_t*);
@@ -50,6 +54,7 @@ struct part_t{
   
   //! function to complete frame
   void (*completeFrame)(void);
+  
 };
 
 enum joint_t{
@@ -103,6 +108,9 @@ struct body_t{
   
   //! function to move the joint here
   void changeOrientation(joint_t, vertex_t);
+
+  //! fill the parts of the body with respective drawings
+  void initBodyStructure(void);
 };
 
 

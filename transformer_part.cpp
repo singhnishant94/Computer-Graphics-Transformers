@@ -1,5 +1,17 @@
 #include "gl_framework.hpp"
 #include "transformer_part.hpp"
+#include "part_drawings.hpp"
+
+// these numbers correspond to the various part numbers
+#define HIPNUM  1
+#define TORSONUM 2
+#define SHOULDERNUM 3
+#define NECKNUM 4
+#define ARMNUM 5
+#define HANDNUM 6
+#define THIGHNUM 7
+#define LEGNUM 8
+#define FOOTNUM 9
 
 //! sets the vertex
 void vertex_t::setVertex(double _x, double _y, double _z){
@@ -22,26 +34,23 @@ void vertex_t::scaleValue(double m){
   z *= m;
 }
 
-//! dummy to draw frame
-void drawFrame(void){
-  glBegin(GL_LINES);
-  glVertex3f(-1, 0, 0);
-  glVertex3f(1, 0, 0);
-  glEnd();
-}
 
 //! constructor initialize the current part to unit length along x axis
 part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
   end_B.setVertex(1, 0, 0);
   center.setVertex(0, 0, 0);
-  completeFrame  = drawFrame;
 }
 
 //! sets the length to scale to later
 void part_t::setLength(double l){
   end_A.setVertex(-l / 2, 0, 0);
   end_B.setVertex(l / 2, 0, 0);
+}
+
+//! set part number
+void part_t::setPartNum(int _partNum){
+  partNum = _partNum;
 }
 
 //! add child
@@ -72,8 +81,8 @@ void part_t::drawPart(void){
   for(int i = 0; i < l; i++){
     children[i]->drawPart();
   }
-  
-  completeFrame();
+  //glCallList(partNum); 
+  drawing_t::drawLine();
   glPopMatrix();
 }
 
@@ -98,26 +107,54 @@ void part_t::change_theta_z(double delta){
 body_t::body_t(void){
   center.setVertex(0, 0, 0);
   theta_x = theta_y = theta_z = 0.0;
-  hip = new part_t();
-  torso = new part_t();
-  thigh1 = new part_t();
-  thigh2 = new part_t();
-  leg1 = new part_t();
-  leg2 = new part_t();
-  foot1 = new part_t();
-  foot2 = new part_t();
-  shoulder = new part_t();
-  neck = new part_t();
-  arm1 = new part_t();
-  arm2 = new part_t();
-  hand1 = new part_t();
-  hand2 = new part_t();
+  hip = new part_t();       
+  hip->setPartNum(HIPNUM);
+  
+  torso = new part_t();     
+  torso->setPartNum(TORSONUM);
+  
+  thigh1 = new part_t();    
+  thigh1->setPartNum(THIGHNUM);  
+  
+  thigh2 = new part_t();    
+  thigh2->setPartNum(THIGHNUM);
+  
+  leg1 = new part_t();      
+  leg1->setPartNum(LEGNUM);
+  
+  leg2 = new part_t();      
+  leg2->setPartNum(LEGNUM);
+  
+  foot1 = new part_t();     
+  foot1->setPartNum(FOOTNUM);
+  
+  foot2 = new part_t();     
+  foot2->setPartNum(FOOTNUM);
+  
+  shoulder = new part_t();  
+  shoulder->setPartNum(SHOULDERNUM);
+  
+  neck = new part_t();      
+  neck->setPartNum(NECKNUM);
+  
+  arm1 = new part_t();      
+  arm1->setPartNum(ARMNUM);
+  
+  arm2 = new part_t();      
+  arm2->setPartNum(ARMNUM);
+  
+  hand1 = new part_t();     
+  hand1->setPartNum(HANDNUM);
+  
+  hand2 = new part_t();     
+  hand2->setPartNum(HANDNUM);
   
   // here we set the hip values specifically so as to make it at origin
   hip->anchorLocal = &(hip->center);
   hip->anchorRemote = &(hip->center);
 
   makeBody();
+  initBodyStructure();
 }
 
 
@@ -148,6 +185,22 @@ void body_t::makeBody(void){
   hand1->connect(&(hand1->end_A), arm1, &(arm1->end_B), 0, 0, 0);
   hand2->connect(&(hand2->end_A), arm2, &(arm2->end_B), 0, 0, 0);
 }
+
+//! fill the parts of the body with respective drawings
+void body_t::initBodyStructure(void){
+  //drawing_t::initList(9);
+  glGenLists(9);
+  drawing_t::drawHip(HIPNUM, 1);
+  drawing_t::drawTorso(TORSONUM, 1);
+  drawing_t::drawShoulder(SHOULDERNUM, 1);
+  drawing_t::drawNeck(NECKNUM, 1);
+  drawing_t::drawArm(ARMNUM, 1);
+  drawing_t::drawHand(HANDNUM, 1);
+  drawing_t::drawThigh(THIGHNUM, 1);
+  drawing_t::drawLeg(LEGNUM, 1);
+  drawing_t::drawFoot(FOOTNUM, 1);
+}
+
 
 //! draws the body
 void body_t::drawBody(void){
