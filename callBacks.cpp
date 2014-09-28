@@ -88,6 +88,13 @@ void group_t::performAction(int key, int action, int mods){
   }
 }
 
+//! init all the body parts after the context creation
+void group_t::initListAfterContext(void){
+  for (int i = 0; i < totCount; i++){
+    bodyList[0]->initBodyStructure();
+  }
+}
+
 namespace bot_t{
   //!GLFW keyboard callback
   extern group_t autoBots;

@@ -81,8 +81,9 @@ void part_t::drawPart(void){
   for(int i = 0; i < l; i++){
     children[i]->drawPart();
   }
-  //glCallList(partNum); 
-  drawing_t::drawLine();
+  glPushMatrix();
+  glCallList(partNum);
+  glPopMatrix();
   glPopMatrix();
 }
 
@@ -154,7 +155,6 @@ body_t::body_t(void){
   hip->anchorRemote = &(hip->center);
 
   makeBody();
-  initBodyStructure();
 }
 
 
@@ -188,8 +188,7 @@ void body_t::makeBody(void){
 
 //! fill the parts of the body with respective drawings
 void body_t::initBodyStructure(void){
-  //drawing_t::initList(9);
-  glGenLists(9);
+  drawing_t::initList(9);
   drawing_t::drawHip(HIPNUM, 1);
   drawing_t::drawTorso(TORSONUM, 1);
   drawing_t::drawShoulder(SHOULDERNUM, 1);

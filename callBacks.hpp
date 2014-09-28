@@ -31,6 +31,9 @@ struct group_t{
 
   //! to select a given joint
   int selectJoint(int);
+
+  //! init all the body parts after the context creation
+  void initListAfterContext(void);
 };
 
 namespace bot_t{

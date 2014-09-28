@@ -54,7 +54,7 @@ int main (int argc, char *argv[])
   cs475::framebuffer_size_callback(window, win_width, win_height);
   //Initialize GL state
   cs475::initGL();
-  
+  bot_t::autoBots.initListAfterContext();
   // Loop until the user closes the window
   while (glfwWindowShouldClose(window) == 0)
     {
