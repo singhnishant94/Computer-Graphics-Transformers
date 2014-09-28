@@ -23,7 +23,8 @@ struct part_t{
   std::vector<part_t*> children;           //! pointer to children connected to this
   vertex_t end_A, end_B, center;           //! three points for joining
   vertex_t *anchorLocal, *anchorRemote;    //! anchorLocal -> pointer local anchor, anchorRemote -> anchor to the parent
-  double theta_x, theta_y, theta_z;                 //! theta_y , theta_z denote the angle relative to parent
+  double theta_x, theta_y, theta_z;        //! theta_y , theta_z denote the angle relative to parent
+  vertex_t angleMin, angleMax;             //! the angular constraints 
   
   //!contructor
   part_t(void);
@@ -52,9 +53,26 @@ struct part_t{
   //! function to change theta_z
   void change_theta_z(double);
   
+  //! function as a hole to overpass the constraints
+  void change_theta_sys(double, double, double);
+  
   //! function to complete frame
   void (*completeFrame)(void);
   
+  //! set constraints minimum values
+  void setMinAngularConstraints(vertex_t);
+  
+  //! set constraints max values
+  void setMaxAngularConstraints(vertex_t);
+  
+    //! set constraints minimum values, overloaded
+  void setMinAngularConstraints(double, double, double);
+  
+  //! set constraints max values , overloaded
+  void setMaxAngularConstraints(double, double, double);
+
+  //! checking the constraints, return true/ false, value, axis
+  int checkConstraint(double, char);
 };
 
 enum joint_t{
@@ -111,6 +129,9 @@ struct body_t{
 
   //! fill the parts of the body with respective drawings
   void initBodyStructure(void);
+  
+  //! add the constraints to the various parts
+  void addConstraints(void);
 };
 
 

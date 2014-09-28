@@ -40,6 +40,8 @@ part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
   end_B.setVertex(1, 0, 0);
   center.setVertex(0, 0, 0);
+  angleMin.setVertex(-360, -360, -360);
+  angleMax.setVertex(360, 360, 360);
 }
 
 //! sets the length to scale to later
@@ -89,19 +91,74 @@ void part_t::drawPart(void){
 
 //! function to change theta_x
 void part_t::change_theta_x(double delta){
-  theta_x += delta;
+  if(checkConstraint(theta_x + delta, 'x')){
+    theta_x += delta;
+    if(theta_x >= 360) theta_x -= 360;
+    else if(theta_x <= -360) theta_x += 360;
+  }
 }
 
 //! function to change theta_y
 void part_t::change_theta_y(double delta){
-  theta_y += delta;
+  if(checkConstraint(theta_y + delta, 'y')){
+    theta_y += delta;
+    if(theta_y >= 360) theta_y -= 360;
+    else if(theta_y <= -360) theta_y += 360;
+  }
 }
 
 //! function to change theta_z
 void part_t::change_theta_z(double delta){
-  theta_z += delta;
+  if(checkConstraint(theta_z + delta, 'z')){
+    theta_z += delta;
+    if(theta_z >= 360) theta_z -= 360;
+    else if(theta_z <= -360) theta_z += 360;
+  }
+}
+
+//! function as a hole to overpass the constraints
+void part_t::change_theta_sys(double dx, double dy, double dz){
+  theta_x += dx, theta_y += dy; theta_z += dz;
+}
+ 
+  
+//! set constraints minimum values
+void part_t::setMinAngularConstraints(vertex_t c){
+  angleMin = c;
 }
   
+//! set constraints max values
+void part_t::setMaxAngularConstraints(vertex_t c){
+  angleMax = c;
+}
+
+//! set constraints minimum values, overloaded
+void part_t::setMinAngularConstraints(double x, double y, double z){
+  angleMin.setVertex(x, y, z);
+}
+
+//! set constraints minimum values, overloaded
+void part_t::setMaxAngularConstraints(double x, double y, double z){
+  angleMax.setVertex(x, y, z);
+}  
+  
+//! checking the constraints, return true/ false
+int part_t::checkConstraint(double theta, char axis){
+  if(axis == 'x'){
+    if(theta <= angleMax.x && theta >= angleMin.x) return 1;
+    else return 0;
+  }
+  else if(axis == 'y'){
+    if(theta <= angleMax.y && theta >= angleMin.y) return 1;
+    else return 0;
+  }
+  else if(axis == 'z'){
+    if(theta <= angleMax.z && theta >= angleMin.z) return 1;
+    else return 0;
+  }
+  return 0;
+}
+
 
 
 //! constructor for body
@@ -155,6 +212,7 @@ body_t::body_t(void){
   hip->anchorRemote = &(hip->center);
 
   makeBody();
+  addConstraints();
 }
 
 
@@ -198,6 +256,14 @@ void body_t::initBodyStructure(void){
   drawing_t::drawThigh(THIGHNUM, 1);
   drawing_t::drawLeg(LEGNUM, 1);
   drawing_t::drawFoot(FOOTNUM, 1);
+}
+
+
+//! add the constraints to the various parts
+void body_t::addConstraints(void){
+  torso->setMinAngularConstraints(-180, -90, 0);
+  torso->setMaxAngularConstraints(180, 90, 180);
+  
 }
 
 
