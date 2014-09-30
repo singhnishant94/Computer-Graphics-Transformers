@@ -31,6 +31,9 @@ struct part_t{
 
   //! set to a given length
   void setLength(double);
+
+  //! returns length
+  double getLength(void);
   
   //! set part number
   void setPartNum(int);
