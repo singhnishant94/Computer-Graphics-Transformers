@@ -1,6 +1,7 @@
 #include "gl_framework.hpp"
 #include "transformer_part.hpp"
 #include "part_drawings.hpp"
+#include "matrix.hpp"
 
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
@@ -46,8 +47,13 @@ part_t::part_t(void){
 
 //! sets the length to scale to later
 void part_t::setLength(double l){
-  end_A.setVertex(-l / 2, 0, 0);
-  end_B.setVertex(l / 2, 0, 0);
+  end_A.setVertex(-l, 0, 0);
+  end_B.setVertex(l, 0, 0);
+}
+
+//! returns length
+double part_t::getLength(void){
+  return (end_B.x - end_A.x);
 }
 
 //! set part number
@@ -233,8 +239,8 @@ void body_t::makeBody(void){
   thigh2->connect(&(thigh2->end_A), hip, &(hip->end_B), 0, 0, -90);
   leg1->connect(&(leg1->end_A), thigh1, &(thigh1->end_B), 0, 0, 0);
   leg2->connect(&(leg2->end_A), thigh2, &(thigh2->end_B), 0, 0, 0);
-  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), -90, 0, -90);
-  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 90, 0, 90);
+  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), 0, -90, 0);
+  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 0, -90, 0);
   torso->connect(&(torso->end_A), hip, &(hip->center), 0, 0, 90);
   shoulder->connect(&(shoulder->center), torso, &(torso->end_B), 0, 0, -90);
   neck->connect(&(neck->end_A), shoulder, &(shoulder->center), 0, 0, 90);
@@ -247,15 +253,15 @@ void body_t::makeBody(void){
 //! fill the parts of the body with respective drawings
 void body_t::initBodyStructure(void){
   drawing_t::initList(9);
-  drawing_t::drawHip(HIPNUM, 1);
-  drawing_t::drawTorso(TORSONUM, 1);
-  drawing_t::drawShoulder(SHOULDERNUM, 1);
-  drawing_t::drawNeck(NECKNUM, 1);
-  drawing_t::drawArm(ARMNUM, 1);
-  drawing_t::drawHand(HANDNUM, 1);
-  drawing_t::drawThigh(THIGHNUM, 1);
-  drawing_t::drawLeg(LEGNUM, 1);
-  drawing_t::drawFoot(FOOTNUM, 1);
+  drawing_t::drawHip(HIPNUM, hip->getLength());
+  drawing_t::drawTorso(TORSONUM, torso->getLength());
+  drawing_t::drawShoulder(SHOULDERNUM, shoulder->getLength());
+  drawing_t::drawNeck(NECKNUM, neck->getLength());
+  drawing_t::drawArm(ARMNUM, arm1->getLength());
+  drawing_t::drawHand(HANDNUM, hand1->getLength());
+  drawing_t::drawThigh(THIGHNUM, thigh1->getLength());
+  drawing_t::drawLeg(LEGNUM, leg1->getLength());
+  drawing_t::drawFoot(FOOTNUM, foot1->getLength());
 }
 
 
@@ -264,6 +270,38 @@ void body_t::addConstraints(void){
   torso->setMinAngularConstraints(-180, -90, 0);
   torso->setMaxAngularConstraints(180, 90, 180);
   
+  thigh1->setMinAngularConstraints(-90, -90, -180);
+  thigh1->setMaxAngularConstraints(90, 90, -90);
+  
+  thigh2->setMinAngularConstraints(-90, -90, -90);
+  thigh2->setMaxAngularConstraints(90, 90, 0);
+  
+  leg1->setMinAngularConstraints(0, 0, 0);
+  leg1->setMaxAngularConstraints(0, 180, 0);
+  
+  leg2->setMinAngularConstraints(0, 0, 0);
+  leg2->setMaxAngularConstraints(0, 180, 0);
+  
+  foot1->setMinAngularConstraints(0, -135, -40);
+  foot1->setMaxAngularConstraints(0, -45, 40);
+  
+  foot2->setMinAngularConstraints(0, -135, -40);
+  foot2->setMaxAngularConstraints(0, -45, 40);
+  
+  neck->setMinAngularConstraints(-90, 180, 0);      // one direction unsure, detected after head putting , left right nodding
+  neck->setMaxAngularConstraints(180, -45, 180);
+  
+  arm1->setMinAngularConstraints(-90, -90, -270); //x  , y , z 
+  arm1->setMaxAngularConstraints(90, 135, -90);
+
+  arm2->setMinAngularConstraints(-90, -135, -90);
+  arm2->setMaxAngularConstraints(90, 90, 90);
+
+  hand1->setMinAngularConstraints(0, -180, 0);
+  hand1->setMaxAngularConstraints(0, 0, 0);
+
+  hand2->setMinAngularConstraints(0, -180, 0);
+  hand2->setMaxAngularConstraints(0, 0, 0);
 }
 
 
@@ -276,6 +314,22 @@ void body_t::drawBody(void){
   glRotatef(theta_z, 0, 0, 1);
   glRotatef(theta_y, 0, 1, 0);
   glRotatef(theta_x, 1, 0, 0);
+  /*
+  matrix _m;
+  tuple _t;
+  _t.setValue(theta_x, theta_y, theta_z);
+  double _a[3][3];
+  _m.getLocalAxisRotMatrix(&_t, _a);
+  double rot[16];
+  for(int i = 0; i < 16; i++) rot[i] = 0;
+  for(int i = 0; i < 3; i++){
+    for(int j = 0; j < 3; j++){
+      rot[i * 4 + j] = _a[j][i];
+    }
+  }
+  rot[15] = 1;
+  glMultMatrixd(rot);
+  */
   glPushMatrix();
   hip->drawPart();
   glPopMatrix();
@@ -313,6 +367,14 @@ void body_t::translateBody(double dx, double dy, double dz){
 //! rotate the given body
 void body_t::rotateBody(double dx, double dy, double dz){
   theta_x += dx;
+  if(theta_x >= 360) theta_x -= 360;
+  else if(theta_x <= -360) theta_x += 360;
+  
   theta_y += dy;
+  if(theta_y >= 360) theta_y -= 360;
+  else if(theta_y <= -360) theta_y += 360;
+  
   theta_z += dz;
+  if(theta_z >= 360) theta_z -= 360;
+  else if(theta_z <= -360) theta_z += 360;
 }
