@@ -170,18 +170,23 @@ body_t::body_t(void){
   
   torso = new part_t();     
   torso->setPartNum(TORSONUM);
+  torso->setLength(4.0f);
   
   thigh1 = new part_t();    
   thigh1->setPartNum(THIGHNUM);  
+  thigh1->setLength(2.4f);
   
   thigh2 = new part_t();    
   thigh2->setPartNum(THIGHNUM);
+  thigh2->setLength(2.4f);
   
   leg1 = new part_t();      
   leg1->setPartNum(LEGNUM);
+  leg1->setLength(2.4f);
   
   leg2 = new part_t();      
   leg2->setPartNum(LEGNUM);
+  leg2->setLength(2.4f);
   
   foot1 = new part_t();     
   foot1->setPartNum(FOOTNUM);
@@ -191,6 +196,7 @@ body_t::body_t(void){
   
   shoulder = new part_t();  
   shoulder->setPartNum(SHOULDERNUM);
+  shoulder->setLength(4.2f);
   
   neck = new part_t();      
   neck->setPartNum(NECKNUM);
@@ -233,8 +239,8 @@ void body_t::makeBody(void){
   thigh2->connect(&(thigh2->end_A), hip, &(hip->end_B), 0, 0, -90);
   leg1->connect(&(leg1->end_A), thigh1, &(thigh1->end_B), 0, 0, 0);
   leg2->connect(&(leg2->end_A), thigh2, &(thigh2->end_B), 0, 0, 0);
-  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), -90, 0, -90);
-  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 90, 0, 90);
+  foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), 0, -90, 0);
+  foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 0, -90, 0);
   torso->connect(&(torso->end_A), hip, &(hip->center), 0, 0, 90);
   shoulder->connect(&(shoulder->center), torso, &(torso->end_B), 0, 0, -90);
   neck->connect(&(neck->end_A), shoulder, &(shoulder->center), 0, 0, 90);
