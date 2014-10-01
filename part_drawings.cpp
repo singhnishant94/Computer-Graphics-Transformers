@@ -300,5 +300,14 @@ namespace drawing_t{
     glPopMatrix();
     glEndList();
   }
+  
+  //! for Chest Cover
+  void drawChestCover(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+ 
+    drawLine();
+    
+    glEndList();
+  }
 };
 

@@ -45,6 +45,8 @@ namespace drawing_t{
   //! for Foot 
   void drawFoot(int, double); //! part number, length
   
+  //! for Chest Cover
+  void drawChestCover(int, double); //! part number, length
 };
 
 #endif

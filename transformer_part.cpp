@@ -14,8 +14,9 @@
 #define LEGNUM 8
 #define FOOTNUM 9
 #define PALMNUM 10
+#define CHESTCOVERNUM 11
 
-#define TOT_PART 10
+#define TOT_PART 11
 
 //! sets the vertex
 void vertex_t::setVertex(double _x, double _y, double _z){
@@ -232,6 +233,8 @@ body_t::body_t(void){
   palm2 = new part_t();
   palm2->setPartNum(PALMNUM);
   
+  chestCover = new part_t();
+  chestCover->setPartNum(CHESTCOVERNUM);
 
   // here we set the hip values specifically so as to make it at origin
   hip->anchorLocal = &(hip->center);
@@ -251,6 +254,7 @@ body_t::~body_t(void){
   delete neck;
   delete arm1, arm2, hand1, hand2;
   delete palm1, palm2;
+  delete chestCover;
 }
 
 
@@ -271,6 +275,7 @@ void body_t::makeBody(void){
   hand2->connect(&(hand2->end_A), arm2, &(arm2->end_B), 0, 0, 0);
   palm1->connect(&(palm1->end_A), hand1, &(hand1->end_B), 0, 0, 0);
   palm2->connect(&(palm2->end_A), hand2, &(hand2->end_B), 0, 0, 0);
+  chestCover->connect(&(chestCover->end_A), hip, &(hip->center), 0, 0, 90);
 }
 
 //! fill the parts of the body with respective drawings
@@ -286,6 +291,7 @@ void body_t::initBodyStructure(void){
   drawing_t::drawLeg(LEGNUM, leg1->getLength());
   drawing_t::drawFoot(FOOTNUM, foot1->getLength());
   drawing_t::drawPalm(PALMNUM, palm1->getLength());
+  drawing_t::drawChestCover(CHESTCOVERNUM, chestCover->getLength());
 }
 
 
@@ -327,11 +333,14 @@ void body_t::addConstraints(void){
   hand2->setMinAngularConstraints(0, -180, 0);
   hand2->setMaxAngularConstraints(0, 0, 0);
   
-  palm1->setMinAngularConstraints(0, -180, 0);
-  palm1->setMaxAngularConstraints(0, 0, 0);
+  palm1->setMinAngularConstraints(-360, -360, -360);
+  palm1->setMaxAngularConstraints(360, 360, 360);
 
-  palm2->setMinAngularConstraints(0, -180, 0);
-  palm2->setMaxAngularConstraints(0, 0, 0); 
+  palm2->setMinAngularConstraints(-360, -360, -360);
+  palm2->setMaxAngularConstraints(360, 360, 360); 
+  
+  chestCover->setMinAngularConstraints(-360, -360, -360);
+  chestCover->setMaxAngularConstraints(360, 360, 360); 
 }
 
 
@@ -383,6 +392,7 @@ void body_t::changeOrientation(joint_t jName, vertex_t delta){
   else if(jName == HAND2ARM2) _part = hand2;
   else if(jName == PALM1HAND1) _part = palm1; 
   else if(jName == PALM2HAND2) _part = palm2;
+  else if(jName == CHESTCOVERHIP) _part = chestCover;
   
   if(_part != 0){
     _part->change_theta_x(delta.x);

@@ -52,6 +52,9 @@ int group_t::selectJoint(int key){
   else if (key == GLFW_KEY_U) jName = ARM2SHOULDER;
   else if (key == GLFW_KEY_R) jName = HAND1ARM1;
   else if (key == GLFW_KEY_I) jName = HAND2ARM2;
+  else if (key == GLFW_KEY_O) jName = PALM1HAND1;
+  else if (key == GLFW_KEY_E) jName = PALM2HAND2;
+  else if (key == GLFW_KEY_C) jName = CHESTCOVERHIP;
   else return 0;
   return 1;
 }
