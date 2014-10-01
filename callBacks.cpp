@@ -14,10 +14,19 @@ group_t::~group_t(void){
   for(int i = 0; i < totCount; i++) delete bodyList[i];
 }
 
+//! set the window and renderBody function pointers
+void group_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*)){
+  window = _window;
+  renderGroup = renderGL;
+  bodyList[0]->setWindowRender(window, renderGroup);
+}
+
+
 //! add a body to the List
 void group_t::addBody(void){
   body_t *temp = new body_t();
   bodyList.push_back(temp);
+  temp->setWindowRender(window, renderGroup);
   totCount++;
 }
 
@@ -106,6 +115,14 @@ namespace bot_t{
     //!Close the window if the ESC key was pressed
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
     else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) autoBots.nextBody();
+    else if (key == GLFW_KEY_DOWN && action == GLFW_PRESS){
+      body_t *curr = autoBots.currentBody();
+      curr->transformToVehicle();
+    }
+    else if (key == GLFW_KEY_UP && action == GLFW_PRESS){
+      body_t *curr = autoBots.currentBody();
+      curr->transformToVehicle();
+    }
     else autoBots.performAction(key, action, mods);
   }
 };

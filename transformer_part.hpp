@@ -2,10 +2,9 @@
 #define _TRANSFORMER_PART_
 
 #include <vector>
+#include "gl_framework.hpp"
 
-int temp;
-
-// helper class to 
+// helper class to  
 struct vertex_t{
   double x, y, z;
   
@@ -28,9 +27,18 @@ struct part_t{
   double theta_x, theta_y, theta_z;        //! theta_y , theta_z denote the angle relative to parent
   vertex_t angleMin, angleMax;             //! the angular constraints 
   
+  //! current window for passing swapping buffers
+  GLFWwindow *window;
+  
+  //! the renderPart is the renderGL function pointer. part denotes the struct it is in 
+  void (*renderPart)(GLFWwindow*);
+
   //!contructor
   part_t(void);
 
+  //! set the window and renderBody function pointers
+  void setWindowRender(GLFWwindow*, void (*)(GLFWwindow*));
+  
   //! set to a given length
   void setLength(double);
 
@@ -57,6 +65,9 @@ struct part_t{
   
   //! function to change theta_z
   void change_theta_z(double);
+  
+  //! set orientation to a given value with a given speed
+  void setAngularOrientation(double, double, double, double);
   
   //! function as a hole to overpass the constraints
   void change_theta_sys(double, double, double);
@@ -116,11 +127,23 @@ struct body_t{
   vertex_t center;                        // the center of entire body
   double theta_x, theta_y, theta_z;       // orientation
   
+  //! state , 0 -> bot, 1 -> vehice
+  int state;
+  
+  //! current window for passing swapping buffers
+  GLFWwindow *window;
+  
+  //! the renderPart is the renderGL function pointer. body denotes the struct it is in 
+  void (*renderBody)(GLFWwindow*);
+
   //!constructor
   body_t(void);
   
   //!destructor to free memory
   ~body_t(void);
+  
+  //! set the window and renderBody function pointers
+  void setWindowRender(GLFWwindow*, void (*)(GLFWwindow*));
   
   //! formBasicFrame
   void makeBody(void);
@@ -142,6 +165,12 @@ struct body_t{
   
   //! add the constraints to the various parts
   void addConstraints(void);
+
+  //! changes the bot to vehicle
+  void transformToVehicle(void);
+  
+  //! changes the vehicle to bot
+  void transformToBot(void);
 };
 
 

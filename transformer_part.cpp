@@ -49,6 +49,13 @@ part_t::part_t(void){
   angleMax.setVertex(360, 360, 360);
 }
 
+//! set the window and renderBody function pointers
+void part_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*)){
+  window = _window;
+  renderPart = renderGL;
+}
+ 
+
 //! sets the length to scale to later
 void part_t::setLength(double l){
   end_A.setVertex(-l, 0, 0);
@@ -126,12 +133,73 @@ void part_t::change_theta_z(double delta){
   }
 }
 
+//! set orientation to a given value with a given speed
+void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double speed){
+  // changing the theta z values
+  while(theta_x - t_x > speed){
+    theta_x -= speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  while(t_x - theta_x > speed){
+    theta_x += speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  if(t_x != theta_x){
+    theta_x = t_x;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  // changing the theta y values
+  while(theta_y - t_y > speed){
+    theta_y -= speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  while(t_y - theta_y > speed){
+    theta_y += speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  if(t_y != theta_y){
+    theta_y = t_y;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  // changing the theta z value
+  while(theta_z - t_z > speed){
+    theta_z -= speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  while(t_z - theta_z > speed){
+    theta_z += speed;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+  if(t_z != theta_z){
+    theta_z = t_z;
+    renderPart(window);
+    glfwSwapBuffers(window);
+  }
+  
+}
+  
+
 //! function as a hole to overpass the constraints
 void part_t::change_theta_sys(double dx, double dy, double dz){
   theta_x += dx, theta_y += dy; theta_z += dz;
 }
- 
-  
+
 //! set constraints minimum values
 void part_t::setMinAngularConstraints(vertex_t c){
   angleMin = c;
@@ -175,6 +243,8 @@ int part_t::checkConstraint(double theta, char axis){
 body_t::body_t(void){
   center.setVertex(0, 0, 0);
   theta_x = theta_y = theta_z = 0.0;
+  state = 0;
+  
   hip = new part_t();       
   hip->setPartNum(HIPNUM);
   
@@ -255,6 +325,30 @@ body_t::~body_t(void){
   delete arm1, arm2, hand1, hand2;
   delete palm1, palm2;
   delete chestCover;
+}
+
+//! set the window and renderBody function pointers
+void body_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*)){
+  window = _window;
+  renderBody = renderGL;
+  hip->setWindowRender(window, renderGL);
+  torso->setWindowRender(window, renderGL);
+  hip->setWindowRender(window, renderGL);
+  thigh1->setWindowRender(window, renderGL);
+  thigh2->setWindowRender(window, renderGL);
+  leg1->setWindowRender(window, renderGL);
+  leg2->setWindowRender(window, renderGL);
+  foot1->setWindowRender(window, renderGL);
+  foot2->setWindowRender(window, renderGL);
+  shoulder->setWindowRender(window, renderGL);
+  neck->setWindowRender(window, renderGL);
+  arm1->setWindowRender(window, renderGL);
+  arm2->setWindowRender(window, renderGL);
+  hand1->setWindowRender(window, renderGL);
+  hand2->setWindowRender(window, renderGL);
+  palm1->setWindowRender(window, renderGL);
+  palm2->setWindowRender(window, renderGL);
+  chestCover->setWindowRender(window, renderGL);
 }
 
 
@@ -419,4 +513,21 @@ void body_t::rotateBody(double dx, double dy, double dz){
   theta_z += dz;
   if(theta_z >= 360) theta_z -= 360;
   else if(theta_z <= -360) theta_z += 360;
+}
+
+//! changes the bot to vehicle
+void body_t::transformToVehicle(void){
+  if(!state){
+    state = 1;
+    chestCover->setAngularOrientation(30, 0, 90, 1);
+    neck->setAngularOrientation(180, 0, 90, 1);
+    chestCover->setAngularOrientation(0, 0, 90, 1);
+  }
+}
+  
+//! changes the vehicle to bot
+void body_t::transformToBot(void){
+  if(state){
+    state = 0;
+  }
 }

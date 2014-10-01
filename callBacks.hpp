@@ -1,7 +1,6 @@
 #ifndef _CALLBACKS_HPP_
 #define _CALLBACKS_HPP_
 
-#include "gl_framework.hpp"
 #include "transformer_part.hpp"
 
 struct group_t{
@@ -11,12 +10,21 @@ struct group_t{
   int totCount;                         //  all bodies
   joint_t jName;
   
+  //! current window for passing swapping buffers
+  GLFWwindow *window;
+  
+  //! the renderPart is the renderGL function pointer. body denotes the struct it is in 
+  void (*renderGroup)(GLFWwindow*);
+  
   //! constructor
   group_t(void);
 
   //!Destructor
   ~group_t(void);
 
+  //! set the window and renderBody function pointers
+  void setWindowRender(GLFWwindow*, void (*)(GLFWwindow*));
+  
   //!Perform Action
   void performAction(int, int, int);
 
@@ -34,6 +42,7 @@ struct group_t{
 
   //! init all the body parts after the context creation
   void initListAfterContext(void);
+  
 };
 
 namespace bot_t{

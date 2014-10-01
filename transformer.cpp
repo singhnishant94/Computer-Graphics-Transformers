@@ -55,6 +55,7 @@ int main (int argc, char *argv[])
   //Initialize GL state
   cs475::initGL();
   bot_t::autoBots.initListAfterContext();
+  bot_t::autoBots.setWindowRender(window, renderGL);
   // Loop until the user closes the window
   while (glfwWindowShouldClose(window) == 0)
     {
