@@ -176,23 +176,23 @@ body_t::body_t(void){
   
   torso = new part_t();     
   torso->setPartNum(TORSONUM);
-  torso->setLength(4.0f);
+  torso->setLength(2.0f);
   
   thigh1 = new part_t();    
   thigh1->setPartNum(THIGHNUM);  
-  thigh1->setLength(2.4f);
+  thigh1->setLength(1.2f);
   
   thigh2 = new part_t();    
   thigh2->setPartNum(THIGHNUM);
-  thigh2->setLength(2.4f);
+  thigh2->setLength(1.2f);
   
   leg1 = new part_t();      
   leg1->setPartNum(LEGNUM);
-  leg1->setLength(2.4f);
+  leg1->setLength(1.2f);
   
   leg2 = new part_t();      
   leg2->setPartNum(LEGNUM);
-  leg2->setLength(2.4f);
+  leg2->setLength(1.2f);
   
   foot1 = new part_t();     
   foot1->setPartNum(FOOTNUM);
@@ -202,7 +202,7 @@ body_t::body_t(void){
   
   shoulder = new part_t();  
   shoulder->setPartNum(SHOULDERNUM);
-  shoulder->setLength(4.2f);
+  shoulder->setLength(2.1f);
   
   neck = new part_t();      
   neck->setPartNum(NECKNUM);
