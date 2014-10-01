@@ -134,8 +134,17 @@ void part_t::change_theta_z(double delta){
 }
 
 //! set orientation to a given value with a given speed
-void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double speed){
-  // changing the theta z values
+void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double speed, std::string order){
+  for(int i = 0; i < 3; i++){
+    if(order[i] == 'x') setAngularOrientationX(t_x, speed);
+    else if(order[i] == 'y') setAngularOrientationY(t_y, speed);
+    else if(order[i] == 'z') setAngularOrientationZ(t_z, speed);
+  }
+}
+ 
+//! set Orientation in x 
+void part_t::setAngularOrientationX(double t_x, double speed){
+  // changing the theta x values
   while(theta_x - t_x > speed){
     theta_x -= speed;
     renderPart(window);
@@ -153,7 +162,11 @@ void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double sp
     renderPart(window);
     glfwSwapBuffers(window);
   }
-  
+ 
+}
+
+//! set Orientation in y 
+void part_t:: setAngularOrientationY(double t_y, double speed){
   // changing the theta y values
   while(theta_y - t_y > speed){
     theta_y -= speed;
@@ -173,7 +186,11 @@ void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double sp
     glfwSwapBuffers(window);
   }
   
-  // changing the theta z value
+}
+
+//! set Orientation in z
+void part_t::setAngularOrientationZ(double t_z, double speed){
+ // changing the theta z value
   while(theta_z - t_z > speed){
     theta_z -= speed;
     renderPart(window);
@@ -191,9 +208,7 @@ void part_t::setAngularOrientation(double t_x, double t_y, double t_z, double sp
     renderPart(window);
     glfwSwapBuffers(window);
   }
-  
-}
-  
+} 
 
 //! function as a hole to overpass the constraints
 void part_t::change_theta_sys(double dx, double dy, double dz){
@@ -520,9 +535,12 @@ void body_t::rotateBody(double dx, double dy, double dz){
 void body_t::transformToVehicle(void){
   if(!state){
     state = 1;
-    chestCover->setAngularOrientation(30, 0, 90, 1);
-    neck->setAngularOrientation(180, 0, 90, 1);
-    chestCover->setAngularOrientation(0, 0, 90, 1);
+    // pushing the head into the chest
+    chestCover->setAngularOrientation(30, 0, 90, 1, "xyz");
+    neck->setAngularOrientation(180, 0, 90, 1, "yzx");
+    chestCover->setAngularOrientation(0, 0, 90, 1, "xyz");
+    
+    // torso converting to body
   }
 }
   

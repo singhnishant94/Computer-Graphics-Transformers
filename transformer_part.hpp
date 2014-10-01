@@ -2,6 +2,7 @@
 #define _TRANSFORMER_PART_
 
 #include <vector>
+#include <string.h>
 #include "gl_framework.hpp"
 
 // helper class to  
@@ -67,7 +68,16 @@ struct part_t{
   void change_theta_z(double);
   
   //! set orientation to a given value with a given speed
-  void setAngularOrientation(double, double, double, double);
+  void setAngularOrientation(double, double, double, double, std::string);
+  
+  //! set Orientation in x 
+  void setAngularOrientationX(double, double);
+  
+  //! set Orientation in y 
+  void setAngularOrientationY(double, double);
+    
+  //! set Orientation in z
+  void setAngularOrientationZ(double, double);
   
   //! function as a hole to overpass the constraints
   void change_theta_sys(double, double, double);
@@ -89,6 +99,9 @@ struct part_t{
 
   //! checking the constraints, return true/ false, value, axis
   int checkConstraint(double, char);
+  
+  //! shift the rotation point / remote anchor by a given offset
+  void shiftRemoteAnchor(double, double, double);
 };
 
 enum joint_t{
