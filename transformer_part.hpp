@@ -3,6 +3,8 @@
 
 #include <vector>
 
+int temp;
+
 // helper class to 
 struct vertex_t{
   double x, y, z;
