@@ -53,7 +53,7 @@ void part_t::setLength(double l){
 
 //! returns length
 double part_t::getLength(void){
-  return (end_B.x - end_A.x);
+  return (end_B.x);
 }
 
 //! set part number
@@ -180,19 +180,19 @@ body_t::body_t(void){
   
   thigh1 = new part_t();    
   thigh1->setPartNum(THIGHNUM);  
-  thigh1->setLength(1.2f);
+  thigh1->setLength(1.6f);
   
   thigh2 = new part_t();    
   thigh2->setPartNum(THIGHNUM);
-  thigh2->setLength(1.2f);
+  thigh2->setLength(1.6f);
   
   leg1 = new part_t();      
   leg1->setPartNum(LEGNUM);
-  leg1->setLength(1.2f);
+  leg1->setLength(1.6f);
   
   leg2 = new part_t();      
   leg2->setPartNum(LEGNUM);
-  leg2->setLength(1.2f);
+  leg2->setLength(1.6f);
   
   foot1 = new part_t();     
   foot1->setPartNum(FOOTNUM);
@@ -209,15 +209,19 @@ body_t::body_t(void){
   
   arm1 = new part_t();      
   arm1->setPartNum(ARMNUM);
+  arm1->setLength(1.4f);
   
   arm2 = new part_t();      
   arm2->setPartNum(ARMNUM);
+  arm2->setLength(1.4f);
   
   hand1 = new part_t();     
   hand1->setPartNum(HANDNUM);
+  hand1->setLength(1.3f);
   
   hand2 = new part_t();     
   hand2->setPartNum(HANDNUM);
+  hand2->setLength(1.3f);
   
   // here we set the hip values specifically so as to make it at origin
   hip->anchorLocal = &(hip->center);

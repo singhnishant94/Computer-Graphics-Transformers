@@ -143,7 +143,7 @@ namespace drawing_t{
       glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
       glScalef(0.2f,0.4f,0.4f);
       glColor3f(0.3f,0.3f,0.3f);
-      glRotatef(180,0,1,0);
+      glRotatef(0,0,1,0);
       drawChest();
       glPopMatrix();
     }
@@ -200,12 +200,9 @@ namespace drawing_t{
     drawCube();
     glPopMatrix();
 
-    
-
-   
 
     glPushMatrix();
-    glTranslatef(-0.8f,0.0f,0.0f);
+    glTranslatef(-1.0f,0.0f,0.0f);
     glScalef(0.4f,0.4f,0.4f);
     glColor3f(0.3f,0.3f,0.3f);
     glRotatef(180,0,1,0);
@@ -220,7 +217,7 @@ namespace drawing_t{
   void drawHand(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
-    glTranslatef(0.8f,0.0f,0.0f);
+    glTranslatef(0.3f,0.0f,0.0f);
     glScalef(1.0f,0.30f,0.30f);
     glColor3f(0.5f,0.5f,0.9f);
     drawCube();
@@ -228,7 +225,7 @@ namespace drawing_t{
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-0.3f,0.0f,0.0f);
+    glTranslatef(-1.0f,0.0f,0.0f);
     glScalef(0.3f,0.3f,0.3f);
     glColor3f(0.3f,0.3f,0.3f);
     glRotatef(180,0,1,0);
@@ -242,7 +239,7 @@ namespace drawing_t{
   void drawThigh(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
-    glTranslatef(0.7f,0.0f,0.0f);
+    glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.2f,0.6f,0.6f);
     glColor3f(0.4f,0.4f,0.8f);
     drawCube();
@@ -251,7 +248,7 @@ namespace drawing_t{
     
 
     glPushMatrix();
-    glTranslatef(-0.8f,0,0);
+    glTranslatef(-1.2f,0,0);
     glRotatef(0,0,1,0);
     glScalef(0.4f,0.4f,0.4f);
     glColor3f(0.3f,0.3f,0.3f);
@@ -265,14 +262,14 @@ namespace drawing_t{
   void drawLeg(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
-    glTranslatef(1.5f,0.0f,0.0f);
+    glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.2f,0.4f,0.4f);
     glColor3f(0.45f,0.45f,0.76f);
     drawCube();
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(-0.1f,0,0);
+    glTranslatef(-1.2f,0,0);
     glRotatef(180,0,1,0);
     glScalef(0.4f,0.4f,0.4f);
     glColor3f(0.3f,0.3f,0.3f);
@@ -285,11 +282,13 @@ namespace drawing_t{
   //! for Foot 
   void drawFoot(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
-    glTranslatef(-0.2f,-0.0f,-1.5f);
+    glPushMatrix();
+    glTranslatef(-0.2f,-0.0f,-0.25f);
     glScalef(1.0f,0.5f,0.3f);
     glColor3f(0.6f,0.6f,1.0f);
     drawCube();
     glColor3f(1.0f,1.0f,1.0f);
+    glPopMatrix();
     glEndList();
   }
 };
