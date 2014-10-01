@@ -172,10 +172,10 @@ namespace drawing_t{
       glEnd();
   }
 
-  void DrawCylinder(float cx, float cy, float r, int num_segments){
+  void DrawCylinder(float cx, float cy, float r, int num_segments, float width){
 
     glPushMatrix();
-    glTranslatef(0.0f,0.0f,0.3f);
+    glTranslatef(0.0f,0.0f,width);
     DrawCircle(cx, cy, r, num_segments);
     glPopMatrix();
 
@@ -201,7 +201,7 @@ namespace drawing_t{
           float y = r * sinf(theta);//calculate the y component
 
           glVertex3f(x + cx, y + cy, 0.0f);//output vertex
-          glVertex3f(x + cx, y + cy, 0.3f);
+          glVertex3f(x + cx, y + cy, width);
 
       }
       glEnd();
@@ -222,7 +222,7 @@ namespace drawing_t{
   //! for Hip 
   void drawHip(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
-    glScalef(1.5f,0.25f,0.5f);
+    glScalef(1.5f,0.3f,0.5f);
     glColor3f(0.2f,0.2f,0.2f);
     drawCube();
     glColor3f(1.0f,1.0f,1.0f);
@@ -430,7 +430,7 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.0f,-0.45f,0.0f);
     glRotatef(90,1,0,0);
-    DrawCylinder(0.0f,0.0f,1.0f,50);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glPopMatrix();
 
     glColor3f(1.0f,1.0f,1.0f);
@@ -456,9 +456,9 @@ namespace drawing_t{
 
 
     glPushMatrix();
-    glTranslatef(0.0f,0.75f,0.0f);
+    glTranslatef(0.0f,1.05f,0.0f);
     glRotatef(90,1,0,0);
-    DrawCylinder(0.0f,0.0f,1.0f,50);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glPopMatrix();
 
     glColor3f(1.0f,1.0f,1.0f);
@@ -522,7 +522,9 @@ namespace drawing_t{
   //! for HipMid 
   void drawHipMid(int p_num, double len){ //! part number, length
      glNewList(p_num, GL_COMPILE);
-     drawLine();
+     glScalef(0.20f,0.5f,0.5f);
+     glColor3f(0.5f,0.5f,0.5f);
+     drawChest();
      glEndList();
   }
 
