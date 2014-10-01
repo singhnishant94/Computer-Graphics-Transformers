@@ -109,6 +109,55 @@ namespace drawing_t{
           //rotqube +=0.9f;                       // Increase Angle
 
   }
+
+    void drawTorsoChest(void){
+    
+          // Reset The Current Modelview Matrix
+          //glLoadIdentity();
+          //glScalef(1/4.0, 1/4.0, 1/4.0);
+          //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
+ 
+          //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
+          //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
+          //glRotatef(rotqube,1.0f,1.0f,1.0f);
+          glBegin(GL_QUADS);            // Draw The Cube Using quads
+            //glColor3f(_r,_g,_b);
+            double y_val = 1.4f;
+            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
+            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
+            glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
+            glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
+            //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+            glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
+            glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
+            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
+            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
+            
+            glColor3f(0.1f,0.1f,0.5f);  // Color Yellow
+            glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
+            glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
+            glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
+            glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
+            //glColor3f(1.0f,1.0f,1.0f);  // Color white
+            glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
+            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
+            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
+            glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
+            //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
+            glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
+            glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
+            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Right)
+            //glColor3f(1.0f,0.0f,0.0f);
+          glEnd();                      // End Drawing The Cube
+ 
+          //rotqube +=0.9f;                       // Increase Angle
+
+  }
+
+  void drawCover(void){
+
+  }
   //! Now the functions to draw various diff body parts
   //! these functions push the various things in a list
   
@@ -134,14 +183,14 @@ namespace drawing_t{
     glTranslatef(0.7f,0.0f,0.0f);
     glScalef(0.8f,1.5f,0.5f);
     glColor3f(0.4f,0.4f,0.9f);
-    drawChest();
+    drawTorsoChest();
     glPopMatrix();
 
     for (int i = 0; i < 4; ++i)
     {
       glPushMatrix();
       glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
-      glScalef(0.2f,0.4f,0.4f);
+      glScalef(0.2f,0.4f,0.3f);
       glColor3f(0.3f,0.3f,0.3f);
       glRotatef(0,0,1,0);
       drawChest();
@@ -183,9 +232,33 @@ namespace drawing_t{
   //! for neck
   void drawNeck(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
-    glScalef(1.0f,0.5f,0.2f);
     glColor3f(0.3f,0.3f,0.6f);
-    drawCube();
+    for (int i = 0; i < 3; ++i)
+    {
+      glPushMatrix();
+      glTranslatef(-0.8f+i/2.2,0.0f,0.0f);
+      glScalef(0.2f,0.2f,0.3f);
+      glColor3f(0.3f,0.3f,0.3f);
+      glRotatef(0,0,1,0);
+      drawChest();
+      glPopMatrix();
+    }
+
+    glPushMatrix();
+    glColor3f(0.3f,0.3f,0.6f);
+    glTranslatef(1.0f,0.0f,0.0f);
+    glScalef(0.6f,0.6f,0.3f);
+    drawChest();
+    glPopMatrix();
+
+    glPushMatrix();
+    glColor3f(0.3f,0.3f,0.6f);
+    glTranslatef(1.8f,0.0f,0.0f);
+    glScalef(0.2f,0.6f,0.3f);
+    glRotatef(180,0,0,1);
+    drawChest();
+    glPopMatrix();
+
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
@@ -239,8 +312,23 @@ namespace drawing_t{
   void drawPalm(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     
-    drawLine();
-    
+    glPushMatrix();
+    glColor3f(0.3f,0.3f,0.9f);
+    glTranslatef(-0.6f,0.0f,0.0f);
+    glScalef(0.4f,0.3f,0.2f);
+    drawChest();
+    glPopMatrix();
+
+    for (int i = 0; i < 5; ++i)
+    {
+      glPushMatrix();
+      glRotatef(-5+i*3,0,0,1);
+      glTranslatef(0.0f,-0.4f+i/5.0,0.0f);
+      glScalef(0.4f,0.05f,0.05f);
+      drawCube();
+      glPopMatrix();
+    }
+    glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 
@@ -304,8 +392,39 @@ namespace drawing_t{
   //! for Chest Cover
   void drawChestCover(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
- 
+
+    glPushMatrix();
+
+    glTranslatef(0.0f,0.0f,0.5f);
+    glRotatef(90,0,1,0);
+    glScalef(0.1f,1.0f,1.0f);
     drawLine();
+    glPopMatrix();
+
+    glPushMatrix();
+    //glTranslatef(-1.0f,0.0f,0.4f);
+    glColor3f(0.1f,0.1f,0.1f);
+    for (int i = 0; i < 4; ++i)
+    {
+      glPushMatrix();
+      glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
+      glScalef(0.2f,0.4f,0.1f);
+      glColor3f(0.3f,0.3f,0.3f);
+      glRotatef(0,0,1,0);
+      drawChest();
+      glPopMatrix();
+    }
+    //drawLine();
+    
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(1.0f,0.0f,0.6f);
+    glScalef(1.0f,1.5f,0.1f);
+    glColor3f(0.4f,0.4f,0.7f);
+    drawChest();
+    glColor3f(1.0f,1.0f,1.0f);
+    glPopMatrix();
     
     glEndList();
   }

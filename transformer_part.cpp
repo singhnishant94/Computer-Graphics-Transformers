@@ -305,6 +305,7 @@ body_t::body_t(void){
   
   chestCover = new part_t();
   chestCover->setPartNum(CHESTCOVERNUM);
+  chestCover->setLength(2.0f);
 
   // here we set the hip values specifically so as to make it at origin
   hip->anchorLocal = &(hip->center);
