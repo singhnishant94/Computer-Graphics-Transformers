@@ -299,6 +299,7 @@ body_t::body_t(void){
   
   hipmid = new part_t();       
   hipmid->setPartNum(HIPMIDNUM);
+  hipmid->setLenght(0.5f);
   
   torso = new part_t();     
   torso->setPartNum(TORSONUM);
@@ -583,6 +584,10 @@ void body_t::transformToVehicle(void){
     // bringing the torso to correct position
     torso->setAngularOrientation(0, 0, 90, 2, "yxz");
     
+    // putting hands in position
+    arm1->setAngularOrientation(0, 0, -90, 1, "zxy");
+    arm2->setAngularOrientation(0, 0, -90, 1, "zxy");
+  
     // pushing the head into the chest
     chestCover->setAngularOrientation(30, 0, 90, 1, "xyz");
     neck->setAngularOrientation(180, 0, 90, 1, "yzx");
@@ -590,6 +595,14 @@ void body_t::transformToVehicle(void){
     
     // torso converting to body
     torso->setAngularOrientation(-90, 0, 270, 1, "yxz");
+    
+    // lifting the thighs
+    thigh1->setAngularOrientation(-90, 0, -90, 1, "zxy");
+    thigh2->setAngularOrientation(-90, 0, -90, 1, "zxy");
+    
+    // turning the foot
+    foot1->setAngularOrientation(0, -90, -90, 1, "yzx");
+    foot2->setAngularOrientation(0, -90, 90, 1, "yzx");
   }
 }
   
