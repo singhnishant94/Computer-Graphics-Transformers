@@ -299,7 +299,7 @@ body_t::body_t(void){
   
   hipmid = new part_t();       
   hipmid->setPartNum(HIPMIDNUM);
-  hipmid->setLenght(0.5f);
+  hipmid->setLength(0.5f);
   
   torso = new part_t();     
   torso->setPartNum(TORSONUM);
