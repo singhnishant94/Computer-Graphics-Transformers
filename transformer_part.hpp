@@ -34,6 +34,9 @@ struct part_t{
   //! the renderPart is the renderGL function pointer. part denotes the struct it is in 
   void (*renderPart)(GLFWwindow*);
 
+  //! connecting body like torso - cover
+  std::vector<part_t*> connPart;
+  
   //!contructor
   part_t(void);
 
@@ -55,6 +58,9 @@ struct part_t{
   //! connects this to the parent, 
   void connect(vertex_t*, part_t*, vertex_t*, double, double, double);
   
+  //! connect dependent parts here
+  void addConnPart(part_t*);
+  
   //! draw part function to draw it and the children
   void drawPart(void);
   
@@ -67,6 +73,9 @@ struct part_t{
   //! function to change theta_z
   void change_theta_z(double);
   
+  //! change connPart theta
+  void changeConnPartTheta(double, char);
+
   //! set orientation to a given value with a given speed
   void setAngularOrientation(double, double, double, double, std::string);
   

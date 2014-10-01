@@ -11,12 +11,15 @@
 #define ARMNUM 5
 #define HANDNUM 6
 #define THIGHNUM 7
-#define LEGNUM 8
+#define LEG1NUM 8
 #define FOOTNUM 9
 #define PALMNUM 10
 #define CHESTCOVERNUM 11
+#define LEG2NUM 12
 
-#define TOT_PART 11
+#define TOT_PART 12
+
+#define OK  std::cout<<"ok"<<std::endl;
 
 //! sets the vertex
 void vertex_t::setVertex(double _x, double _y, double _z){
@@ -87,6 +90,11 @@ void part_t::connect(vertex_t* _anchorLocal, part_t* parent, vertex_t* _anchorRe
   theta_z = _theta_z;
 }
 
+//! connect dependent parts here
+void part_t::addConnPart(part_t* _part){
+  connPart.push_back(_part);
+}
+  
 //! draw the part and children
 void part_t::drawPart(void){
   glPushMatrix();
@@ -112,6 +120,7 @@ void part_t::change_theta_x(double delta){
     theta_x += delta;
     if(theta_x >= 360) theta_x -= 360;
     else if(theta_x <= -360) theta_x += 360;
+    changeConnPartTheta(delta, 'x');
   }
 }
 
@@ -121,6 +130,7 @@ void part_t::change_theta_y(double delta){
     theta_y += delta;
     if(theta_y >= 360) theta_y -= 360;
     else if(theta_y <= -360) theta_y += 360;
+    changeConnPartTheta(delta, 'y');
   }
 }
 
@@ -130,6 +140,17 @@ void part_t::change_theta_z(double delta){
     theta_z += delta;
     if(theta_z >= 360) theta_z -= 360;
     else if(theta_z <= -360) theta_z += 360;
+    changeConnPartTheta(delta, 'z');
+  }
+}
+
+//! change connPart theta
+void part_t::changeConnPartTheta(double delta, char ax){
+  int l = connPart.size();
+  for(int i = 0; i < l; i++){
+    if(ax == 'x') connPart[i]->change_theta_x(delta);
+    else if(ax == 'y') connPart[i]->change_theta_y(delta);
+    else if(ax == 'z') connPart[i]->change_theta_z(delta);
   }
 }
 
@@ -147,18 +168,21 @@ void part_t::setAngularOrientationX(double t_x, double speed){
   // changing the theta x values
   while(theta_x - t_x > speed){
     theta_x -= speed;
+    changeConnPartTheta(-speed, 'x');
     renderPart(window);
     glfwSwapBuffers(window);
   }
   
   while(t_x - theta_x > speed){
     theta_x += speed;
+    changeConnPartTheta(speed, 'x');
     renderPart(window);
     glfwSwapBuffers(window);
   }
   
   if(t_x != theta_x){
     theta_x = t_x;
+    changeConnPartTheta(t_x - theta_x, 'x');
     renderPart(window);
     glfwSwapBuffers(window);
   }
@@ -170,18 +194,21 @@ void part_t:: setAngularOrientationY(double t_y, double speed){
   // changing the theta y values
   while(theta_y - t_y > speed){
     theta_y -= speed;
+    changeConnPartTheta(-speed, 'y');
     renderPart(window);
     glfwSwapBuffers(window);
   }
   
   while(t_y - theta_y > speed){
     theta_y += speed;
+    changeConnPartTheta(speed, 'y');
     renderPart(window);
     glfwSwapBuffers(window);
   }
   
   if(t_y != theta_y){
     theta_y = t_y;
+    changeConnPartTheta(t_y - theta_y, 'y');
     renderPart(window);
     glfwSwapBuffers(window);
   }
@@ -193,11 +220,13 @@ void part_t::setAngularOrientationZ(double t_z, double speed){
  // changing the theta z value
   while(theta_z - t_z > speed){
     theta_z -= speed;
+    changeConnPartTheta(-speed, 'z');
     renderPart(window);
     glfwSwapBuffers(window);
   }
   
   while(t_z - theta_z > speed){
+    changeConnPartTheta(speed, 'z');
     theta_z += speed;
     renderPart(window);
     glfwSwapBuffers(window);
@@ -205,6 +234,7 @@ void part_t::setAngularOrientationZ(double t_z, double speed){
   
   if(t_z != theta_z){
     theta_z = t_z;
+    changeConnPartTheta(t_z - theta_z, 'z');
     renderPart(window);
     glfwSwapBuffers(window);
   }
@@ -276,11 +306,11 @@ body_t::body_t(void){
   thigh2->setLength(1.6f);
   
   leg1 = new part_t();      
-  leg1->setPartNum(LEGNUM);
+  leg1->setPartNum(LEG1NUM);
   leg1->setLength(1.6f);
   
   leg2 = new part_t();      
-  leg2->setPartNum(LEGNUM);
+  leg2->setPartNum(LEG2NUM);
   leg2->setLength(1.6f);
   
   foot1 = new part_t();     
@@ -326,6 +356,8 @@ body_t::body_t(void){
   hip->anchorLocal = &(hip->center);
   hip->anchorRemote = &(hip->center);
 
+  torso->addConnPart(chestCover);
+  
   makeBody();
   addConstraints();
 }
@@ -398,7 +430,8 @@ void body_t::initBodyStructure(void){
   drawing_t::drawArm(ARMNUM, arm1->getLength());
   drawing_t::drawHand(HANDNUM, hand1->getLength());
   drawing_t::drawThigh(THIGHNUM, thigh1->getLength());
-  drawing_t::drawLeg(LEGNUM, leg1->getLength());
+  drawing_t::drawLeg(LEG1NUM, leg1->getLength());
+  drawing_t::drawLeg(LEG2NUM, leg2->getLength());
   drawing_t::drawFoot(FOOTNUM, foot1->getLength());
   drawing_t::drawPalm(PALMNUM, palm1->getLength());
   drawing_t::drawChestCover(CHESTCOVERNUM, chestCover->getLength());
@@ -535,12 +568,17 @@ void body_t::rotateBody(double dx, double dy, double dz){
 void body_t::transformToVehicle(void){
   if(!state){
     state = 1;
+    
+    // bringing the torso to correct position
+    torso->setAngularOrientation(0, 0, 90, 2, "yxz");
+    
     // pushing the head into the chest
     chestCover->setAngularOrientation(30, 0, 90, 1, "xyz");
     neck->setAngularOrientation(180, 0, 90, 1, "yzx");
     chestCover->setAngularOrientation(0, 0, 90, 1, "xyz");
     
     // torso converting to body
+    torso->setAngularOrientation(-90, 0, 270, 1, "yxz");
   }
 }
   
