@@ -92,6 +92,8 @@ enum joint_t{
   ARM2SHOULDER,
   HAND1ARM1,
   HAND2ARM2,
+  PALM1HAND1,
+  PALM2HAND2,
   DUMMY,
   ROOT
 };
@@ -104,6 +106,7 @@ struct body_t{
   part_t *shoulder;
   part_t *neck;
   part_t *arm1, *arm2, *hand1, *hand2;
+  part_t *palm1, *palm2;
   
   //! body parameters
   vertex_t center;                        // the center of entire body

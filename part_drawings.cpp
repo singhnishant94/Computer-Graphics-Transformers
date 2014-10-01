@@ -234,6 +234,15 @@ namespace drawing_t{
 
     glEndList();
   }
+  
+  //! for Palm 
+  void drawPalm(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    
+    drawLine();
+    
+    glEndList();
+  }
 
   //! for Thigh
   void drawThigh(int p_num, double len){ //! part number, length

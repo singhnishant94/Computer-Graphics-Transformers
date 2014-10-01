@@ -33,6 +33,9 @@ namespace drawing_t{
   //! for Hand
   void drawHand(int, double); //! part number, length
   
+  //! for Palm 
+  void drawPalm(int, double); //! part number, length
+
   //! for Thigh
   void drawThigh(int, double); //! part number, length
   
