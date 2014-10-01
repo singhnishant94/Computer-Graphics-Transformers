@@ -114,13 +114,13 @@ struct part_t{
 };
 
 enum joint_t{
-  THIGH1HIP, 
-  THIGH2HIP, 
+  THIGH1HIP2, 
+  THIGH2HIP2, 
   LEG1THIGH1,
   LEG2THIGH2,
   FOOT1LEG1,
   FOOT2LEG2,
-  TORSOHIP,
+  TORSOHIP1,
   SHOULDERTORSO,
   NECKSHOULDER,
   ARM1SHOULDER,
@@ -130,13 +130,15 @@ enum joint_t{
   PALM1HAND1,
   PALM2HAND2,
   CHESTCOVERHIP,
+  HIPMIDHIP1,
+  HIP2HIPMID,
   DUMMY,
   ROOT
 };
 
 struct body_t{
   //! the various parts of a transformer
-  part_t *hip;    // the hip is the root
+  part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
   part_t *torso;
   part_t *thigh1, *thigh2, *leg1, *leg2, *foot1, *foot2;
   part_t *shoulder;

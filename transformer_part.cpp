@@ -16,8 +16,9 @@
 #define PALMNUM 10
 #define CHESTCOVERNUM 11
 #define LEG2NUM 12
+#define HIPMIDNUM 13
 
-#define TOT_PART 12
+#define TOT_PART 13
 
 #define OK  std::cout<<"ok"<<std::endl;
 
@@ -290,8 +291,14 @@ body_t::body_t(void){
   theta_x = theta_y = theta_z = 0.0;
   state = 0;
   
-  hip = new part_t();       
-  hip->setPartNum(HIPNUM);
+  hip1 = new part_t();       
+  hip1->setPartNum(HIPNUM);
+  
+  hip2 = new part_t();       
+  hip2->setPartNum(HIPNUM);
+  
+  hipmid = new part_t();       
+  hipmid->setPartNum(HIPMIDNUM);
   
   torso = new part_t();     
   torso->setPartNum(TORSONUM);
@@ -353,8 +360,8 @@ body_t::body_t(void){
   chestCover->setLength(2.0f);
 
   // here we set the hip values specifically so as to make it at origin
-  hip->anchorLocal = &(hip->center);
-  hip->anchorRemote = &(hip->center);
+  hip1->anchorLocal = &(hip1->center);
+  hip1->anchorRemote = &(hip1->center);
 
   torso->addConnPart(chestCover);
   
@@ -365,7 +372,7 @@ body_t::body_t(void){
 
 //! destructor
 body_t::~body_t(void){
-  delete hip;
+  delete hip1, hip2, hipmid;
   delete torso;
   delete thigh1, thigh2, leg1, leg2, foot1, foot2;
   delete shoulder;
@@ -379,9 +386,10 @@ body_t::~body_t(void){
 void body_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*)){
   window = _window;
   renderBody = renderGL;
-  hip->setWindowRender(window, renderGL);
+  hip1->setWindowRender(window, renderGL);
+  hip2->setWindowRender(window, renderGL);
+  hipmid->setWindowRender(window, renderGL);
   torso->setWindowRender(window, renderGL);
-  hip->setWindowRender(window, renderGL);
   thigh1->setWindowRender(window, renderGL);
   thigh2->setWindowRender(window, renderGL);
   leg1->setWindowRender(window, renderGL);
@@ -402,13 +410,15 @@ void body_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*))
 
 //! forms the basic structure
 void body_t::makeBody(void){ 
-  thigh1->connect(&(thigh1->end_A), hip, &(hip->end_A), 0, 0, -90);
-  thigh2->connect(&(thigh2->end_A), hip, &(hip->end_B), 0, 0, -90);
+  hipmid->connect(&(hipmid->end_A), hip1, &(hip1->center), 0, 0, -90);
+  hip2->connect(&(hip2->center), hipmid, &(hipmid->end_B), 0, 0, 90);
+  thigh1->connect(&(thigh1->end_A), hip2, &(hip2->end_A), 0, 0, -90);
+  thigh2->connect(&(thigh2->end_A), hip2, &(hip2->end_B), 0, 0, -90);
   leg1->connect(&(leg1->end_A), thigh1, &(thigh1->end_B), 0, 0, 0);
   leg2->connect(&(leg2->end_A), thigh2, &(thigh2->end_B), 0, 0, 0);
   foot1->connect(&(foot1->end_A), leg1, &(leg1->end_B), 0, -90, 0);
   foot2->connect(&(foot2->end_A), leg2, &(leg2->end_B), 0, -90, 0);
-  torso->connect(&(torso->end_A), hip, &(hip->center), 0, 0, 90);
+  torso->connect(&(torso->end_A), hip1, &(hip1->center), 0, 0, 90);
   shoulder->connect(&(shoulder->center), torso, &(torso->end_B), 0, 0, -90);
   neck->connect(&(neck->end_A), shoulder, &(shoulder->center), 0, 0, 90);
   arm1->connect(&(arm1->end_A), shoulder, &(shoulder->end_A), 0, 0, -180);
@@ -417,13 +427,14 @@ void body_t::makeBody(void){
   hand2->connect(&(hand2->end_A), arm2, &(arm2->end_B), 0, 0, 0);
   palm1->connect(&(palm1->end_A), hand1, &(hand1->end_B), 0, 0, 0);
   palm2->connect(&(palm2->end_A), hand2, &(hand2->end_B), 0, 0, 0);
-  chestCover->connect(&(chestCover->end_A), hip, &(hip->center), 0, 0, 90);
+  chestCover->connect(&(chestCover->end_A), hip1, &(hip1->center), 0, 0, 90);
 }
 
 //! fill the parts of the body with respective drawings
 void body_t::initBodyStructure(void){
   drawing_t::initList(TOT_PART);
-  drawing_t::drawHip(HIPNUM, hip->getLength());
+  drawing_t::drawHip(HIPNUM, hip1->getLength());
+  drawing_t::drawHipMid(HIPMIDNUM, hipmid->getLength());
   drawing_t::drawTorso(TORSONUM, torso->getLength());
   drawing_t::drawShoulder(SHOULDERNUM, shoulder->getLength());
   drawing_t::drawNeck(NECKNUM, neck->getLength());
@@ -513,20 +524,20 @@ void body_t::drawBody(void){
   glMultMatrixd(rot);
   */
   glPushMatrix();
-  hip->drawPart();
+  hip1->drawPart();
   glPopMatrix();
 }
 
 //! function to move the joint
 void body_t::changeOrientation(joint_t jName, vertex_t delta){
   part_t *_part = 0;
-  if(jName == THIGH1HIP)  _part = thigh1;
-  else if(jName == THIGH2HIP) _part = thigh2;
+  if(jName == THIGH1HIP2)  _part = thigh1;
+  else if(jName == THIGH2HIP2) _part = thigh2;
   else if(jName == LEG1THIGH1) _part = leg1;
   else if(jName == LEG2THIGH2) _part = leg2;
   else if(jName == FOOT1LEG1) _part = foot1;
   else if(jName == FOOT2LEG2) _part = foot2;
-  else if(jName == TORSOHIP) _part = torso;
+  else if(jName == TORSOHIP1) _part = torso;
   else if(jName == SHOULDERTORSO) _part = shoulder;
   else if(jName == NECKSHOULDER) _part = neck;
   else if(jName == ARM1SHOULDER) _part = arm1;

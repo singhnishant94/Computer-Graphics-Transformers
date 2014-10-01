@@ -17,7 +17,10 @@ namespace drawing_t{
   
   //! for Hip 
   void drawHip(int, double); //! part number, length
-  
+      
+  //! for Hip 
+  void drawHipMid(int, double); //! part number, length
+
   //! for torso
   void drawTorso(int, double); //! part number, length
   

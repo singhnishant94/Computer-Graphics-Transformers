@@ -49,9 +49,9 @@ int keyValidEvent(int action){
 //! to select a given joint
 int group_t::selectJoint(int key){
   if(key == GLFW_KEY_SPACE) jName = ROOT;
-  else if (key == GLFW_KEY_H) jName = TORSOHIP;
-  else if (key == GLFW_KEY_G) jName = THIGH1HIP;
-  else if (key == GLFW_KEY_J) jName = THIGH2HIP;
+  else if (key == GLFW_KEY_H) jName = TORSOHIP1;
+  else if (key == GLFW_KEY_G) jName = THIGH1HIP2;
+  else if (key == GLFW_KEY_J) jName = THIGH2HIP2;
   else if (key == GLFW_KEY_B) jName = LEG1THIGH1;
   else if (key == GLFW_KEY_N) jName = LEG2THIGH2;
   else if (key == GLFW_KEY_V) jName = FOOT1LEG1;
