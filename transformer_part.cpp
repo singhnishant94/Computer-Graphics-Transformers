@@ -430,8 +430,8 @@ void body_t::initBodyStructure(void){
   drawing_t::drawArm(ARMNUM, arm1->getLength());
   drawing_t::drawHand(HANDNUM, hand1->getLength());
   drawing_t::drawThigh(THIGHNUM, thigh1->getLength());
-  drawing_t::drawLeg(LEG1NUM, leg1->getLength());
-  drawing_t::drawLeg(LEG2NUM, leg2->getLength());
+  drawing_t::drawLeg1(LEG1NUM, leg1->getLength());
+  drawing_t::drawLeg2(LEG2NUM, leg2->getLength());
   drawing_t::drawFoot(FOOTNUM, foot1->getLength());
   drawing_t::drawPalm(PALMNUM, palm1->getLength());
   drawing_t::drawChestCover(CHESTCOVERNUM, chestCover->getLength());

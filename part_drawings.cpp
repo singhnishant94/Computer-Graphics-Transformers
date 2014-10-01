@@ -1,5 +1,6 @@
 #include "part_drawings.hpp"
 #include "gl_framework.hpp"
+#include <math.h>
 
 
 namespace drawing_t{
@@ -155,6 +156,58 @@ namespace drawing_t{
 
   }
 
+  void DrawCircle(float cx, float cy, float r, int num_segments)
+  {
+      glBegin(GL_TRIANGLE_FAN);
+      for(int ii = 0; ii < num_segments; ii++)
+      {
+          float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+
+          float x = r * cosf(theta);//calculate the x component
+          float y = r * sinf(theta);//calculate the y component
+
+          glVertex2f(x + cx, y + cy);//output vertex
+
+      }
+      glEnd();
+  }
+
+  void DrawCylinder(float cx, float cy, float r, int num_segments){
+
+    glPushMatrix();
+    glTranslatef(0.0f,0.0f,0.3f);
+    DrawCircle(cx, cy, r, num_segments);
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(0.0f,0.0f,0.0f);
+    DrawCircle(cx, cy, r, num_segments);
+    glPopMatrix();
+    /*
+    for (int i = 0; i < 100; ++i)
+    {
+      glPushMatrix();
+      glTranslatef(0.0f,0.0f,0.0f+i/300.0f);
+      DrawCircle(cx, cy, r, num_segments);
+      glPopMatrix();
+    }*/
+
+    glBegin(GL_TRIANGLE_STRIP);
+      for(int ii = 0; ii < num_segments; ii++)
+      {
+          float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+
+          float x = r * cosf(theta);//calculate the x component
+          float y = r * sinf(theta);//calculate the y component
+
+          glVertex3f(x + cx, y + cy, 0.0f);//output vertex
+          glVertex3f(x + cx, y + cy, 0.3f);
+
+      }
+      glEnd();
+
+
+  }
   void drawCover(void){
 
   }
@@ -180,13 +233,13 @@ namespace drawing_t{
   void drawTorso(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
-    glTranslatef(0.7f,0.0f,0.0f);
-    glScalef(0.8f,1.5f,0.5f);
+    glTranslatef(0.5f,0.0f,0.0f);
+    glScalef(1.0f,1.5f,0.5f);
     glColor3f(0.4f,0.4f,0.9f);
     drawTorsoChest();
     glPopMatrix();
 
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
     {
       glPushMatrix();
       glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
@@ -246,15 +299,15 @@ namespace drawing_t{
 
     glPushMatrix();
     glColor3f(0.3f,0.3f,0.6f);
-    glTranslatef(1.0f,0.0f,0.0f);
-    glScalef(0.6f,0.6f,0.3f);
+    glTranslatef(0.8f,0.0f,0.0f);
+    glScalef(0.4f,0.6f,0.3f);
     drawChest();
     glPopMatrix();
 
     glPushMatrix();
     glColor3f(0.3f,0.3f,0.6f);
-    glTranslatef(1.8f,0.0f,0.0f);
-    glScalef(0.2f,0.6f,0.3f);
+    glTranslatef(1.35f,0.0f,0.0f);
+    glScalef(0.1f,0.6f,0.3f);
     glRotatef(180,0,0,1);
     drawChest();
     glPopMatrix();
@@ -356,7 +409,7 @@ namespace drawing_t{
   }
   
   //! for Leg
-  void drawLeg(int p_num, double len){ //! part number, length
+  void drawLeg1(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
     glTranslatef(0.4f,0.0f,0.0f);
@@ -372,6 +425,42 @@ namespace drawing_t{
     glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(0.0f,-0.45f,0.0f);
+    glRotatef(90,1,0,0);
+    DrawCylinder(0.0f,0.0f,1.0f,50);
+    glPopMatrix();
+
+    glColor3f(1.0f,1.0f,1.0f);
+    glEndList();  
+  }
+
+  void drawLeg2(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    glPushMatrix();
+    glTranslatef(0.4f,0.0f,0.0f);
+    glScalef(1.2f,0.4f,0.4f);
+    glColor3f(0.45f,0.45f,0.76f);
+    drawCube();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(-1.2f,0,0);
+    glRotatef(180,0,1,0);
+    glScalef(0.4f,0.4f,0.4f);
+    glColor3f(0.3f,0.3f,0.3f);
+    drawChest();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(0.0f,0.75f,0.0f);
+    glRotatef(90,1,0,0);
+    DrawCylinder(0.0f,0.0f,1.0f,50);
+    glPopMatrix();
+
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
   }
@@ -404,7 +493,7 @@ namespace drawing_t{
     glPushMatrix();
     //glTranslatef(-1.0f,0.0f,0.4f);
     glColor3f(0.1f,0.1f,0.1f);
-    for (int i = 0; i < 4; ++i)
+    for (int i = 0; i < 3; ++i)
     {
       glPushMatrix();
       glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
@@ -419,8 +508,8 @@ namespace drawing_t{
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(1.0f,0.0f,0.6f);
-    glScalef(1.0f,1.5f,0.1f);
+    glTranslatef(0.8f,0.0f,0.6f);
+    glScalef(1.2f,1.5f,0.1f);
     glColor3f(0.4f,0.4f,0.7f);
     drawChest();
     glColor3f(1.0f,1.0f,1.0f);
@@ -428,5 +517,11 @@ namespace drawing_t{
     
     glEndList();
   }
-};
+
+
+
+
+
+
+  };
 

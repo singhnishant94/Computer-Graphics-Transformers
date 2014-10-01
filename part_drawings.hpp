@@ -40,7 +40,10 @@ namespace drawing_t{
   void drawThigh(int, double); //! part number, length
   
   //! for Leg
-  void drawLeg(int, double); //! part number, length
+  void drawLeg1(int, double); //! part number, length
+
+  //! for Leg
+  void drawLeg2(int, double); //! part number, length
   
   //! for Foot 
   void drawFoot(int, double); //! part number, length
