@@ -148,7 +148,7 @@ void LoadGLTextures() {
     // Create Texture 
     glGenTextures(4, texture);
 
-    if (!(ImageLoad("Data/lesson6/chooch.bmp", image1))){
+    if (!(ImageLoad("Data/lesson6/chest.bmp", image1))){
   exit(1);
     }     
 
