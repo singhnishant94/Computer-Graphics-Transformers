@@ -430,6 +430,7 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.0f,-0.45f,0.0f);
     glRotatef(90,1,0,0);
+    glColor3f(0.2f,0.2,0.2f);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glPopMatrix();
 
@@ -458,6 +459,7 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.0f,1.05f,0.0f);
     glRotatef(90,1,0,0);
+    glColor3f(0.2f,0.2,0.2f);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glPopMatrix();
 
@@ -531,14 +533,36 @@ namespace drawing_t{
   //! for PalmPer
   void drawPalmPer1(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
-     drawLine();
-     glEndList();
+    glPushMatrix();
+    drawLine();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(1.0f,0.0f,0.0f);
+    glRotatef(-90,1,0,0);
+    glColor3f(0.2f,0.2,0.2f);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
+    glPopMatrix();
+    glColor3f(1.0f,1.0f,1.0f);
+    glEndList();
+
+
   }
 
     //! for PalmPer
   void drawPalmPer2(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
+    glPushMatrix();
     drawLine();
+    glPopMatrix();
+
+    glPushMatrix();
+    glTranslatef(1.0f,0.0f,0.0f);
+    glRotatef(90,1,0,0);
+    glColor3f(0.2f,0.2,0.2f);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
+    glPopMatrix();
+    glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 

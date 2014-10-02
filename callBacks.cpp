@@ -121,7 +121,7 @@ namespace bot_t{
     }
     else if (key == GLFW_KEY_UP && action == GLFW_PRESS){
       body_t *curr = autoBots.currentBody();
-      curr->transformToVehicle();
+      curr->transformToBot();
     }
     else autoBots.performAction(key, action, mods);
   }
