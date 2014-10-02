@@ -4,6 +4,7 @@
 #include <string>
 
 #include "callBacks.hpp"
+#include "part_drawings.hpp"
 group_t bot_t::autoBots;
 
 //GLFW display callback
@@ -17,6 +18,7 @@ void renderGL(GLFWwindow* window)
   glDepthFunc(GL_LESS);
 
   bot_t::autoBots.bodyList[0]->drawBody();
+  
 }
 
 int main (int argc, char *argv[]) 
@@ -59,9 +61,11 @@ int main (int argc, char *argv[])
   cs475::framebuffer_size_callback(window, win_width, win_height);
   //Initialize GL state
   cs475::initGL();
+  drawing_t::InitGL(512, 512);
   bot_t::autoBots.initListAfterContext();
   bot_t::autoBots.setWindowRender(window, renderGL);
   // Loop until the user closes the window
+
   while (glfwWindowShouldClose(window) == 0)
     {
        

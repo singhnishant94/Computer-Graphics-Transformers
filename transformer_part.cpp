@@ -527,6 +527,7 @@ void body_t::addConstraints(void){
 void body_t::drawBody(void){
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
+  //glTranslatef(0,0,-5.0f);
   glScalef(0.1, 0.1, 0.1);
   glTranslatef(center.x, center.y, center.z);
   glRotatef(theta_z, 0, 0, 1);
@@ -633,8 +634,8 @@ void body_t::transformToVehicle(void){
     palm2->setAngularOrientation(0, 0, -90, 1, "zxy");
 
     //tilting hands
-    hand1->setAngularOrientation(0, 10, 0, 1, "yzx");
-    hand2->setAngularOrientation(0, 10, 0, 1, "yzx");
+    hand1->setAngularOrientation(0, 15, 0, 1, "yzx");
+    hand2->setAngularOrientation(0, 15, 0, 1, "yzx");
   }
 }
   

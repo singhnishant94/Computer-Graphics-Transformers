@@ -60,6 +60,10 @@ namespace drawing_t{
   //! for PalmPer 
   void drawPalmPer2(int, double); //! part number, length
 
+  void InitGL(int, int);
+
+  void drawChestText(void);
+
 };
 
 #endif
