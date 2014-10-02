@@ -53,6 +53,13 @@ namespace drawing_t{
   
   //! for Chest Cover
   void drawChestCover(int, double); //! part number, length
+  
+  //! for PalmPer 
+  void drawPalmPer1(int, double); //! part number, length
+  
+  //! for PalmPer 
+  void drawPalmPer2(int, double); //! part number, length
+
 };
 
 #endif

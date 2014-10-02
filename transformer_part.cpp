@@ -17,8 +17,10 @@
 #define CHESTCOVERNUM 11
 #define LEG2NUM 12
 #define HIPMIDNUM 13
+#define PALMPER1NUM 14
+#define PALMPER2NUM 15
 
-#define TOT_PART 13
+#define TOT_PART 15
 
 #define OK  std::cout<<"ok"<<std::endl;
 
@@ -356,6 +358,12 @@ body_t::body_t(void){
   palm2 = new part_t();
   palm2->setPartNum(PALMNUM);
   
+  palmPer1 = new part_t();
+  palmPer1->setPartNum(PALMPER1NUM);
+  
+  palmPer2 = new part_t();
+  palmPer2->setPartNum(PALMPER2NUM);
+  
   chestCover = new part_t();
   chestCover->setPartNum(CHESTCOVERNUM);
   chestCover->setLength(2.0f);
@@ -365,6 +373,8 @@ body_t::body_t(void){
   hip1->anchorRemote = &(hip1->center);
 
   torso->addConnPart(chestCover);
+  palm1->addConnPart(palmPer1);
+  palm2->addConnPart(palmPer2);
   
   makeBody();
   addConstraints();
@@ -381,6 +391,7 @@ body_t::~body_t(void){
   delete arm1, arm2, hand1, hand2;
   delete palm1, palm2;
   delete chestCover;
+  delete palmPer1, palmPer2;
 }
 
 //! set the window and renderBody function pointers
@@ -405,6 +416,8 @@ void body_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*))
   hand2->setWindowRender(window, renderGL);
   palm1->setWindowRender(window, renderGL);
   palm2->setWindowRender(window, renderGL);
+  palmPer1->setWindowRender(window, renderGL);
+  palmPer2->setWindowRender(window, renderGL);
   chestCover->setWindowRender(window, renderGL);
 }
 
@@ -429,6 +442,8 @@ void body_t::makeBody(void){
   palm1->connect(&(palm1->end_A), hand1, &(hand1->end_B), 0, 0, 0);
   palm2->connect(&(palm2->end_A), hand2, &(hand2->end_B), 0, 0, 0);
   chestCover->connect(&(chestCover->end_A), hip1, &(hip1->center), 0, 0, 90);
+  palmPer1->connect(&(palmPer1->end_A), hand1, &(hand1->end_B), 0, 0, -90);
+  palmPer2->connect(&(palmPer2->end_A), hand2, &(hand2->end_B), 0, 0, 90);
 }
 
 //! fill the parts of the body with respective drawings
@@ -447,6 +462,8 @@ void body_t::initBodyStructure(void){
   drawing_t::drawFoot(FOOTNUM, foot1->getLength());
   drawing_t::drawPalm(PALMNUM, palm1->getLength());
   drawing_t::drawChestCover(CHESTCOVERNUM, chestCover->getLength());
+  drawing_t::drawPalmPer1(PALMPER1NUM, palmPer1->getLength());
+  drawing_t::drawPalmPer2(PALMPER2NUM, palmPer1->getLength());
 }
 
 
@@ -496,6 +513,13 @@ void body_t::addConstraints(void){
   
   chestCover->setMinAngularConstraints(-360, -360, -360);
   chestCover->setMaxAngularConstraints(360, 360, 360); 
+  
+  palmPer1->setMinAngularConstraints(-360, -360, -360);
+  palmPer1->setMaxAngularConstraints(360, 360, 360);
+
+  palmPer2->setMinAngularConstraints(-360, -360, -360);
+  palmPer2->setMaxAngularConstraints(360, 360, 360); 
+  
 }
 
 

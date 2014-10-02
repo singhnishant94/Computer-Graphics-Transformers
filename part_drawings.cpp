@@ -528,5 +528,20 @@ namespace drawing_t{
      glEndList();
   }
 
+  //! for PalmPer
+  void drawPalmPer1(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+     drawLine();
+     glEndList();
+  }
+
+    //! for PalmPer
+  void drawPalmPer2(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    drawLine();
+    glEndList();
+  }
+
+
 };
 
