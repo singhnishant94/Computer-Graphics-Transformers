@@ -38,7 +38,7 @@ Z-axis is towards the outward normal from the front portion of the hip<br><br>
 <br>
 ####Transformation####
 **UP** arrow key will transform the bot to vehicle and it will bring car back to bot.<br>
-Note that other keys are disabled during the transformation<br>
+Note that other keys are disabled during the transformation<br><br>
 For more details visit:<br> 
 www.cse.iitb.ac.in/~adityaakash/CS475_assignment2_part1.html
 
