@@ -2,6 +2,12 @@
 <html>
 <head>
 <title>Graphics Assignment2</title>
+<style>
+  #content, img
+  {
+    box-shadow:5px 2px 2px #888888;
+  }
+  </style>
 </head>
 
 <body>
@@ -25,12 +31,14 @@ CS 475 Assignment 2, Part 1</h1>
   <h2>Team</h2>
   <p> Aditya Kumar Akash  120050046</p>
   <p> Nishant Kumar Singh  120050043</p>
-
+<h2>Heirarchical Model Tree</h2>
 
   <center>
   <canvas id="htree" width="600" height="650" style="border:1px solid #000000"></canvas>
   </center>
-</div>
+
+
+
 
 <script>
 var c = document.getElementById("htree");
@@ -97,10 +105,101 @@ nx += 60;
 makeBlock("PALMPER2", nx, ry+7*h, 120, 30); drawLine(nx-30, ry+5*h, nx, ry+7*h);
 
 </script> 
+<h2>Model Tree</h2>
+<p>
+  As we can see, the hip is the root of the tree. It means any kind of transformation applied to the hip will hold for all the parts that are below it in the heirarchy. Same holds for any node. So the validity of the tree can be intuitively verified. Torso is the parent of the shoulder, neck, arms, hands and palms. 
+</p>
+  Hip has been made in three parts namely hip1, hip2 and hipmid. Hip mid joins hip1 and hip2. So, hipmid has been made the parent of hip2 which is the lower hip which in turn is the parent of thighs, legs and foot. The entire tree structure can be seen in the above diagram.
+</p>
 
+<h2>Files</h2>
+<h3>transformer_part.cpp</h3>
+This file contains the definitions for all the structures that have been used to make the parts of the robot. 
+The declarations are present in header file named transformer_part.hpp.
+<h4>Structures used:</h4>
+<b><em>vertex_t</em></b><br>
+A three dimensional vector with functions to set it, update it and scale it.<br><br>
+<b><em>part_t</em></b><br>
+<p>
+  Structure denoting the parts of the robot. It has various members to denote multiple attributes such as children of the part in the heirarchical tree, the end points, anchors, the orientation of it relative to parent and constraints which restrict its movement to appropriately model a robot.
+</p>
+<p>
+  It also has a variety of member functions to set the length, get the length, add a child, connect it to its parent, drawing the part, changing the orientation angles, setting various angular orientations, checking constraints etc.
+</p><br>
+<b><em>body_t</em></b>
+<p>
+  This structure defines the body of the transformer and all the parts that are to be included. Members include variables denoting center of the body, and orientation of the body. The struct has functions to make the body, draw the shapes, translate it, rotate it, change its orientation, add constraints and transform it.
+</p>
+<br>
+<h3>part_drawings.cpp</h3>
+This file decides the basic design of all the parts and its shapes. Texture mapping has been done in this file itself. Declarations are present in header file named part_drawings.hpp.<br>
+This file contains a namespace drawing_part which includes various functions for drawing the parts of the body.
+Different functions have been made for drawing different parts.
+<br>
+<br>
+<h3>callbacks.cpp</h3>
+This file has two structures and one namespace.
+<h4>Structures</h4>
+<b><em>group_t</em></b><br>
+<p>
+  This struct denotes a group of tranformer bots. This is to help simulate the movie containing many transformer bots.
+</p>
+<b><em>event</em></b><br>
+<p>
+  This struct denotes the event of transformation of a part.
+</p>
+<h4>Namespace</h4>
+<b><em>bot_t</em></b><br>
+<p>
+  This namespace has functions for key-board callbacks and also for executing the list of events related to transformation.
+</p>
+<br>
+<h3>transformer.cpp</h3>
+<p>
+This is the file which contains the main function. It is the one responsible for rendering everything on the screen.
+</p>
+<br>
+<h2>Controls</h2>
+<h4>Selection</h4>
 
-<hr>
-<address></address>
-<!-- hhmts start -->Last modified: Fri Oct  3 02:44:46 IST 2014 <!-- hhmts end -->
+Tab toggles the selection between multiple bots.<br><br>
+
+After selecting a particular bot:<br>
+Button -> part mapping:<br>
+Spacebar -> body of the transformer (so that it can move as a whole)<br>
+H -> torso<br>
+G -> right thigh<br>
+J -> left thigh<br>
+B -> right leg<br>
+N -> left leg<br>
+V -> right foot<br>
+M -> left foot<br>
+Y -> neck<br>
+T -> right arm<br>
+U -> left arm<br>
+R -> right hand<br>
+E -> right palm<br>
+O -> left palm<br>
+<br>
+<h4>Rotation</h4>
+
+After selecting a the body or a particular part:<br>
+Depending on the degree of freedom of the part:<br>
+<br>
+Assuming that the body's axes are always such that:<br>
+Y-axis is always aligned along the torso towards the neck.<br>
+X-axis is along the hip, from left to right.<br>
+Z-axis is towards the outward normal from the front portion of the hip<br>
+<br>
+Q -> rotates it about Z-axis<br>
+W -> rotates it about X-axis<br>
+A -> rotates it about Y-axis<br>
+<br>
+<h4>Transformation</h4>
+<br>
+UP arrow key will transform the bot to vehicle and it will bring car back to bot.<br>
+Note that other keys are disabled during the transformation<br>
+
+</div>
 </body> </html>
 
