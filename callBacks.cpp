@@ -74,8 +74,9 @@ void group_t::performAction(int key, int action, int mods){
   body_t* currBody = currentBody();
   double speedTranslate = 0.5f, speedRotate = 1.0f, dir = 1;
   vertex_t theta; theta.setVertex(0, 0, 0);
+  if (mods == GLFW_MOD_CONTROL) dir = -1;
   if(!currBody->state){
-    if (mods == GLFW_MOD_CONTROL) dir = -1;
+    
     if (keyValidEvent(action)){
       if (!selectJoint(key)){
 	if (jName == ROOT){
