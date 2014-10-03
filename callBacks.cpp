@@ -168,6 +168,8 @@ namespace bot_t{
       }
       renderGL(window);
       glfwSwapBuffers(window);
+      glfwPollEvents();
+
       if(!indicator) itr = eventList.erase(itr);
     }
   }
