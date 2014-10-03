@@ -1,7 +1,6 @@
 #include "gl_framework.hpp"
 #include "transformer_part.hpp"
 #include "part_drawings.hpp"
-#include "matrix.hpp"
 
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
