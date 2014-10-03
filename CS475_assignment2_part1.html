@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Graphics Assignment2</title>
+</head>
+
+<body>
+<center>
+<h1>Transformers - Modelling<br>
+CS 475 Assignment 2, Part 1</h1>
+</center>
+<br>
+
+<div id="content" style="margin-left:13%;margin-right:13%;border:1px solid black;padding:3%;margin-top:2%;margin-bottom:2%">
+  <h2>Introduction</h2>
+  <p>
+  Transformers are robots that can transform into various kinds of vehicles,
+  like cars, planes and helicopters.<br>
+  The overall aim of this entire assignment is to create a short Film with
+  a tansformer of your own design. In this part of the assignment we
+  model the transformer. The report contains brief description of various concepts used in creation
+  of the model.
+  </p>
+
+  <h2>Team</h2>
+  <p> Aditya Kumar Akash  120050046</p>
+  <p> Nishant Kumar Singh  120050043</p>
+
+
+  <center>
+  <canvas id="htree" width="600" height="650" style="border:1px solid #000000"></canvas>
+  </center>
+</div>
+
+<script>
+var c = document.getElementById("htree");
+var ctx = c.getContext("2d");
+
+function writeText(name, x, y){
+ctx.fillStyle = "#000000";
+ctx.font = "20px Arial";
+ctx.fillText(name, x, y);
+}
+
+function makeBlock(name, x, y, w, h){
+ctx.fillStyle = "#009FFF";
+ctx.fillRect(x - w/2.0, y - h/2, w, h);
+writeText(name, x - w/2.0 + 5, y + h/2.0 - 10);
+}
+
+function drawLine(x1, y1, x2, y2){
+ctx.moveTo(x1, y1 + 15);
+ctx.lineTo(x2, y2 - 15);
+ctx.stroke();
+}
+
+var rx = 450, ry = 50;
+
+var h1 = 80;
+makeBlock("HIP1", rx - 150, ry, 50, 30);
+ctx.beginPath();
+ctx.arc(rx-150, ry, 30, 0, 2*Math.PI);
+ctx.stroke();
+
+makeBlock("HIPMID", rx, ry + h1, 80, 30); drawLine(rx - 150, ry, rx, ry + h1);
+makeBlock("HIP2", rx, ry + 2*h1, 60, 30); drawLine(rx, ry + h1, rx, ry + 2*h1);
+var k = -1;
+makeBlock("THIGH1", rx + k * 70, ry + 3*h1, 80, 30); drawLine(rx, ry + 2*h1, rx + k * 70, ry + 3*h1);
+makeBlock("LEG1", rx + k * 70, ry + 4*h1, 60, 30); drawLine(rx + k * 70, ry + 3*h1, rx + k * 70, ry + 4*h1);
+makeBlock("FOOT1", rx + k * 70, ry + 5*h1, 80, 30); drawLine(rx + k * 70, ry + 4*h1, rx + k * 70, ry + 5*h1);
+k = 1;
+makeBlock("THIGH2", rx + k * 70, ry + 3*h1, 80, 30); drawLine(rx, ry + 2*h1, rx + k * 70, ry + 3*h1);
+makeBlock("LEG2", rx + k * 70, ry + 4*h1, 60, 30); drawLine(rx + k * 70, ry + 3*h1, rx + k * 70, ry + 4*h1);
+makeBlock("FOOT2", rx + k * 70, ry + 5*h1, 80, 30); drawLine(rx + k * 70, ry + 4*h1, rx + k * 70, ry + 5*h1);
+
+var h = 80;
+var nx = rx - 300;
+makeBlock("CHESTCOVER", rx - 200, ry + h, 150, 30); drawLine(rx - 150, ry, rx - 200, ry + h);
+nx = rx - 350;
+makeBlock("TORSO", nx, ry + h, 80, 30); drawLine(rx - 150, ry, nx, ry + h);
+nx += 60;
+makeBlock("SHOULDER", nx, ry + 2*h, 120, 30); drawLine(nx-60, ry+h, nx, ry+2*h);
+makeBlock("NECK", nx, ry+3*h, 60, 30); drawLine(nx, ry+2*h, nx, ry+3*h);
+nx -= 90;
+makeBlock("ARM1", nx, ry+4*h, 60, 30); drawLine(nx+90, ry+2*h, nx, ry+4*h);
+makeBlock("HAND1", nx, ry+5*h, 80, 30); drawLine(nx, ry+4*h, nx, ry+5*h);
+nx -= 30;
+makeBlock("PALM1", nx, ry+6*h, 70, 30); drawLine(nx+30, ry+5*h, nx, ry+6*h);
+nx += 60;
+makeBlock("PALMPER1", nx, ry+7*h, 120, 30); drawLine(nx-30, ry+5*h, nx, ry+7*h);
+nx += 150;
+makeBlock("ARM2", nx, ry+4*h, 60, 30); drawLine(nx-90, ry+2*h, nx, ry+4*h);
+makeBlock("HAND2", nx, ry+5*h, 80, 30); drawLine(nx, ry+4*h, nx, ry+5*h);
+nx -= 30;
+makeBlock("PALM2", nx, ry+6*h, 70, 30); drawLine(nx+30, ry+5*h, nx, ry+6*h);
+nx += 60;
+makeBlock("PALMPER2", nx, ry+7*h, 120, 30); drawLine(nx-30, ry+5*h, nx, ry+7*h);
+
+</script> 
+
+
+<hr>
+<address></address>
+<!-- hhmts start -->Last modified: Fri Oct  3 02:44:46 IST 2014 <!-- hhmts end -->
+</body> </html>
+
