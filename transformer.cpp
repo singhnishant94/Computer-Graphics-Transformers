@@ -5,7 +5,12 @@
 
 #include "callBacks.hpp"
 #include "part_drawings.hpp"
+
 group_t bot_t::autoBots;
+std::list<std::list<event> > bot_t::eventList;          //! list of events to execute
+GLFWwindow* bot_t::window;
+void (*bot_t::renderGL)(GLFWwindow*);
+  
 
 //GLFW display callback
 void renderGL(GLFWwindow* window)
@@ -64,6 +69,9 @@ int main (int argc, char *argv[])
   drawing_t::InitGL(512, 512);
   bot_t::autoBots.initListAfterContext();
   bot_t::autoBots.setWindowRender(window, renderGL);
+  bot_t::window = window;
+  bot_t::renderGL = renderGL;
+  
   // Loop until the user closes the window
 
   while (glfwWindowShouldClose(window) == 0)

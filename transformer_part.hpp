@@ -111,6 +111,20 @@ struct part_t{
   
   //! shift the rotation point / remote anchor by a given offset
   void shiftRemoteAnchor(double, double, double);
+
+  //! the functions are below are in trial
+  //! set angular orientation
+  int setAngularOrientationT(double, double, double, double, std::string);
+  
+  //! set Orientation in x 
+  int setAngularOrientationXT(double, double);
+  
+  //! set Orientation in y 
+  int setAngularOrientationYT(double, double);
+    
+  //! set Orientation in z
+  int setAngularOrientationZT(double, double);
+  
 };
 
 enum joint_t{

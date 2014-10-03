@@ -284,6 +284,81 @@ int part_t::checkConstraint(double theta, char axis){
   return 0;
 }
 
+//! the below 4 functions are in trial
+//! set orientation to a given value with a given speed
+int part_t::setAngularOrientationT(double t_x, double t_y, double t_z, double speed, std::string order){
+  int indicator = 0;
+  for(int i = 0; i < 3; i++){
+    if(order[i] == 'x') indicator = setAngularOrientationXT(t_x, speed);
+    else if(order[i] == 'y') indicator = setAngularOrientationYT(t_y, speed);
+    else if(order[i] == 'z') indicator = setAngularOrientationZT(t_z, speed);
+    if(indicator) return 1;
+  }
+  return 0;
+}
+ 
+//! set Orientation in x 
+int part_t::setAngularOrientationXT(double t_x, double speed){
+  // changing the theta x values
+  if (theta_x - t_x > speed){
+    theta_x -= speed;
+    changeConnPartTheta(-speed, 'x');
+    return 1;
+  }
+  else if (t_x - theta_x > speed){
+    theta_x += speed;
+    changeConnPartTheta(speed, 'x');
+    return 1;
+  }
+  else if(t_x != theta_x){
+    theta_x = t_x;
+    changeConnPartTheta(t_x - theta_x, 'x');
+    return 1;
+  }
+  else return 0;
+}
+
+//! set Orientation in y 
+int part_t:: setAngularOrientationYT(double t_y, double speed){
+  // changing the theta y values
+  if (theta_y - t_y > speed){
+    theta_y -= speed;
+    changeConnPartTheta(-speed, 'y');
+    return 1;
+  }
+  else if (t_y - theta_y > speed){
+    theta_y += speed;
+    changeConnPartTheta(speed, 'y');
+    return 1;
+  }
+  else if (t_y != theta_y){
+    theta_y = t_y;
+    changeConnPartTheta(t_y - theta_y, 'y');
+    return 1;
+  }
+  else return 0;
+}
+
+//! set Orientation in z
+int part_t::setAngularOrientationZT(double t_z, double speed){
+ // changing the theta z value
+  if (theta_z - t_z > speed){
+    theta_z -= speed;
+    changeConnPartTheta(-speed, 'z');
+    return 1;
+  }
+  else if (t_z - theta_z > speed){
+    changeConnPartTheta(speed, 'z');
+    theta_z += speed;
+    return 1;
+  }
+  else if (t_z != theta_z){
+    theta_z = t_z;
+    changeConnPartTheta(t_z - theta_z, 'z');
+    return 1;
+  }
+  else return 0;
+}
 
 
 //! constructor for body
