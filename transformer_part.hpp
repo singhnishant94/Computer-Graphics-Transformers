@@ -193,11 +193,8 @@ struct body_t{
   //! add the constraints to the various parts
   void addConstraints(void);
 
-  //! changes the bot to vehicle
-  void transformToVehicle(void);
-  
-  //! changes the vehicle to bot
-  void transformToBot(void);
+  //! changes the vehicle / bot
+  void transformBot(void);
 };
 
 

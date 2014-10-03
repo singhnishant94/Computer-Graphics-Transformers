@@ -16,23 +16,23 @@ namespace drawing_t{
   ///////////////////////////////////////////
 
 
-/* floats for x rotation, y rotation, z rotation */
-float xrot, yrot, zrot;
+  /* floats for x rotation, y rotation, z rotation */
+  float xrot, yrot, zrot;
 
-/* storage for one texture  */
-GLuint texture[5];
+  /* storage for one texture  */
+  GLuint texture[5];
 
-/* Image type - contains height, width, and data */
-struct Image {
+  /* Image type - contains height, width, and data */
+  struct Image {
     unsigned long sizeX;
     unsigned long sizeY;
     char *data;
-};
-typedef struct Image Image;
+  };
+  typedef struct Image Image;
 
-// quick and dirty bitmap loader...for 24 bit bitmaps with 1 plane only.  
-// See http://www.dcs.ed.ac.uk/~mxr/gfx/2d/BMP.txt for more info.
-int ImageLoad(char *filename, Image *image) {
+  // quick and dirty bitmap loader...for 24 bit bitmaps with 1 plane only.  
+  // See http://www.dcs.ed.ac.uk/~mxr/gfx/2d/BMP.txt for more info.
+  int ImageLoad(const char *filename, Image *image) {
     FILE *file;
     unsigned long size;                 // size of the image in bytes.
     unsigned long i;                    // standard counter.
@@ -41,26 +41,25 @@ int ImageLoad(char *filename, Image *image) {
     char temp;                          // temporary color storage for bgr-rgb conversion.
 
     // make sure the file is there.
-    if ((file = fopen(filename, "rb"))==NULL)
-    {
-  printf("File Not Found : %s\n",filename);
-  return 0;
-    }
+    if ((file = fopen(filename, "rb"))==NULL){
+	printf("File Not Found : %s\n",filename);
+	return 0;
+      }
     
     // seek through the bmp header, up to the width/height:
     fseek(file, 18, SEEK_CUR);
 
     // read the width
     if ((i = fread(&image->sizeX, 4, 1, file)) != 1) {
-  printf("Error reading width from %s.\n", filename);
-  return 0;
+      printf("Error reading width from %s.\n", filename);
+      return 0;
     }
     printf("Width of %s: %lu\n", filename, image->sizeX);
     
     // read the height 
     if ((i = fread(&image->sizeY, 4, 1, file)) != 1) {
-  printf("Error reading height from %s.\n", filename);
-  return 0;
+      printf("Error reading height from %s.\n", filename);
+      return 0;
     }
     printf("Height of %s: %lu\n", filename, image->sizeY);
     
@@ -69,22 +68,22 @@ int ImageLoad(char *filename, Image *image) {
 
     // read the planes
     if ((fread(&planes, 2, 1, file)) != 1) {
-  printf("Error reading planes from %s.\n", filename);
-  return 0;
+      printf("Error reading planes from %s.\n", filename);
+      return 0;
     }
     if (planes != 1) {
-  printf("Planes from %s is not 1: %u\n", filename, planes);
-  return 0;
+      printf("Planes from %s is not 1: %u\n", filename, planes);
+      return 0;
     }
 
     // read the bpp
     if ((i = fread(&bpp, 2, 1, file)) != 1) {
-  printf("Error reading bpp from %s.\n", filename);
-  return 0;
+      printf("Error reading bpp from %s.\n", filename);
+      return 0;
     }
     if (bpp != 24) {
-  printf("Bpp from %s is not 24: %u\n", filename, bpp);
-  return 0;
+      printf("Bpp from %s is not 24: %u\n", filename, bpp);
+      return 0;
     }
   
     // seek past the rest of the bitmap header.
@@ -93,27 +92,27 @@ int ImageLoad(char *filename, Image *image) {
     // read the data. 
     image->data = (char *) malloc(size);
     if (image->data == NULL) {
-  printf("Error allocating memory for color-corrected image data");
-  return 0; 
+      printf("Error allocating memory for color-corrected image data");
+      return 0; 
     }
 
     if ((i = fread(image->data, size, 1, file)) != 1) {
-  printf("Error reading image data from %s.\n", filename);
-  return 0;
+      printf("Error reading image data from %s.\n", filename);
+      return 0;
     }
 
     for (i=0;i<size;i+=3) { // reverse all of the colors. (bgr -> rgb)
-  temp = image->data[i];
-  image->data[i] = image->data[i+2];
-  image->data[i+2] = temp;
+      temp = image->data[i];
+      image->data[i] = image->data[i+2];
+      image->data[i+2] = temp;
     }
     
     // we're done.
     return 1;
-}
+  }
 
-// Load Bitmaps And Convert To Textures
-void LoadGLTextures() { 
+  // Load Bitmaps And Convert To Textures
+  void LoadGLTextures() { 
     // Load Texture
     Image *image1;
     Image *image2;
@@ -123,45 +122,45 @@ void LoadGLTextures() {
     // allocate space for texture
     image1 = (Image *) malloc(sizeof(Image));
     if (image1 == NULL) {
-  printf("Error allocating space for image");
-  exit(0);
+      printf("Error allocating space for image");
+      exit(0);
     }
 
     image2 = (Image *) malloc(sizeof(Image));
     if (image2 == NULL) {
-  printf("Error allocating space for image");
-  exit(0);
+      printf("Error allocating space for image");
+      exit(0);
     }
 
     image3 = (Image *) malloc(sizeof(Image));
     if (image3 == NULL) {
-  printf("Error allocating space for image");
-  exit(0);
+      printf("Error allocating space for image");
+      exit(0);
     }
 
     image4 = (Image *) malloc(sizeof(Image));
     if (image3 == NULL) {
-  printf("Error allocating space for image");
-  exit(0);
+      printf("Error allocating space for image");
+      exit(0);
     }
 
     // Create Texture 
     glGenTextures(4, texture);
 
     if (!(ImageLoad("Data/lesson6/chest.bmp", image1))){
-  exit(1);
+      exit(1);
     }     
 
     if (!(ImageLoad("Data/lesson6/metal.bmp", image2))){
-  exit(1);
+      exit(1);
     }   
        
     if (!(ImageLoad("Data/lesson6/tyre.bmp", image3))){
-  exit(1);
+      exit(1);
     }  
 
     if (!(ImageLoad("Data/lesson6/face.bmp", image4))){
-  exit(1);
+      exit(1);
     }  
     
     glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
@@ -220,7 +219,7 @@ void LoadGLTextures() {
     // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
     // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
     glTexImage2D(GL_TEXTURE_2D, 0, 3, image4->sizeX, image4->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image4->data);
-}
+  }
 
 
 
@@ -242,50 +241,50 @@ void LoadGLTextures() {
   //! to draw a cube with unity vertices
   void drawCube(void){
     
-          // Reset The Current Modelview Matrix
-          //glLoadIdentity();
-          //glScalef(1/4.0, 1/4.0, 1/4.0);
-          //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
+    // Reset The Current Modelview Matrix
+    //glLoadIdentity();
+    //glScalef(1/4.0, 1/4.0, 1/4.0);
+    //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
  
-          //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
-          //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
-          //glRotatef(rotqube,1.0f,1.0f,1.0f);
-          glBindTexture(GL_TEXTURE_2D, texture[1]);   // choose the texture to use.
-          glBegin(GL_QUADS);            // Draw The Cube Using quads
-            //glColor3f(_r,_g,_b);
-            glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Top)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Bottom Right Of The Quad (Top)
-            //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
-            glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Top Right Of The Quad (Bottom)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Bottom)
-            //glColor3f(1.0f,0.0f,0.0f);  // Color Red
-            glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Front)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Front)
-            //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
-            glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Top Right Of The Quad (Back)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Bottom Right Of The Quad (Back)
-            //glColor3f(1.0f,1.0f,1.0f);  // Color white
-            glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
-            //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
-            glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Right)
-            glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Right)
-            glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Right)
-            glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Right)
-            //glColor3f(1.0f,0.0f,0.0f);
-          glEnd();                      // End Drawing The Cube
+    //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
+    //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
+    //glRotatef(rotqube,1.0f,1.0f,1.0f);
+    glBindTexture(GL_TEXTURE_2D, texture[1]);   // choose the texture to use.
+    glBegin(GL_QUADS);            // Draw The Cube Using quads
+    //glColor3f(_r,_g,_b);
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Top)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Bottom Right Of The Quad (Top)
+    //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Top Right Of The Quad (Bottom)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Bottom)
+    //glColor3f(1.0f,0.0f,0.0f);  // Color Red
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Front)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Front)
+    //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Top Right Of The Quad (Back)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Bottom Right Of The Quad (Back)
+    //glColor3f(1.0f,1.0f,1.0f);  // Color white
+    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
+    //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Right)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Right)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Right)
+    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Right)
+    //glColor3f(1.0f,0.0f,0.0f);
+    glEnd();                      // End Drawing The Cube
  
-          //rotqube +=0.9f;                       // Increase Angle
+    //rotqube +=0.9f;                       // Increase Angle
   }
   
 
@@ -355,116 +354,116 @@ void LoadGLTextures() {
 
   void drawChest(void){
     
-          // Reset The Current Modelview Matrix
-          //glLoadIdentity();
-          //glScalef(1/4.0, 1/4.0, 1/4.0);
-          //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
+    // Reset The Current Modelview Matrix
+    //glLoadIdentity();
+    //glScalef(1/4.0, 1/4.0, 1/4.0);
+    //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
  
-          //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
-          //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
-          //glRotatef(rotqube,1.0f,1.0f,1.0f);
-          glBindTexture(GL_TEXTURE_2D, texture[3]);   // choose the texture to use.
-          glBegin(GL_QUADS);            // Draw The Cube Using quads
-            //glColor3f(_r,_g,_b);
-            double y_val = 1.4f;
-            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
-            glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
-            glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
-            //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
-            glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
-            glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
-            //glColor3f(1.0f,0.0f,0.0f);  // Color Red
-            glTexCoord2f(1.0f, 0.8f); glVertex3f( 1.0f, y_val, 1.0f);      // Top Right Of The Quad (Front)
-            glTexCoord2f(0.0f, 0.6f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
-            glTexCoord2f(0.0f, 0.4f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
-            glTexCoord2f(1.0f, 0.2f); glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Right Of The Quad (Front)
-            //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
-            glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
-            //glColor3f(1.0f,1.0f,1.0f);  // Color white
-            glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
-            //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
-            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
-            glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
-            glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Right)
-            //glColor3f(1.0f,0.0f,0.0f);
-          glEnd();                      // End Drawing The Cube
+    //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
+    //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
+    //glRotatef(rotqube,1.0f,1.0f,1.0f);
+    glBindTexture(GL_TEXTURE_2D, texture[3]);   // choose the texture to use.
+    glBegin(GL_QUADS);            // Draw The Cube Using quads
+    //glColor3f(_r,_g,_b);
+    double y_val = 1.4f;
+    glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
+    glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
+    glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
+    //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+    glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
+    glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
+    //glColor3f(1.0f,0.0f,0.0f);  // Color Red
+    glTexCoord2f(1.0f, 0.8f); glVertex3f( 1.0f, y_val, 1.0f);      // Top Right Of The Quad (Front)
+    glTexCoord2f(0.0f, 0.6f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
+    glTexCoord2f(0.0f, 0.4f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
+    glTexCoord2f(1.0f, 0.2f); glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Right Of The Quad (Front)
+    //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
+    glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
+    //glColor3f(1.0f,1.0f,1.0f);  // Color white
+    glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
+    glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
+    //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+    glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
+    glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
+    glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Right)
+    //glColor3f(1.0f,0.0f,0.0f);
+    glEnd();                      // End Drawing The Cube
  
-          //rotqube +=0.9f;                       // Increase Angle
+    //rotqube +=0.9f;                       // Increase Angle
 
   }
 
-    void drawTorsoChest(void){
+  void drawTorsoChest(void){
     
-          // Reset The Current Modelview Matrix
-          //glLoadIdentity();
-          //glScalef(1/4.0, 1/4.0, 1/4.0);
-          //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
+    // Reset The Current Modelview Matrix
+    //glLoadIdentity();
+    //glScalef(1/4.0, 1/4.0, 1/4.0);
+    //NEW//////////////////NEW//////////////////NEW//////////////////NEW/////////////
  
-          //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
-          //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
-          //glRotatef(rotqube,1.0f,1.0f,1.0f);
-          glBegin(GL_QUADS);            // Draw The Cube Using quads
-            //glColor3f(_r,_g,_b);
-            double y_val = 1.4f;
-            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
-            glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
-            glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
-            //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
-            glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
-            glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
+    //glTranslatef(0.0f, 0.0f,-7.0f);       // Translate Into The Screen 7.0 Units
+    //glRotatef(rotqube,0.0f,1.0f,0.0f);    // Rotate The cube around the Y axis
+    //glRotatef(rotqube,1.0f,1.0f,1.0f);
+    glBegin(GL_QUADS);            // Draw The Cube Using quads
+    //glColor3f(_r,_g,_b);
+    double y_val = 1.4f;
+    glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
+    glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
+    glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
+    //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+    glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
+    glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
             
-            glColor3f(0.1f,0.1f,0.5f);  // Color Yellow
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
-            glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
-            //glColor3f(1.0f,1.0f,1.0f);  // Color white
-            glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
-            glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
-            glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
-            //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
-            glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
-            glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
-            glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
-            glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Right)
-            //glColor3f(1.0f,0.0f,0.0f);
-          glEnd();                      // End Drawing The Cube
+    glColor3f(0.1f,0.1f,0.5f);  // Color Yellow
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
+    glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
+    //glColor3f(1.0f,1.0f,1.0f);  // Color white
+    glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
+    glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
+    glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
+    glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
+    //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+    glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
+    glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
+    glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
+    glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Right)
+    //glColor3f(1.0f,0.0f,0.0f);
+    glEnd();                      // End Drawing The Cube
  
-          //rotqube +=0.9f;                       // Increase Angle
+    //rotqube +=0.9f;                       // Increase Angle
 
   }
 
   void DrawCircle(float cx, float cy, float r, int num_segments)
   {
-      glPushMatrix();
-      glBegin(GL_TRIANGLE_FAN);
-      for(int ii = 0; ii <= num_segments+1; ii++)
+    glPushMatrix();
+    glBegin(GL_TRIANGLE_FAN);
+    for(int ii = 0; ii <= num_segments+1; ii++)
       {
-          glColor3f(ii%2,ii%2,ii%2);
-          float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+	glColor3f(ii%2,ii%2,ii%2);
+	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
 
-          float x = r * cosf(theta);//calculate the x component
-          float y = r * sinf(theta);//calculate the y component
-          if(ii==0) glVertex2f(cx, cy);
-          else glVertex2f(x + cx, y + cy);//output vertex
+	float x = r * cosf(theta);//calculate the x component
+	float y = r * sinf(theta);//calculate the y component
+	if(ii==0) glVertex2f(cx, cy);
+	else glVertex2f(x + cx, y + cy);//output vertex
 
       }
-      glEnd();
-      glPopMatrix();
+    glEnd();
+    glPopMatrix();
   }
 
   void DrawCylinder(float cx, float cy, float r, int num_segments, float width){
@@ -479,29 +478,29 @@ void LoadGLTextures() {
     DrawCircle(cx, cy, r, num_segments);
     glPopMatrix();
     /*
-    for (int i = 0; i < 100; ++i)
-    {
+      for (int i = 0; i < 100; ++i)
+      {
       glPushMatrix();
       glTranslatef(0.0f,0.0f,0.0f+i/300.0f);
       DrawCircle(cx, cy, r, num_segments);
       glPopMatrix();
-    }*/
+      }*/
     glBindTexture(GL_TEXTURE_2D, texture[2]);   // choose the texture to use.
     glPushMatrix();
     glColor3f(0.4f,0.4f,0.4f);
     glBegin(GL_TRIANGLE_STRIP);
-      for(int ii = 0; ii <= num_segments + 1; ii++)
+    for(int ii = 0; ii <= num_segments + 1; ii++)
       {
-          float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
 
-          float x = r * cosf(theta);//calculate the x component
-          float y = r * sinf(theta);//calculate the y component
+	float x = r * cosf(theta);//calculate the x component
+	float y = r * sinf(theta);//calculate the y component
 
-          glTexCoord2f((ii)%2, (ii)%2); glVertex3f(x + cx, y + cy, 0.0f);//output vertex
-          glTexCoord2f((ii)%2, (1+ii)%2); glVertex3f(x + cx, y + cy, width);
+	glTexCoord2f((ii)%2, (ii)%2); glVertex3f(x + cx, y + cy, 0.0f);//output vertex
+	glTexCoord2f((ii)%2, (1+ii)%2); glVertex3f(x + cx, y + cy, width);
 
       }
-      glEnd();
+    glEnd();
     glPopMatrix();
 
 
@@ -539,15 +538,15 @@ void LoadGLTextures() {
     glPopMatrix();
 
     for (int i = 0; i < 3; ++i)
-    {
-      glPushMatrix();
-      glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
-      glScalef(0.2f,0.4f,0.3f);
-      glColor3f(0.3f,0.3f,0.3f);
-      glRotatef(0,0,1,0);
-      drawChest();
-      glPopMatrix();
-    }
+      {
+	glPushMatrix();
+	glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
+	glScalef(0.2f,0.4f,0.3f);
+	glColor3f(0.3f,0.3f,0.3f);
+	glRotatef(0,0,1,0);
+	drawChest();
+	glPopMatrix();
+      }
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
@@ -586,15 +585,15 @@ void LoadGLTextures() {
     glNewList(p_num, GL_COMPILE);
     glColor3f(0.3f,0.3f,0.6f);
     for (int i = 0; i < 3; ++i)
-    {
-      glPushMatrix();
-      glTranslatef(-0.8f+i/2.2,0.0f,0.0f);
-      glScalef(0.2f,0.2f,0.3f);
-      glColor3f(0.3f,0.3f,0.3f);
-      glRotatef(0,0,1,0);
-      drawChest();
-      glPopMatrix();
-    }
+      {
+	glPushMatrix();
+	glTranslatef(-0.8f+i/2.2,0.0f,0.0f);
+	glScalef(0.2f,0.2f,0.3f);
+	glColor3f(0.3f,0.3f,0.3f);
+	glRotatef(0,0,1,0);
+	drawChest();
+	glPopMatrix();
+      }
 
     glPushMatrix();
     glColor3f(0.3f,0.3f,0.6f);
@@ -678,14 +677,14 @@ void LoadGLTextures() {
     glPopMatrix();
 
     for (int i = 0; i < 5; ++i)
-    {
-      glPushMatrix();
-      glRotatef(-5+i*3,0,0,1);
-      glTranslatef(0.0f,-0.4f+i/5.0,0.0f);
-      glScalef(0.4f,0.05f,0.05f);
-      drawCube();
-      glPopMatrix();
-    }
+      {
+	glPushMatrix();
+	glRotatef(-5+i*3,0,0,1);
+	glTranslatef(0.0f,-0.4f+i/5.0,0.0f);
+	glScalef(0.4f,0.05f,0.05f);
+	drawCube();
+	glPopMatrix();
+      }
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
@@ -811,15 +810,15 @@ void LoadGLTextures() {
     //glTranslatef(-1.0f,0.0f,0.4f);
     glColor3f(0.1f,0.1f,0.1f);
     for (int i = 0; i < 3; ++i)
-    {
-      glPushMatrix();
-      glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
-      glScalef(0.2f,0.4f,0.1f);
-      glColor3f(0.3f,0.3f,0.3f);
-      glRotatef(0,0,1,0);
-      drawChest();
-      glPopMatrix();
-    }
+      {
+	glPushMatrix();
+	glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
+	glScalef(0.2f,0.4f,0.1f);
+	glColor3f(0.3f,0.3f,0.3f);
+	glRotatef(0,0,1,0);
+	drawChest();
+	glPopMatrix();
+      }
     //drawLine();
     
     glPopMatrix();
@@ -848,11 +847,11 @@ void LoadGLTextures() {
   
   //! for HipMid 
   void drawHipMid(int p_num, double len){ //! part number, length
-     glNewList(p_num, GL_COMPILE);
-     glScalef(0.20f,0.5f,0.5f);
-     glColor3f(0.5f,0.5f,0.5f);
-     drawChest();
-     glEndList();
+    glNewList(p_num, GL_COMPILE);
+    glScalef(0.20f,0.5f,0.5f);
+    glColor3f(0.5f,0.5f,0.5f);
+    drawChest();
+    glEndList();
   }
 
   //! for PalmPer
@@ -878,7 +877,7 @@ void LoadGLTextures() {
 
   }
 
-    //! for PalmPer
+  //! for PalmPer
   void drawPalmPer2(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
@@ -899,11 +898,9 @@ void LoadGLTextures() {
     glEndList();
   }
 
-
-  /////////////////////////////////////////////
   /* A general OpenGL initialization function.  Sets all of the initial parameters. */
-void InitGL(int Width, int Height)          // We call this right after our OpenGL window is created.
-{
+  void InitGL(int Width, int Height)          // We call this right after our OpenGL window is created.
+  {
     LoadGLTextures();       // Load The Texture(s) 
     //glEnable(GL_TEXTURE_2D);      // Enable Texture Mapping
     glClearColor(0.0f, 0.0f, 1.0f, 0.0f); // Clear The Background Color To Blue 
@@ -918,7 +915,7 @@ void InitGL(int Width, int Height)          // We call this right after our Open
     //gluPerspective(45.0f,(GLfloat)Width/(GLfloat)Height,0.1f,100.0f); // Calculate The Aspect Ratio Of The Window
     
     //glMatrixMode(GL_MODELVIEW);
-}
+  }
 
 
 };

@@ -533,22 +533,6 @@ void body_t::drawBody(void){
   glRotatef(theta_z, 0, 0, 1);
   glRotatef(theta_y, 0, 1, 0);
   glRotatef(theta_x, 1, 0, 0);
-  /*
-  matrix _m;
-  tuple _t;
-  _t.setValue(theta_x, theta_y, theta_z);
-  double _a[3][3];
-  _m.getLocalAxisRotMatrix(&_t, _a);
-  double rot[16];
-  for(int i = 0; i < 16; i++) rot[i] = 0;
-  for(int i = 0; i < 3; i++){
-    for(int j = 0; j < 3; j++){
-      rot[i * 4 + j] = _a[j][i];
-    }
-  }
-  rot[15] = 1;
-  glMultMatrixd(rot);
-  */
   glPushMatrix();
   hip1->drawPart();
   glPopMatrix();
@@ -602,78 +586,72 @@ void body_t::rotateBody(double dx, double dy, double dz){
 }
 
 //! changes the bot to vehicle
-void body_t::transformToVehicle(void){
+void body_t::transformBot(void){
+  double speed = 1;
   if(!state){
     state = 1;
     
     // bringing the torso to correct position
-    torso->setAngularOrientation(0, 0, 90, 2, "yxz");
+    torso->setAngularOrientation(0, 0, 90, 2 * speed, "yxz");
     
     // putting hands in position
-    arm1->setAngularOrientation(0, 0, -90, 1, "zxy");
-    arm2->setAngularOrientation(0, 0, -90, 1, "zxy");
+    arm1->setAngularOrientation(0, 0, -90, speed, "zxy");
+    arm2->setAngularOrientation(0, 0, -90, speed, "zxy");
   
     // pushing the head into the chest
-    chestCover->setAngularOrientation(30, 0, 90, 1, "xyz");
-    neck->setAngularOrientation(180, 0, 90, 1, "yzx");
-    chestCover->setAngularOrientation(0, 0, 90, 1, "xyz");
+    chestCover->setAngularOrientation(30, 0, 90, speed, "xyz");
+    neck->setAngularOrientation(180, 0, 90, speed, "yzx");
+    chestCover->setAngularOrientation(0, 0, 90, speed, "xyz");
     
     // torso converting to body
-    torso->setAngularOrientation(-90, 0, 270, 1, "yxz");
+    torso->setAngularOrientation(-90, 0, 270, speed, "yxz");
     
     // lifting the thighs
-    thigh1->setAngularOrientation(-90, 0, -90, 1, "zxy");
-    thigh2->setAngularOrientation(-90, 0, -90, 1, "zxy");
+    thigh1->setAngularOrientation(-90, 0, -90, speed, "zxy");
+    thigh2->setAngularOrientation(-90, 0, -90, speed, "zxy");
     
     // turning the foot
-    foot1->setAngularOrientation(0, -90, -90, 1, "yzx");
-    foot2->setAngularOrientation(0, -90, 90, 1, "yzx");
+    foot1->setAngularOrientation(0, -90, -90, speed, "yzx");
+    foot2->setAngularOrientation(0, -90, 90, speed, "yzx");
 
     //rotating the palm
-    palm1->setAngularOrientation(0, 0, 90, 1, "zxy");
-    palm2->setAngularOrientation(0, 0, -90, 1, "zxy");
+    palm1->setAngularOrientation(0, 0, 90, speed, "zxy");
+    palm2->setAngularOrientation(0, 0, -90, speed, "zxy");
 
     //tilting hands
-    hand1->setAngularOrientation(0, 15, 0, 1, "yzx");
-    hand2->setAngularOrientation(0, 15, 0, 1, "yzx");
+    hand1->setAngularOrientation(0, 15, 0, speed, "yzx");
+    hand2->setAngularOrientation(0, 15, 0, speed, "yzx");
   }
-}
-  
-//! changes the vehicle to bot
-void body_t::transformToBot(void){
-  if(state){
+  else{
     state = 0;
-
+    
     //tilting hands
-    hand1->setAngularOrientation(0, 0, 0, 1, "yzx");
-    hand2->setAngularOrientation(0, 0, 0, 1, "yzx");
+    hand1->setAngularOrientation(0, 0, 0, speed, "yzx");
+    hand2->setAngularOrientation(0, 0, 0, speed, "yzx");
 
     //rotating the palm
-    palm1->setAngularOrientation(0, 0, 0, 1, "zxy");
-    palm2->setAngularOrientation(0, 0, 0, 1, "zxy");
+    palm1->setAngularOrientation(0, 0, 0, speed, "zxy");
+    palm2->setAngularOrientation(0, 0, 0, speed, "zxy");
 
     // turning the foot
-    foot1->setAngularOrientation(0, -90, 0, 1, "yzx");
-    foot2->setAngularOrientation(0, -90, 0, 1, "yzx");
+    foot1->setAngularOrientation(0, -90, 0, speed, "yzx");
+    foot2->setAngularOrientation(0, -90, 0, speed, "yzx");
 
     // lifting the thighs
-    thigh1->setAngularOrientation(0, 0, -90, 1, "zxy");
-    thigh2->setAngularOrientation(0, 0, -90, 1, "zxy");
+    thigh1->setAngularOrientation(0, 0, -90, speed, "zxy");
+    thigh2->setAngularOrientation(0, 0, -90, speed, "zxy");
 
     
     // torso converting to body
-    torso->setAngularOrientation(0, 0, 90, 1, "zxy");
+    torso->setAngularOrientation(0, 0, 90, speed, "zxy");
 
     // pushing the head into the chest
-    chestCover->setAngularOrientation(30, 0, 90, 1, "xyz");
-    neck->setAngularOrientation(0, 0, 90, 1, "yzx");
-    chestCover->setAngularOrientation(0, 0, 90, 1, "xyz");
+    chestCover->setAngularOrientation(30, 0, 90, speed, "xyz");
+    neck->setAngularOrientation(0, 0, 90, speed, "yzx");
+    chestCover->setAngularOrientation(0, 0, 90, speed, "xyz");
 
     // putting hands in position
-    arm1->setAngularOrientation(0, 0, -180, 1, "zxy");
-    arm2->setAngularOrientation(0, 0, 0, 1, "zxy");
-
-    // bringing the torso to correct position
-    //torso->setAngularOrientation(0, 0, 90, 2, "yxz");
+    arm1->setAngularOrientation(0, 0, -180, speed, "zxy");
+    arm2->setAngularOrientation(0, 0, 0, speed, "zxy");
   }
 }
