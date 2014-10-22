@@ -601,7 +601,7 @@ void body_t::addConstraints(void){
 void body_t::drawBody(void){
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  //glTranslatef(0,0,-5.0f);
+  glTranslatef(0,0,-3.0f);
   glScalef(0.1, 0.1, 0.1);
   glTranslatef(center.x, center.y, center.z);
   glRotatef(theta_z, 0, 0, 1);

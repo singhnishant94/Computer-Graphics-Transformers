@@ -57,6 +57,9 @@ int main (int argc, char *argv[])
   //Keyboard Callback
   glfwSetKeyCallback(window, bot_t::key_callback);
   //Framebuffer resize callback
+  glEnable(GL_NORMALIZE);
+  glEnable(GL_LIGHTING);
+
   glfwSetFramebufferSizeCallback(window, cs475::framebuffer_size_callback);
 
   // Ensure we can capture the escape key being pressed below

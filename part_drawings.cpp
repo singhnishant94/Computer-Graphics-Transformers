@@ -16,6 +16,25 @@ namespace drawing_t{
   ///////////////////////////////////////////
 
 
+  /* lighting on/off (1 = on, 0 = off) */
+  int light;
+
+    /* white ambient light at half intensity (rgba) */
+  GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
+
+  /* super bright, full intensity diffuse light. */
+  GLfloat LightDiffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+  /* position of light (x, y, z, (position of light)) */
+  GLfloat LightPosition[] = { 0.0f, 0.0f, 2.0f, 1.0f };
+
+  //Another method for lighting
+  GLfloat mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+  GLfloat mat_shininess[] = { 100.0 };
+  GLfloat light_position[] = { 1.0, 1.0, 1.0, 1.0};
+
+  GLfloat white[] = {0.6f,0.6f,1.0f, 1.f};
+
   /* floats for x rotation, y rotation, z rotation */
   float xrot, yrot, zrot;
 
@@ -252,31 +271,37 @@ namespace drawing_t{
     glBindTexture(GL_TEXTURE_2D, texture[1]);   // choose the texture to use.
     glBegin(GL_QUADS);            // Draw The Cube Using quads
     //glColor3f(_r,_g,_b);
+    glNormal3f( 0.0f, 1.0f, 0.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Top)
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Bottom Right Of The Quad (Top)
     //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+    glNormal3f( 0.0f, -1.0f, 0.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Top Right Of The Quad (Bottom)
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Bottom)
     //glColor3f(1.0f,0.0f,0.0f);  // Color Red
+    glNormal3f( 0.0f, 0.0f, 1.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Front)
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Front)
     //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
+    glNormal3f( 0.0f, 0.0f,-1.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Top Right Of The Quad (Back)
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Bottom Right Of The Quad (Back)
     //glColor3f(1.0f,1.0f,1.0f);  // Color white
+    glNormal3f( -1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
     //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+    glNormal3f( 1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Right)
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Right)
     glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Right)
@@ -304,36 +329,42 @@ namespace drawing_t{
     glBegin(GL_QUADS);                    // begin drawing a cube
     double y_val = 1.4f;
     // Front Face (note that the texture's corners have to match the quad's corners)
+    glNormal3f( 0.0f, 0.0f, 1.0f);
     glTexCoord2f(0.0f, 0.15f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -y_val,  1.0f);  // Bottom Right Of The Texture and Quad
     glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  y_val,  1.0f);  // Top Right Of The Texture and Quad
     glTexCoord2f(0.0f, 0.85f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Left Of The Texture and Quad
     
     // Back Face
+    glNormal3f( 0.0f, 0.0f, -1.0f);
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Right Of The Texture and Quad
     glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Right Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  y_val, -1.0f);  // Top Left Of The Texture and Quad
     glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f, -y_val, -1.0f);  // Bottom Left Of The Texture and Quad
   
     // Top Face
+    glNormal3f( 0.0f, 1.0f, 0.0f);
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);  // Top Left Of The Texture and Quad
     glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Bottom Left Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  y_val,  1.0f);  // Bottom Right Of The Texture and Quad
     glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,  y_val, -1.0f);  // Top Right Of The Texture and Quad
     
-    // Bottom Face       
+    // Bottom Face  
+    glNormal3f( 0.0f, -1.0f, 0.0f);     
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Top Right Of The Texture and Quad
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, -y_val, -1.0f);  // Top Left Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, -y_val,  1.0f);  // Bottom Left Of The Texture and Quad
     glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
     
     // Right face
+    glNormal3f( 1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, -y_val, -1.0f);  // Bottom Right Of The Texture and Quad
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,  y_val, -1.0f);  // Top Right Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f,  y_val,  1.0f);  // Top Left Of The Texture and Quad
     glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f, -y_val,  1.0f);  // Bottom Left Of The Texture and Quad
     
     // Left Face
+    glNormal3f( -1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f, -1.0f, -1.0f);  // Bottom Left Of The Texture and Quad
     glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, -1.0f,  1.0f);  // Bottom Right Of The Texture and Quad
     glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,  1.0f,  1.0f);  // Top Right Of The Texture and Quad
@@ -366,31 +397,37 @@ namespace drawing_t{
     glBegin(GL_QUADS);            // Draw The Cube Using quads
     //glColor3f(_r,_g,_b);
     double y_val = 1.4f;
+    glNormal3f( 0.0f, 1.0f, 0.0f);
     glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Top)
     glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Top)
     glVertex3f(-1.0f, 1.0f, 1.0f);      // Bottom Left Of The Quad (Top)
     glVertex3f( 1.0f, y_val, 1.0f);      // Bottom Right Of The Quad (Top)
     //glColor3f(1.0f,0.5f,0.0f);  // Color Orange
+    glNormal3f( 0.0f, -1.0f, 0.0f);
     glVertex3f( 1.0f,-y_val, 1.0f);      // Top Right Of The Quad (Bottom)
     glVertex3f(-1.0f,-1.0f, 1.0f);      // Top Left Of The Quad (Bottom)
     glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Bottom)
     glVertex3f( 1.0f,-y_val,-1.0f);      // Bottom Right Of The Quad (Bottom)
     //glColor3f(1.0f,0.0f,0.0f);  // Color Red
+    glNormal3f( 0.0f, 0.0f, 1.0f);
     glTexCoord2f(1.0f, 0.8f); glVertex3f( 1.0f, y_val, 1.0f);      // Top Right Of The Quad (Front)
     glTexCoord2f(0.0f, 0.6f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
     glTexCoord2f(0.0f, 0.4f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
     glTexCoord2f(1.0f, 0.2f); glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Right Of The Quad (Front)
     //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
+    glNormal3f( 0.0f, 0.0f, -1.0f);
     glVertex3f( 1.0f,-y_val,-1.0f);      // Top Right Of The Quad (Back)
     glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
     glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
     glVertex3f( 1.0f, y_val,-1.0f);      // Bottom Right Of The Quad (Back)
     //glColor3f(1.0f,1.0f,1.0f);  // Color white
+    glNormal3f( -1.0f, 0.0f, 0.0f);
     glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
     glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
     glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
     glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
     //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
+    glNormal3f( 1.0f, 0.0f, 0.0f);
     glVertex3f( 1.0f, y_val,-1.0f);      // Top Right Of The Quad (Right)
     glVertex3f( 1.0f, y_val, 1.0f);      // Top Left Of The Quad (Right)
     glVertex3f( 1.0f,-y_val, 1.0f);      // Bottom Left Of The Quad (Right)
@@ -453,13 +490,16 @@ namespace drawing_t{
     glBegin(GL_TRIANGLE_FAN);
     for(int ii = 0; ii <= num_segments+1; ii++)
       {
-	glColor3f(ii%2,ii%2,ii%2);
-	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
 
-	float x = r * cosf(theta);//calculate the x component
-	float y = r * sinf(theta);//calculate the y component
-	if(ii==0) glVertex2f(cx, cy);
-	else glVertex2f(x + cx, y + cy);//output vertex
+      GLfloat col1[] = {ii%2,ii%2,ii%2, 1.f};
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    	//glColor3f(ii%2,ii%2,ii%2);
+    	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+
+    	float x = r * cosf(theta);//calculate the x component
+    	float y = r * sinf(theta);//calculate the y component
+    	if(ii==0) glVertex2f(cx, cy);
+    	else glVertex2f(x + cx, y + cy);//output vertex
 
       }
     glEnd();
@@ -470,11 +510,13 @@ namespace drawing_t{
 
     glPushMatrix();
     glTranslatef(0.0f,0.0f,width);
+    glNormal3f( 0.0f, 0.0f, 1.0f);
     DrawCircle(cx, cy, r, num_segments);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(0.0f,0.0f,0.0f);
+    glNormal3f( 0.0f, 0.0f, -1.0f);
     DrawCircle(cx, cy, r, num_segments);
     glPopMatrix();
     /*
@@ -487,17 +529,19 @@ namespace drawing_t{
       }*/
     glBindTexture(GL_TEXTURE_2D, texture[2]);   // choose the texture to use.
     glPushMatrix();
-    glColor3f(0.4f,0.4f,0.4f);
+    GLfloat col1[] = {0.4f,0.4f,0.4f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.4f);
     glBegin(GL_TRIANGLE_STRIP);
     for(int ii = 0; ii <= num_segments + 1; ii++)
       {
-	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
+    	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
 
-	float x = r * cosf(theta);//calculate the x component
-	float y = r * sinf(theta);//calculate the y component
-
-	glTexCoord2f((ii)%2, (ii)%2); glVertex3f(x + cx, y + cy, 0.0f);//output vertex
-	glTexCoord2f((ii)%2, (1+ii)%2); glVertex3f(x + cx, y + cy, width);
+    	float x = r * cosf(theta);//calculate the x component
+    	float y = r * sinf(theta);//calculate the y component
+      glNormal3f( x + cx, y + cy, 0.0f);
+    	glTexCoord2f((ii)%2, (ii)%2); glVertex3f(x + cx, y + cy, 0.0f);//output vertex
+    	glTexCoord2f((ii)%2, (1+ii)%2); glVertex3f(x + cx, y + cy, width);
 
       }
     glEnd();
@@ -520,9 +564,12 @@ namespace drawing_t{
   void drawHip(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glScalef(1.5f,0.3f,0.5f);
-    glColor3f(0.2f,0.2f,0.2f);
+    GLfloat col1[] = {0.2f,0.2f,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.2f,0.2f,0.2f);
     drawCube();
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
   
@@ -532,22 +579,27 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.5f,0.0f,0.0f);
     glScalef(1.0f,1.5f,0.5f);
-    glColor3f(0.4f,0.4f,0.9f);
+    GLfloat col1[] = {0.4f,0.4f,0.9f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.9f);
     //drawTorsoChest();
     drawTorsoChest();
     glPopMatrix();
 
     for (int i = 0; i < 3; ++i)
-      {
-	glPushMatrix();
-	glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
-	glScalef(0.2f,0.4f,0.3f);
-	glColor3f(0.3f,0.3f,0.3f);
-	glRotatef(0,0,1,0);
-	drawChest();
-	glPopMatrix();
-      }
-    glColor3f(1.0f,1.0f,1.0f);
+    {
+    	glPushMatrix();
+    	glTranslatef(-1.55f+i/2.2,0.0f,0.0f);
+    	glScalef(0.2f,0.4f,0.3f);
+      GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    	//glColor3f(0.3f,0.3f,0.3f);
+    	glRotatef(0,0,1,0);
+    	drawChest();
+    	glPopMatrix();
+    }
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
   
@@ -556,7 +608,9 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
     glScalef(2.1f,0.5f,0.5f);
-    glColor3f(0.4f,0.4f,0.4f);
+    GLfloat col1[] = {0.4f,0.4f,0.4f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.4f);
     drawCube();
     glPopMatrix();
 
@@ -564,7 +618,9 @@ namespace drawing_t{
     glTranslatef(1.4f,0.4f,0.0f);
     glRotatef(-90,0,0,1);
     glScalef(0.2f,0.4f,0.4f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
 
@@ -572,31 +628,39 @@ namespace drawing_t{
     glTranslatef(-1.4f,0.4f,0.0f);
     glRotatef(-90,0,0,1);
     glScalef(0.2f,0.4f,0.4f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col3[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    //glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
-
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 
   //! for neck
   void drawNeck(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
-    glColor3f(0.3f,0.3f,0.6f);
+    GLfloat col1[] = {0.3f,0.3f,0.6f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.3f,0.3f,0.6f);
     for (int i = 0; i < 3; ++i)
       {
-	glPushMatrix();
-	glTranslatef(-0.8f+i/2.2,0.0f,0.0f);
-	glScalef(0.2f,0.2f,0.3f);
-	glColor3f(0.3f,0.3f,0.3f);
-	glRotatef(0,0,1,0);
-	drawChest();
-	glPopMatrix();
+    	glPushMatrix();
+    	glTranslatef(-0.8f+i/2.2,0.0f,0.0f);
+    	glScalef(0.2f,0.2f,0.3f);
+      GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    	//glColor3f(0.3f,0.3f,0.3f);
+    	glRotatef(0,0,1,0);
+    	drawChest();
+    	glPopMatrix();
       }
 
     glPushMatrix();
-    glColor3f(0.3f,0.3f,0.6f);
+    GLfloat col3[] = {0.3f,0.3f,0.6f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    //glColor3f(0.3f,0.3f,0.6f);
     glTranslatef(0.8f,0.0f,0.0f);
     glScalef(0.4f,0.6f,0.3f);
     //glEnable(GL_TEXTURE_2D);
@@ -605,14 +669,16 @@ namespace drawing_t{
     glPopMatrix();
 
     glPushMatrix();
-    glColor3f(0.3f,0.3f,0.6f);
+    GLfloat col4[] = {0.3f,0.3f,0.6f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col4);
+    //glColor3f(0.3f,0.3f,0.6f);
     glTranslatef(1.35f,0.0f,0.0f);
     glScalef(0.1f,0.6f,0.3f);
     glRotatef(180,0,0,1);
     drawChest();
     glPopMatrix();
-
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 
@@ -622,7 +688,9 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.0f,0.40f,0.4f);
-    glColor3f(0.3f,0.3f,0.7f);
+    GLfloat col1[] = {0.3f,0.3f,0.7f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.3f,0.3f,0.7f);
     glEnable(GL_TEXTURE_2D);
     drawCube();
     glDisable(GL_TEXTURE_2D);
@@ -632,12 +700,14 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(-1.0f,0.0f,0.0f);
     glScalef(0.4f,0.4f,0.4f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.3f,0.3f,0.3f);
     glRotatef(180,0,1,0);
     drawChest();
     glPopMatrix();
-
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
   }
   
@@ -647,17 +717,22 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.3f,0.0f,0.0f);
     glScalef(1.0f,0.30f,0.30f);
-    glColor3f(0.5f,0.5f,0.9f);
+    GLfloat col1[] = {0.5f,0.5f,0.9f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.5f,0.5f,0.9f);
     glEnable(GL_TEXTURE_2D);
     drawCube();
     glDisable(GL_TEXTURE_2D);
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(-1.0f,0.0f,0.0f);
     glScalef(0.3f,0.3f,0.3f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.3f,0.3f,0.3f);
     glRotatef(180,0,1,0);
     drawChest();
     glPopMatrix();
@@ -670,7 +745,9 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     
     glPushMatrix();
-    glColor3f(0.3f,0.3f,0.9f);
+    GLfloat col1[] = {0.3f,0.3f,0.9f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.3f,0.3f,0.9f);
     glTranslatef(-0.6f,0.0f,0.0f);
     glScalef(0.4f,0.3f,0.2f);
     drawChest();
@@ -678,14 +755,15 @@ namespace drawing_t{
 
     for (int i = 0; i < 5; ++i)
       {
-	glPushMatrix();
-	glRotatef(-5+i*3,0,0,1);
-	glTranslatef(0.0f,-0.4f+i/5.0,0.0f);
-	glScalef(0.4f,0.05f,0.05f);
-	drawCube();
-	glPopMatrix();
+    	glPushMatrix();
+    	glRotatef(-5+i*3,0,0,1);
+    	glTranslatef(0.0f,-0.4f+i/5.0,0.0f);
+    	glScalef(0.4f,0.05f,0.05f);
+    	drawCube();
+    	glPopMatrix();
       }
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 
@@ -695,7 +773,9 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.2f,0.6f,0.6f);
-    glColor3f(0.4f,0.4f,0.8f);
+    GLfloat col1[] = {0.4f,0.4f,0.8f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.8f);
     glEnable(GL_TEXTURE_2D);
     drawCube();
     glDisable(GL_TEXTURE_2D);
@@ -707,10 +787,13 @@ namespace drawing_t{
     glTranslatef(-1.2f,0,0);
     glRotatef(0,0,1,0);
     glScalef(0.4f,0.4f,0.4f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
     glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
   
@@ -720,7 +803,9 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.2f,0.4f,0.4f);
-    glColor3f(0.45f,0.45f,0.76f);
+    GLfloat col1[] = {0.45f,0.45f,0.76f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.45f,0.45f,0.76f);
     glEnable(GL_TEXTURE_2D);
     drawCube();
     glDisable(GL_TEXTURE_2D);
@@ -730,7 +815,8 @@ namespace drawing_t{
     glTranslatef(-1.2f,0,0);
     glRotatef(180,0,1,0);
     glScalef(0.4f,0.4f,0.4f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
     drawChest();
     glPopMatrix();
 
@@ -738,13 +824,15 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.5f,-0.45f,-0.2f);
     glRotatef(90,1,0,0);
-    glColor3f(0.2f,0.2,0.2f);
+    GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
     glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
   }
 
@@ -753,7 +841,9 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.4f,0.0f,0.0f);
     glScalef(1.2f,0.4f,0.4f);
-    glColor3f(0.45f,0.45f,0.76f);
+    GLfloat col1[] = {0.45f,0.45f,0.76f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.45f,0.45f,0.76f);
     glEnable(GL_TEXTURE_2D);
     drawCube();
     glDisable(GL_TEXTURE_2D);
@@ -763,7 +853,9 @@ namespace drawing_t{
     glTranslatef(-1.2f,0,0);
     glRotatef(180,0,1,0);
     glScalef(0.4f,0.4f,0.4f);
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
 
@@ -771,13 +863,15 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.5f,1.25f,-0.2f);
     glRotatef(90,1,0,0);
-    glColor3f(0.2f,0.2,0.2f);
+    GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    //glColor3f(0.2f,0.2,0.2f);
     glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
   }
   
@@ -787,9 +881,12 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(-0.2f,-0.0f,-0.25f);
     glScalef(1.0f,0.5f,0.3f);
-    glColor3f(0.6f,0.6f,1.0f);
+    GLfloat col[] = {0.6f,0.6f,1.0f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);
+    //glColor3f(0.6f,0.6f,1.0f);
     drawCube();
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glPopMatrix();
     glEndList();
   }
@@ -808,16 +905,20 @@ namespace drawing_t{
 
     glPushMatrix();
     //glTranslatef(-1.0f,0.0f,0.4f);
-    glColor3f(0.1f,0.1f,0.1f);
+    GLfloat col1[] = {0.1f,0.1f,0.1f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.1f,0.1f,0.1f);
     for (int i = 0; i < 3; ++i)
       {
-	glPushMatrix();
-	glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
-	glScalef(0.2f,0.4f,0.1f);
-	glColor3f(0.3f,0.3f,0.3f);
-	glRotatef(0,0,1,0);
-	drawChest();
-	glPopMatrix();
+    	glPushMatrix();
+    	glTranslatef(-1.55f+i/2.2,0.0f,0.3f);
+    	glScalef(0.2f,0.4f,0.1f);
+      GLfloat col2[] = {0.3f,0.3f,0.3f, 1.f};
+      glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    	//glColor3f(0.3f,0.3f,0.3f);
+    	glRotatef(0,0,1,0);
+    	drawChest();
+    	glPopMatrix();
       }
     //drawLine();
     
@@ -828,7 +929,11 @@ namespace drawing_t{
     glScalef(1.2f,1.5f,0.1f);
     //glColor3f(0.4f,0.4f,0.7f);
     //drawChest();
-    glColor3f(0.3f,0.3f,0.3f);
+    GLfloat col3[] = {0.3f,0.3f,0.3f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    //glColor3f(0.3f,0.3f,0.3f);
     glPushMatrix();
     //glLoadIdentity();
     glEnable(GL_TEXTURE_2D);
@@ -838,8 +943,8 @@ namespace drawing_t{
     glPopMatrix();
     //glColor3f(1.0f,1.0f,1.0f);
     glPopMatrix();
-    
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     
     glEndList();
   }
@@ -849,7 +954,9 @@ namespace drawing_t{
   void drawHipMid(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glScalef(0.20f,0.5f,0.5f);
-    glColor3f(0.5f,0.5f,0.5f);
+    GLfloat col[] = {0.5f,0.5f,0.5f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col);
+    //glColor3f(0.5f,0.5f,0.5f);
     drawChest();
     glEndList();
   }
@@ -859,19 +966,24 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
     glScalef(1.0f,0.1f,0.1f);
-    glColor3f(0.4f,0.4f,0.8f);
+    GLfloat col1[] = {0.4f,0.4f,0.8f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.8f);
     drawCube();
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(1.0f,0.1f,0.0f);
     glRotatef(-90,1,0,0);
-    glColor3f(0.2f,0.2,0.2f);
+    GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.2f,0.2,0.2f);
     glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
 
 
@@ -882,19 +994,24 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
     glScalef(1.0f,0.1f,0.1f);
-    glColor3f(0.4f,0.4f,0.8f);
+    GLfloat col1[] = {0.4f,0.4f,0.8f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glColor3f(0.4f,0.4f,0.8f);
     drawCube();
     glPopMatrix();
 
     glPushMatrix();
     glTranslatef(1.0f,-0.1f,0.0f);
     glRotatef(90,1,0,0);
-    glColor3f(0.2f,0.2,0.2f);
+    GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    //glColor3f(0.2f,0.2,0.2f);
     glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-    glColor3f(1.0f,1.0f,1.0f);
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    //glColor3f(1.0f,1.0f,1.0f);
     glEndList();
   }
 
@@ -905,16 +1022,19 @@ namespace drawing_t{
     //glEnable(GL_TEXTURE_2D);      // Enable Texture Mapping
     glClearColor(0.0f, 0.0f, 1.0f, 0.0f); // Clear The Background Color To Blue 
     glClearDepth(1.0);        // Enables Clearing Of The Depth Buffer
-    //glDepthFunc(GL_LESS);     // The Type Of Depth Test To Do
-    //glEnable(GL_DEPTH_TEST);      // Enables Depth Testing
-    //glShadeModel(GL_SMOOTH);      // Enables Smooth Color Shading
-    
-    //glMatrixMode(GL_PROJECTION);
-    //glLoadIdentity();       // Reset The Projection Matrix
-    
-    //gluPerspective(45.0f,(GLfloat)Width/(GLfloat)Height,0.1f,100.0f); // Calculate The Aspect Ratio Of The Window
-    
-    //glMatrixMode(GL_MODELVIEW);
+
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
+    glLightfv(GL_LIGHT0, GL_POSITION, light_position);
+    //glLightfv(GL_LIGHT0, GL_DIFFUSE, LightDiffuse);
+    glEnable(GL_LIGHT0);
+
+    // set up light number 1.
+    glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);  // add lighting. (diffuse).
+    glLightfv(GL_LIGHT1, GL_POSITION,LightPosition); // set light position.
+    //glEnable(GL_LIGHT1);
   }
 
 
