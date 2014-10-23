@@ -4,6 +4,8 @@
 #include <list>
 #include "transformer_part.hpp"
 
+
+
 struct group_t{
   
   std::vector<body_t*> bodyList;             // the body for which this call back is defined
@@ -70,6 +72,11 @@ namespace bot_t{
   extern std::list<std::list<event> > eventList;          //! list of events to execute
   extern GLFWwindow* window;
   extern void (*renderGL)(GLFWwindow*);
+
+  extern int light0;
+  extern int light1;
+
+  void InitGL(void);
   
   //! GLFW callback
   void key_callback(GLFWwindow*, int, int, int, int);

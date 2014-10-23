@@ -2,6 +2,12 @@
 #define _PART_DRAWINGS_
 
 namespace drawing_t{
+
+  //! to draw the sky
+  void drawSky(void);
+
+  //! to draw the ground on which the car runs
+  void drawGround(void);
   
   //! to draw a line
   void drawLine(void);

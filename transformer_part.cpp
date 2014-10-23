@@ -1,7 +1,8 @@
 #include "gl_framework.hpp"
 #include "transformer_part.hpp"
 #include "part_drawings.hpp"
-
+#include <iostream>
+using namespace std;
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
 #define TORSONUM 2
@@ -596,20 +597,23 @@ void body_t::addConstraints(void){
   
 }
 
-
+float delt = 0.02f;
 //! draws the body
 void body_t::drawBody(void){
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glTranslatef(0,0,-3.0f);
-  glScalef(0.1, 0.1, 0.1);
+  
+  
+  //glTranslatef(0,0,-3.0f);
+  
+  
   glTranslatef(center.x, center.y, center.z);
+  glScalef(0.1, 0.1, 0.1);
   glRotatef(theta_z, 0, 0, 1);
   glRotatef(theta_y, 0, 1, 0);
   glRotatef(theta_x, 1, 0, 0);
   glPushMatrix();
   hip1->drawPart();
   glPopMatrix();
+  delt+=0.02f;
 }
 
 //! function to move the joint

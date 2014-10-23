@@ -1,4 +1,10 @@
 #include "callBacks.hpp"
+#include <iostream>
+using namespace std;
+
+
+
+
 
 //! constructor
 group_t::group_t(void){
@@ -143,6 +149,22 @@ namespace bot_t{
   extern std::list<std::list<event> > eventList;          //! list of events to execute
   extern GLFWwindow* window;
   extern void (*renderGL)(GLFWwindow*);
+
+  extern int light0;
+  extern int light1;
+
+  void InitGL(void){
+    
+
+    // set up light number 1.
+    /*
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+    glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
+    glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);  // add lighting. (diffuse).
+    glLightfv(GL_LIGHT1, GL_POSITION,LightPosition); // set light position.
+    //glEnable(GL_LIGHT1);*/
+  }
   
   void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
   {
@@ -152,6 +174,30 @@ namespace bot_t{
     else if (key == GLFW_KEY_UP && action == GLFW_PRESS){
       transformBot();
       executeList();
+    }
+    else if (key == GLFW_KEY_8 && action == GLFW_PRESS){
+      if (light0 == 1) {
+        cout<<"Light 0 disabled"<<endl;
+        light0 = 0;
+      }
+      else{
+        cout<<"Light 0 Enabled"<<endl;
+        light0 = 1;
+      }
+      //if(light0) glEnable(GL_LIGHT0);
+      //else glDisable(GL_LIGHT0);
+    }
+    else if (key == GLFW_KEY_9 && action == GLFW_PRESS){
+      if (light1 == 1) {
+        cout<<"Light 1 disabled"<<endl;
+        light1 = 0;
+      }
+      else{
+        cout<<"Light 1 Enabled"<<endl;
+        light1 = 1;
+      }
+      //if(light1) glEnable(GL_LIGHT1);
+      //else glDisable(GL_LIGHT1);
     }
     else autoBots.performAction(key, action, mods);
   }

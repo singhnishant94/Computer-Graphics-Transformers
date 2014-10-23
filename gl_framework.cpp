@@ -31,7 +31,7 @@ namespace cs475{
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();       // Reset The Projection Matrix
 
-    gluPerspective(45.0f,(GLfloat)win_width/(GLfloat)win_height,0.1f,100.0f); // Calculate The Aspect Ratio Of The Window
+    gluPerspective(45.0f,(GLfloat)win_width/(GLfloat)win_height,0.1f,2000.0f); // Calculate The Aspect Ratio Of The Window
     
     
     /*glLoadIdentity();
