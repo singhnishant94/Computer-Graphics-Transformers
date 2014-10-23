@@ -1227,7 +1227,7 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     
     glPushMatrix();
-    glTranslatef(1.0f,0.1f,0.0f);
+    //glTranslatef(1.0f,0.1f,0.0f);
     glRotatef(-90,1,0,0);
     GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
@@ -1247,7 +1247,7 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
 
     glPushMatrix();
-    glTranslatef(0.5f,-0.45f,-0.2f);
+    //glTranslatef(0.5f,-0.45f,-0.2f);
     glRotatef(90,1,0,0);
     GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
@@ -1287,7 +1287,7 @@ namespace drawing_t{
     glNewList(p_num, GL_COMPILE);
     
     glPushMatrix();
-    glTranslatef(0.5f,1.25f,-0.2f);
+    //glTranslatef(0.5f,1.25f,-0.2f);
     glRotatef(90,1,0,0);
     GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
