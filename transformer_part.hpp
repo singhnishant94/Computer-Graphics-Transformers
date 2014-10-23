@@ -24,9 +24,13 @@ struct part_t{
   int partNum;                             //! the part number for denoting the list numebr
   std::vector<part_t*> children;           //! pointer to children connected to this
   vertex_t end_A, end_B, center;           //! three points for joining
+  vertex_t customPoint;                    //! a ustom point which can be deinfed and used for joiing anywhere
   vertex_t *anchorLocal, *anchorRemote;    //! anchorLocal -> pointer local anchor, anchorRemote -> anchor to the parent
   double theta_x, theta_y, theta_z;        //! theta_y , theta_z denote the angle relative to parent
   vertex_t angleMin, angleMax;             //! the angular constraints 
+  
+  //! special variable to avoid constraint check
+  int fullRotate;
   
   //! current window for passing swapping buffers
   GLFWwindow *window;
@@ -149,6 +153,10 @@ enum joint_t{
   DUMMY,
   PALMPER1HAND1,
   PALMPER2HAND2,
+  WHEELFRONTPALMPER,
+  WHEELBACKLEG,
+  AXLE1PALMPER1,
+  AXLE2PALMPER2,
   ROOT
 };
 
@@ -163,6 +171,9 @@ struct body_t{
   part_t *palm1, *palm2;
   part_t *chestCover;
   part_t *palmPer1, *palmPer2;
+  part_t *wheelFront, *wheelBack;
+  part_t *wheelFront1, *wheelFront2, *wheelBack1, *wheelBack2;
+  part_t *axle1, *axle2;
   
   //! body parameters
   vertex_t center;                        // the center of entire body
@@ -171,6 +182,19 @@ struct body_t{
   //! state , 0 -> bot, 1 -> vehice
   int state;
   
+  //! the variables regarding the wheel movements
+  int vstate;           // the state the vehicle is in
+  double level0, level1, level2, levelm1, levelm2, level;        // the level of speed count 
+  double speed0, speed1, speed2, speedm1, speedm2;
+  
+  //! variable for turing
+  int tstate;
+  double tmin, tmax, tval, tzero;
+  double rot, recoil;
+  
+  //! for finding current movement
+  int moveState;  
+
   //! current window for passing swapping buffers
   GLFWwindow *window;
   
@@ -194,6 +218,9 @@ struct body_t{
 
   //! translate the entire body
   void translateBody(double, double, double);
+  
+  //! move the vehicle in xz plane
+  void translateBodyXZ(double, double);
   
   //! rotate the entire body
   void rotateBody(double, double, double);

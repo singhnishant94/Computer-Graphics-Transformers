@@ -66,6 +66,25 @@ namespace drawing_t{
   //! for PalmPer 
   void drawPalmPer2(int, double); //! part number, length
 
+  
+  //! for Front Wheel 
+  void drawWheelFront1(int, double); //! part number, length
+
+  //! for BackWheel 
+  void drawWheelBack1(int, double); //! part number, length
+  
+  //! for Front Wheel 
+  void drawWheelFront2(int, double); //! part number, length
+
+  //! for BackWheel 
+  void drawWheelBack2(int, double); //! part number, length
+
+  //! for Axle1 
+  void drawAxle1(int, double); //! part number, length
+
+  //! for Axle2 
+  void drawAxle2(int, double); //! part number, length
+  
   void InitGL(int, int);
 
   void drawChestText(void);

@@ -1,8 +1,8 @@
 #include "gl_framework.hpp"
 #include "transformer_part.hpp"
 #include "part_drawings.hpp"
-#include <iostream>
-using namespace std;
+#include <math.h>
+
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
 #define TORSONUM 2
@@ -19,8 +19,15 @@ using namespace std;
 #define HIPMIDNUM 13
 #define PALMPER1NUM 14
 #define PALMPER2NUM 15
+#define WHEELFRONTNUM1 16
+#define WHEELFRONTNUM2 17
+#define WHEELBACKNUM1 18
+#define WHEELBACKNUM2 19
+#define AXLE1NUM 20
+#define AXLE2NUM 21
 
-#define TOT_PART 15
+#define TOT_PART 21
+
 
 #define OK  std::cout<<"ok"<<std::endl;
 
@@ -53,6 +60,7 @@ part_t::part_t(void){
   center.setVertex(0, 0, 0);
   angleMin.setVertex(-360, -360, -360);
   angleMax.setVertex(360, 360, 360);
+  fullRotate = 0;
 }
 
 //! set the window and renderBody function pointers
@@ -270,6 +278,7 @@ void part_t::setMaxAngularConstraints(double x, double y, double z){
   
 //! checking the constraints, return true/ false
 int part_t::checkConstraint(double theta, char axis){
+  if(fullRotate) return 1;
   if(axis == 'x'){
     if(theta <= angleMax.x && theta >= angleMin.x) return 1;
     else return 0;
@@ -368,6 +377,29 @@ body_t::body_t(void){
   theta_x = theta_y = theta_z = 0.0;
   state = 0;
   
+  // wheel vaiables for forward back movements
+  vstate = 0;
+  level0 = 0;
+  level1 = 50;
+  level2 = 100;
+  levelm1 = -40;
+  level = 0;
+  
+  speed0 = 2;
+  speed1 = 2;
+  speed2 = 4;
+  speedm1 = 2;
+  moveState = 0;
+  
+  // wheel turning parts
+  tstate = 0;
+  tmin = -40;
+  tmax = 40;
+  tval = 0;
+  tzero = 0;
+  rot = 2;
+  recoil = 2;
+  
   hip1 = new part_t();       
   hip1->setPartNum(HIPNUM);
   
@@ -393,10 +425,12 @@ body_t::body_t(void){
   leg1 = new part_t();      
   leg1->setPartNum(LEG1NUM);
   leg1->setLength(1.6f);
-  
+  leg1->customPoint.setVertex(0.5f, -0.45f, -0.2f);
+   
   leg2 = new part_t();      
   leg2->setPartNum(LEG2NUM);
   leg2->setLength(1.6f);
+  leg2->customPoint.setVertex(0.5f, 1.25f, -0.2f);
   
   foot1 = new part_t();     
   foot1->setPartNum(FOOTNUM);
@@ -443,6 +477,40 @@ body_t::body_t(void){
   chestCover->setPartNum(CHESTCOVERNUM);
   chestCover->setLength(2.0f);
 
+  wheelFront = new part_t();
+  wheelFront->setPartNum(-1);
+  wheelFront->fullRotate = 1;
+  
+  wheelBack = new part_t();
+  wheelBack->setPartNum(-1);
+  wheelBack->fullRotate = 1;
+  
+  wheelFront1 = new part_t();
+  wheelFront1->setPartNum(WHEELFRONTNUM1);
+  wheelFront1->fullRotate = 1;
+ 
+  wheelBack1 = new part_t();
+  wheelBack1->setPartNum(WHEELBACKNUM1);
+  wheelBack1->fullRotate = 1;
+ 
+  wheelFront2 = new part_t();
+  wheelFront2->setPartNum(WHEELFRONTNUM2);
+  wheelFront2->fullRotate = 1;
+  
+  wheelBack2 = new part_t();
+  wheelBack2->setPartNum(WHEELBACKNUM2);
+  wheelBack2->fullRotate = 1;  
+
+  axle1 = new part_t();
+  axle1->setPartNum(AXLE1NUM);
+  axle1->fullRotate = 1;
+  
+
+  axle2 = new part_t();
+  axle2->setPartNum(AXLE1NUM);
+  axle2->fullRotate = 1;
+
+  
   // here we set the hip values specifically so as to make it at origin
   hip1->anchorLocal = &(hip1->center);
   hip1->anchorRemote = &(hip1->center);
@@ -450,6 +518,12 @@ body_t::body_t(void){
   torso->addConnPart(chestCover);
   palm1->addConnPart(palmPer1);
   palm2->addConnPart(palmPer2);
+  
+  wheelFront->addConnPart(wheelFront1);
+  wheelFront->addConnPart(wheelFront2);
+  
+  wheelBack->addConnPart(wheelBack1);
+  wheelBack->addConnPart(wheelBack2);
   
   makeBody();
   addConstraints();
@@ -467,6 +541,9 @@ body_t::~body_t(void){
   delete palm1, palm2;
   delete chestCover;
   delete palmPer1, palmPer2;
+  delete wheelFront, wheelBack;
+  delete wheelFront1, wheelFront2, wheelBack1, wheelBack2;
+  delete axle1, axle2;
 }
 
 //! set the window and renderBody function pointers
@@ -494,6 +571,14 @@ void body_t::setWindowRender(GLFWwindow* _window, void (*renderGL)(GLFWwindow*))
   palmPer1->setWindowRender(window, renderGL);
   palmPer2->setWindowRender(window, renderGL);
   chestCover->setWindowRender(window, renderGL);
+  wheelFront->setWindowRender(window, renderGL);
+  wheelBack->setWindowRender(window, renderGL);
+  wheelFront1->setWindowRender(window, renderGL);
+  wheelBack1->setWindowRender(window, renderGL);
+  wheelFront2->setWindowRender(window, renderGL);
+  wheelBack2->setWindowRender(window, renderGL);
+  axle1->setWindowRender(window, renderGL);
+  axle2->setWindowRender(window, renderGL);
 }
 
 
@@ -519,6 +604,12 @@ void body_t::makeBody(void){
   chestCover->connect(&(chestCover->end_A), hip1, &(hip1->center), 0, 0, 90);
   palmPer1->connect(&(palmPer1->end_A), hand1, &(hand1->end_B), 0, 0, -90);
   palmPer2->connect(&(palmPer2->end_A), hand2, &(hand2->end_B), 0, 0, 90);
+  wheelFront1->connect(&(wheelFront1->center), axle1, &(axle1->end_B), 0, 0, 0);  // --------- the 4 below are not done
+  wheelFront2->connect(&(wheelFront2->center), axle2, &(axle2->end_B), 0, 0, 0);
+  wheelBack1->connect(&(wheelBack1->center), leg1, &(leg1->customPoint), 0, 0, 0);
+  wheelBack2->connect(&(wheelBack2->center), leg2, &(leg2->customPoint), 0, 0, 0);
+  axle1->connect(&(axle1->end_A), palmPer1, &(palmPer1->end_B), 0, 0, 0);
+  axle2->connect(&(axle2->end_A), palmPer2, &(palmPer2->end_B), 0, 0, 0);
 }
 
 //! fill the parts of the body with respective drawings
@@ -539,6 +630,11 @@ void body_t::initBodyStructure(void){
   drawing_t::drawChestCover(CHESTCOVERNUM, chestCover->getLength());
   drawing_t::drawPalmPer1(PALMPER1NUM, palmPer1->getLength());
   drawing_t::drawPalmPer2(PALMPER2NUM, palmPer1->getLength());
+  drawing_t::drawWheelFront1(WHEELFRONTNUM1, wheelFront1->getLength());
+  drawing_t::drawWheelBack1(WHEELBACKNUM1, wheelBack1->getLength());
+  drawing_t::drawWheelFront2(WHEELFRONTNUM2, wheelFront2->getLength());
+  drawing_t::drawWheelBack2(WHEELBACKNUM2, wheelBack2->getLength());
+  drawing_t::drawAxle1(AXLE1NUM, axle1->getLength());
 }
 
 
@@ -594,17 +690,37 @@ void body_t::addConstraints(void){
 
   palmPer2->setMinAngularConstraints(-360, -360, -360);
   palmPer2->setMaxAngularConstraints(360, 360, 360); 
+ 
+  wheelFront->setMinAngularConstraints(-360, -360, -360);
+  wheelFront->setMaxAngularConstraints(360, 360, 360); 
   
+  wheelBack->setMinAngularConstraints(-360, -360, -360);
+  wheelBack->setMaxAngularConstraints(360, 360, 360); 
+  
+  wheelFront1->setMinAngularConstraints(-360, -360, -360);
+  wheelFront1->setMaxAngularConstraints(360, 360, 360); 
+ 
+  wheelFront2->setMinAngularConstraints(-360, -360, -360);
+  wheelFront2->setMaxAngularConstraints(360, 360, 360); 
+  
+  wheelBack1->setMinAngularConstraints(-360, -360, -360);
+  wheelBack1->setMaxAngularConstraints(360, 360, 360); 
+
+  wheelBack2->setMinAngularConstraints(-360, -360, -360);
+  wheelBack2->setMaxAngularConstraints(360, 360, 360); 
+
+  axle1->setMinAngularConstraints(-360, -360, -360);
+  axle1->setMaxAngularConstraints(360, 360, 360); 
+
+  axle2->setMinAngularConstraints(-360, -360, -360);
+  axle2->setMaxAngularConstraints(360, 360, 360); 
 }
 
 float delt = 0.02f;
+
 //! draws the body
 void body_t::drawBody(void){
-  
-  
-  //glTranslatef(0,0,-3.0f);
-  
-  
+
   glTranslatef(center.x, center.y, center.z);
   glScalef(0.1, 0.1, 0.1);
   glRotatef(theta_z, 0, 0, 1);
@@ -613,7 +729,7 @@ void body_t::drawBody(void){
   glPushMatrix();
   hip1->drawPart();
   glPopMatrix();
-  delt+=0.02f;
+  delt += 0.02f;
 }
 
 //! function to move the joint
@@ -635,6 +751,12 @@ void body_t::changeOrientation(joint_t jName, vertex_t delta){
   else if(jName == PALM1HAND1) _part = palm1; 
   else if(jName == PALM2HAND2) _part = palm2;
   else if(jName == CHESTCOVERHIP) _part = chestCover;
+  else if(jName == WHEELFRONTPALMPER) _part = wheelFront;
+  else if(jName == WHEELBACKLEG) _part = wheelBack;
+  else if(jName == PALMPER1HAND1) _part = palmPer1;
+  else if(jName == PALMPER2HAND2) _part = palmPer2;
+  else if(jName == AXLE1PALMPER1) _part = axle1;
+  else if(jName == AXLE2PALMPER2) _part = axle2;
   
   if(_part != 0){
     _part->change_theta_x(delta.x);
@@ -646,6 +768,14 @@ void body_t::changeOrientation(joint_t jName, vertex_t delta){
 //! translate the given body
 void body_t::translateBody(double dx, double dy, double dz){
   center.updateValue(dx, dy, dx);
+}
+
+//! translate the body in xz plane
+void body_t::translateBodyXZ(double dist, double theta){
+  double param = theta * M_PI / 180.0;
+  double dx = dist * cos(param);
+  double dz = dist * sin(param);
+  translateBody(dx, 0, dz);
 }
 
 //! rotate the given body

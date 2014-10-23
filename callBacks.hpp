@@ -4,8 +4,6 @@
 #include <list>
 #include "transformer_part.hpp"
 
-
-
 struct group_t{
   
   std::vector<body_t*> bodyList;             // the body for which this call back is defined
@@ -31,6 +29,9 @@ struct group_t{
   //!Perform Action
   void performAction(int, int, int);
 
+  //! for actions which are not triggered by keys
+  void untriggeredActions(void);
+  
   //! add a body to the List
   void addBody(void);
   

@@ -9,7 +9,7 @@
 #include "part_drawings.hpp"
 using namespace std;
 
-#define PI 3.14159265
+double PI  = M_PI;
 
 int bot_t::light0 = 1, bot_t::light1 = 1;
 
@@ -75,12 +75,6 @@ void renderGL(GLFWwindow* window)
   drawing_t::drawGround();
   drawing_t::drawSky();
   bot_t::autoBots.bodyList[0]->drawBody();
- 
-  
-  
-  
-
-
 }
 
 int main (int argc, char *argv[]) 
@@ -143,13 +137,14 @@ int main (int argc, char *argv[])
       // Render here
       renderGL(window);
 
-      
-
       // Swap front and back buffers
       glfwSwapBuffers(window);
       
       // Poll for and process events
       glfwPollEvents();
+      
+      // look after usual operations
+      bot_t::autoBots.untriggeredActions();
     }
 
   glfwDestroyWindow(window);

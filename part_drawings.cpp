@@ -1023,7 +1023,7 @@ namespace drawing_t{
     glPopMatrix();
 
 
-    glPushMatrix();
+    /*    glPushMatrix();
     glTranslatef(0.5f,-0.45f,-0.2f);
     glRotatef(90,1,0,0);
     GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
@@ -1033,7 +1033,8 @@ namespace drawing_t{
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
+    */
+    
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
@@ -1062,7 +1063,7 @@ namespace drawing_t{
     drawChest();
     glPopMatrix();
 
-
+    /*
     glPushMatrix();
     glTranslatef(0.5f,1.25f,-0.2f);
     glRotatef(90,1,0,0);
@@ -1073,6 +1074,7 @@ namespace drawing_t{
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
+    */
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();  
@@ -1175,7 +1177,7 @@ namespace drawing_t{
     drawCube();
     glPopMatrix();
 
-    glPushMatrix();
+    /*    glPushMatrix();
     glTranslatef(1.0f,0.1f,0.0f);
     glRotatef(-90,1,0,0);
     GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
@@ -1185,6 +1187,7 @@ namespace drawing_t{
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
+    */
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();
@@ -1202,9 +1205,69 @@ namespace drawing_t{
     glColor3f(0.4f,0.4f,0.8f);
     drawCube();
     glPopMatrix();
-
+    /*
     glPushMatrix();
     glTranslatef(1.0f,-0.1f,0.0f);
+    glRotatef(90,1,0,0);
+    GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    glColor3f(0.2f,0.2,0.2f);
+    glEnable(GL_TEXTURE_2D);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();*/
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1.0f,1.0f,1.0f);
+    glEndList();
+  }
+
+  
+  //! for Front Wheel
+  void drawWheelFront1(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    
+    glPushMatrix();
+    glTranslatef(1.0f,0.1f,0.0f);
+    glRotatef(-90,1,0,0);
+    GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
+    glColor3f(0.2f,0.2,0.2f);
+    glEnable(GL_TEXTURE_2D);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1.0f,1.0f,1.0f);
+    
+    glEndList();
+  }
+
+  //! for Front Wheel
+  void drawWheelBack1(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+
+    glPushMatrix();
+    glTranslatef(0.5f,-0.45f,-0.2f);
+    glRotatef(90,1,0,0);
+    GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    glColor3f(0.2f,0.2,0.2f);
+    glEnable(GL_TEXTURE_2D);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1.0f,1.0f,1.0f);    
+    
+    glEndList();
+  }
+
+  //! for Front Wheel
+  void drawWheelFront2(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    glPushMatrix();
+ 
     glRotatef(90,1,0,0);
     GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
@@ -1215,8 +1278,50 @@ namespace drawing_t{
     glPopMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
+    
     glEndList();
   }
+
+  //! for Front Wheel
+  void drawWheelBack2(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    
+    glPushMatrix();
+    glTranslatef(0.5f,1.25f,-0.2f);
+    glRotatef(90,1,0,0);
+    GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
+    glColor3f(0.2f,0.2,0.2f);
+    glEnable(GL_TEXTURE_2D);
+    DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+    
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
+    glColor3f(1.0f,1.0f,1.0f);
+    
+    glEndList();
+  }
+
+
+  //! for Axle1 
+  void drawAxle1(int p_num, double len){ //! part number, length
+    glNewList(p_num, GL_COMPILE);
+    glPushMatrix();
+    
+    drawLine();
+    
+    glPopMatrix();
+    glColor3f(1.0f,1.0f,1.0f);
+    
+    glEndList();
+  }
+  
+  //! for Axle2 
+  void drawAxle2(int p_num, double len){ //! part number, length
+  
+  }
+
 
   /* A general OpenGL initialization function.  Sets all of the initial parameters. */
   void InitGL(int Width, int Height)          // We call this right after our OpenGL window is created.

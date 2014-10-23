@@ -1,10 +1,12 @@
 #include "callBacks.hpp"
+#include <math.h>
 #include <iostream>
-using namespace std;
 
 
-
-
+#define FORWARD 1
+#define BACK 2
+#define TLEFT 4
+#define TRIGHT 8
 
 //! constructor
 group_t::group_t(void){
@@ -113,10 +115,200 @@ void group_t::performAction(int key, int action, int mods){
       else if (key == GLFW_KEY_A) currBody->rotateBody(0, dir  * speedRotate, 0);
       else if (key == GLFW_KEY_S) currBody->translateBody(0, dir * speedTranslate, 0);
       else if (key == GLFW_KEY_Z) currBody->translateBody(0, 0, dir * speedTranslate);
-      else if (key == GLFW_KEY_X) currBody->translateBody(dir * speedTranslate, 0, 0);
+      else if (key == GLFW_KEY_X) currBody->translateBody(dir * speedTranslate, 0, 0); 
+      else if (key == GLFW_KEY_UP){
+	if (action == GLFW_PRESS) currBody->moveState += FORWARD;
+       	else if (action == GLFW_RELEASE) currBody->moveState -= FORWARD;
+      }
+      else if (key == GLFW_KEY_DOWN){
+	if (action == GLFW_PRESS) currBody->moveState += BACK;
+       	else if (action == GLFW_RELEASE) currBody->moveState -= BACK;
+      }
+      else if (key == GLFW_KEY_LEFT){
+	if (action == GLFW_PRESS) currBody->moveState += TLEFT;
+       	else if (action == GLFW_RELEASE) currBody->moveState -= TLEFT;
+      }
+      else if (key == GLFW_KEY_RIGHT){
+	if (action == GLFW_PRESS) currBody->moveState += TRIGHT;
+       	else if (action == GLFW_RELEASE) currBody->moveState -= TRIGHT;
+      }
     }
   }
 }
+
+
+//! for actions which are not triggered by keys
+void group_t::untriggeredActions(void){
+  body_t* currBody = currentBody();
+  vertex_t theta; theta.setVertex(0, 0, 0);
+  double factor = 0.01;
+  double dsx = 0, thx = 0;
+  if (currBody->moveState & FORWARD){
+    if (currBody->vstate <= 0){
+      currBody->level += currBody->speed1;
+      
+      dsx = factor * currBody->speed1;
+      theta.setVertex(0, currBody->speed1, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, -1 * currBody->speed1, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+      
+      if (currBody->level > currBody->level0) currBody->vstate = 1;
+    }
+    else if (currBody->vstate == 1){
+      currBody->level += currBody->speed1;
+      
+      dsx = factor * currBody->speed1;
+      theta.setVertex(0, currBody->speed1, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, -1 * currBody->speed1, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+	  
+      if (currBody->level > currBody->level1) currBody->vstate = 2;
+    }
+    else if (currBody->vstate == 2){
+	  
+      if (currBody->level < currBody->level2){
+	currBody->level += currBody->speed2;
+      }
+      dsx = factor * currBody->speed2;
+      
+      theta.setVertex(0, currBody->speed2, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, -1 * currBody->speed2, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+    }
+  }
+  else{
+    int _st = currBody->vstate;
+    if (_st == 1 || _st == 2){
+      currBody->level -= 1;
+      dsx = factor * currBody->speed0;
+      
+      theta.setVertex(0, currBody->speed0, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, -1 * currBody->speed0, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+	
+      if (currBody->level <= currBody->level0){
+	currBody->level = 0;
+	currBody->vstate = 0;
+      }
+    }
+  }
+  
+  if (currBody->moveState & BACK){
+    if (currBody->vstate >= 0){
+      currBody->level -= currBody->speedm1;
+      dsx = factor * currBody->speed1;
+      
+      theta.setVertex(0, currBody->speed1, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, -1 * currBody->speed1, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+      
+      if (currBody->level < currBody->level0) currBody->vstate = -1;
+    }
+    else if (currBody->vstate == -1){
+      if (currBody->level > currBody->levelm1){
+	currBody->level -= currBody->speedm1;
+      }
+      dsx = factor * -currBody->speedm1;
+      
+      theta.setVertex(0, -currBody->speedm1, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, currBody->speedm1, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+    }
+  }
+  else{
+    int _st = currBody->vstate;
+    if (_st == -1){
+      currBody->level += 1;
+      dsx = factor * -currBody->speed0;
+      
+      theta.setVertex(0, -currBody->speed0, 0);
+      currBody->changeOrientation(WHEELFRONTPALMPER, theta);
+      theta.setVertex(0, currBody->speed0, 0);
+      currBody->changeOrientation(WHEELBACKLEG, theta);
+      
+      if (currBody->level >= currBody->level0){
+	currBody->level = 0;
+	currBody->vstate = 0;
+      }
+    }
+  }
+  
+  
+  if (currBody->moveState & TLEFT){
+    if (currBody->tstate <= 0){
+      currBody->tval+=currBody->rot;
+      thx =  currBody->rot;
+      theta.setVertex(0, 0, currBody->rot);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      if (currBody->tval >= currBody->tzero) currBody->tstate = 1; 
+    }
+    else if (currBody->tstate == 1){
+      if (currBody->tval < currBody->tmax){
+	currBody->tval+=currBody->rot;
+	theta.setVertex(0, 0, currBody->rot);
+	currBody->changeOrientation(AXLE1PALMPER1, theta);
+	currBody->changeOrientation(AXLE2PALMPER2, theta);
+      }
+      thx =  currBody->rot;     
+    }
+  }
+  else{
+    if (currBody->tstate == 1){
+      theta.setVertex(0, 0, -currBody->recoil);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      currBody->tval-=currBody->recoil;
+      if (currBody->tval <= currBody->tzero){
+	currBody->tstate = 0;
+	currBody->tval = currBody->tzero;
+      }
+    }
+  }
+
+  if (currBody->moveState & TRIGHT){
+    if (currBody->tstate >= 0){
+      currBody->tval -= currBody->rot;;      
+      thx =  -currBody->rot;
+      theta.setVertex(0, 0, -currBody->rot);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      if (currBody->tval <= currBody->tzero) currBody->tstate = -1; 
+    }
+    else if (currBody->tstate == -1){
+      if (currBody->tval > currBody->tmin){
+	currBody->tval -= currBody->rot;
+	theta.setVertex(0, 0, -currBody->rot);
+	currBody->changeOrientation(AXLE1PALMPER1, theta);
+	currBody->changeOrientation(AXLE2PALMPER2, theta);
+      }
+      thx = -currBody->rot;
+    }
+  }
+  else{
+    if (currBody->tstate == -1){
+      theta.setVertex(0, 0, currBody->recoil);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      currBody->tval += currBody->recoil;
+      if (currBody->tval >= currBody->tzero){
+	currBody->tstate = 0;
+	currBody->tval = currBody->tzero;
+      }
+    }
+  }
+  if(dsx != 0){
+    currBody->theta_y += thx;
+    currBody->translateBodyXZ(dsx, currBody->theta_y + 90); 
+  }
+}
+
 
 //! init all the body parts after the context creation
 void group_t::initListAfterContext(void){
@@ -171,17 +363,17 @@ namespace bot_t{
     //!Close the window if the ESC key was pressed
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
     else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) autoBots.nextBody();
-    else if (key == GLFW_KEY_UP && action == GLFW_PRESS){
+    else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS){
       transformBot();
       executeList();
     }
     else if (key == GLFW_KEY_8 && action == GLFW_PRESS){
       if (light0 == 1) {
-        cout<<"Light 0 disabled"<<endl;
+        std::cout<<"Light 0 disabled"<<std::endl;
         light0 = 0;
       }
       else{
-        cout<<"Light 0 Enabled"<<endl;
+        std::cout<<"Light 0 Enabled"<<std::endl;
         light0 = 1;
       }
       //if(light0) glEnable(GL_LIGHT0);
@@ -189,11 +381,11 @@ namespace bot_t{
     }
     else if (key == GLFW_KEY_9 && action == GLFW_PRESS){
       if (light1 == 1) {
-        cout<<"Light 1 disabled"<<endl;
+	std::cout<<"Light 1 disabled"<<std::endl;
         light1 = 0;
       }
       else{
-        cout<<"Light 1 Enabled"<<endl;
+	std::cout<<"Light 1 Enabled"<<std::endl;
         light1 = 1;
       }
       //if(light1) glEnable(GL_LIGHT1);
@@ -222,8 +414,9 @@ namespace bot_t{
   
   void transformBot(void){
     body_t* curr = autoBots.currentBody();
-    double speed = 1.0;
+    double speed = 2.0;
     if(!curr->state){
+      autoBots.jName = ROOT;
       curr->state = 1;
       event e;
       std::list<event> le;
