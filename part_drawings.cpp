@@ -378,6 +378,15 @@ namespace drawing_t{
     glVertex3f(1, 0, 0);
     glEnd();
   }
+
+    //! to draw a line of a given length along x axis
+  void drawLine(double len){
+    glBegin(GL_LINES);
+    glVertex3f(-len / 2.0, 0, 0);
+    glVertex3f(len / 2.0, 0, 0);
+    glEnd();
+  }
+
   
   //! to draw a cube with unity vertices
   void drawCube(void){
@@ -1308,12 +1317,15 @@ namespace drawing_t{
   void drawAxle1(int p_num, double len){ //! part number, length
     glNewList(p_num, GL_COMPILE);
     glPushMatrix();
-    
-    drawLine();
-    
+    glScalef(len, 0.1f,0.1f);
+    GLfloat col1[] = {0.4f,0.4f,0.8f, 1.f};
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    glColor3f(0.4f,0.4f,0.8f);
+    drawCube();
     glPopMatrix();
+
+    glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
-    
     glEndList();
   }
   

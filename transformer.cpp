@@ -19,7 +19,7 @@ GLFWwindow* bot_t::window;
 void (*bot_t::renderGL)(GLFWwindow*);
 
 
-    /* white ambient light at half intensity (rgba) */
+/* white ambient light at half intensity (rgba) */
 GLfloat LightAmbient[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 
 /* super bright, full intensity diffuse light. */
@@ -53,15 +53,15 @@ void renderGL(GLFWwindow* window)
   float theta_y = bot_t::autoBots.bodyList[0]->theta_y;
   float theta_z = bot_t::autoBots.bodyList[0]->theta_z;
   //cout<<theta_x<<endl;
-
+  /*
   gluLookAt(center.x + 4.0f*sin(theta_y*PI/180) , center.y,  center.z+ 4.0f*cos(theta_y*PI/180),
       center.x,center.y,center.z,//0,-0.7f,0,
       0.0f, 1.0f,  0.0f);
-
-  /*gluLookAt( 0, 0, 4.0f,
+  */
+  gluLookAt( 0, 0, 4.0f,
       0,0,0,
-      0.0f, 1.0f,  0.0f);*/
-
+      0.0f, 1.0f,  0.0f);
+    
   glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
   glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
   glLightfv(GL_LIGHT0, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)

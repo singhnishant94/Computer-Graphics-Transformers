@@ -11,6 +11,9 @@ namespace drawing_t{
   
   //! to draw a line
   void drawLine(void);
+
+  //! to draw a line of a given length
+  void drawLine(double);
   
   //! to draw a cube
   void drawCube(void);

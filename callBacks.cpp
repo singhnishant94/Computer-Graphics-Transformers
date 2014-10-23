@@ -80,7 +80,7 @@ int group_t::selectJoint(int key){
 void group_t::performAction(int key, int action, int mods){
 
   body_t* currBody = currentBody();
-  double speedTranslate = 0.5f, speedRotate = 1.0f, dir = 1;
+  double speedTranslate = 0.05f, speedRotate = 1.0f, dir = 1;
   vertex_t theta; theta.setVertex(0, 0, 0);
   if (mods == GLFW_MOD_CONTROL) dir = -1;
   if(!currBody->state){
@@ -141,7 +141,7 @@ void group_t::performAction(int key, int action, int mods){
 void group_t::untriggeredActions(void){
   body_t* currBody = currentBody();
   vertex_t theta; theta.setVertex(0, 0, 0);
-  double factor = 0.01;
+  double factor = 0.005; double rot_factor = 1.0;
   double dsx = 0, thx = 0;
   if (currBody->moveState & FORWARD){
     if (currBody->vstate <= 0){
@@ -303,9 +303,13 @@ void group_t::untriggeredActions(void){
       }
     }
   }
-  if(dsx != 0){
-    currBody->theta_y += thx;
-    currBody->translateBodyXZ(dsx, currBody->theta_y + 90); 
+  if(dsx > 0){
+    currBody->theta_y += thx * rot_factor;;
+    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0); 
+  }
+  else  if(dsx < 0){
+    currBody->theta_y += thx * -rot_factor;;
+    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0); 
   }
 }
 
@@ -485,6 +489,10 @@ namespace bot_t{
       le.push_back(e);
       e.setValue(curr->hand2, 0, 15, 0, speed, "yzx");
       le.push_back(e);
+      e.setValue(curr->axle1, 0, -15, 0, speed, "yzx");
+      le.push_back(e);
+      e.setValue(curr->axle2, 0, -15, 0, speed, "yzx");
+      le.push_back(e);
       eventList.push_back(le);
     }
     else{
@@ -497,6 +505,10 @@ namespace bot_t{
       e.setValue(curr->hand1, 0, 0, 0, speed, "yzx");
       le.push_back(e);
       e.setValue(curr->hand2, 0, 0, 0, speed, "yzx");
+      le.push_back(e);
+      e.setValue(curr->axle1, 0, 0, 0, speed, "yzx");
+      le.push_back(e);
+      e.setValue(curr->axle2, 0, 0, 0, speed, "yzx");
       le.push_back(e);
       eventList.push_back(le);
       

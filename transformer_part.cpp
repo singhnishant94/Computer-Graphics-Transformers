@@ -2,6 +2,7 @@
 #include "transformer_part.hpp"
 #include "part_drawings.hpp"
 #include <math.h>
+#include <iostream>
 
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
@@ -43,6 +44,7 @@ void vertex_t::updateValue(double dx, double dy, double dz){
   x += dx;
   y += dy;
   z += dz;
+  //std::cout<<"up "<<dx<<" "<<dy<<" "<<dz<<std::endl;
 }
 
 //! scale value
@@ -397,8 +399,8 @@ body_t::body_t(void){
   tmax = 40;
   tval = 0;
   tzero = 0;
-  rot = 2;
-  recoil = 2;
+  rot = 1;
+  recoil = 1;
   
   hip1 = new part_t();       
   hip1->setPartNum(HIPNUM);
@@ -504,12 +506,14 @@ body_t::body_t(void){
   axle1 = new part_t();
   axle1->setPartNum(AXLE1NUM);
   axle1->fullRotate = 1;
-  
+  axle1->setLength(0.5f);
+  axle1->customPoint.setVertex(axle1->getLength(), 0.15f, 0.0f);
 
   axle2 = new part_t();
   axle2->setPartNum(AXLE1NUM);
   axle2->fullRotate = 1;
-
+  axle2->setLength(0.5f);
+  axle2->customPoint.setVertex(axle2->getLength(), -0.15f, 0.0f);
   
   // here we set the hip values specifically so as to make it at origin
   hip1->anchorLocal = &(hip1->center);
@@ -604,8 +608,8 @@ void body_t::makeBody(void){
   chestCover->connect(&(chestCover->end_A), hip1, &(hip1->center), 0, 0, 90);
   palmPer1->connect(&(palmPer1->end_A), hand1, &(hand1->end_B), 0, 0, -90);
   palmPer2->connect(&(palmPer2->end_A), hand2, &(hand2->end_B), 0, 0, 90);
-  wheelFront1->connect(&(wheelFront1->center), axle1, &(axle1->end_B), 0, 0, 0);  // --------- the 4 below are not done
-  wheelFront2->connect(&(wheelFront2->center), axle2, &(axle2->end_B), 0, 0, 0);
+  wheelFront1->connect(&(wheelFront1->center), axle1, &(axle1->customPoint), 0, 0, 0);  // --------- the 4 below are not done
+  wheelFront2->connect(&(wheelFront2->center), axle2, &(axle2->customPoint), 0, 0, 0);
   wheelBack1->connect(&(wheelBack1->center), leg1, &(leg1->customPoint), 0, 0, 0);
   wheelBack2->connect(&(wheelBack2->center), leg2, &(leg2->customPoint), 0, 0, 0);
   axle1->connect(&(axle1->end_A), palmPer1, &(palmPer1->end_B), 0, 0, 0);
@@ -720,7 +724,7 @@ float delt = 0.02f;
 
 //! draws the body
 void body_t::drawBody(void){
-
+  //std::cout<<"center "<<center.x<<" "<<center.y<<" "<<center.z<<std::endl;
   glTranslatef(center.x, center.y, center.z);
   glScalef(0.1, 0.1, 0.1);
   glRotatef(theta_z, 0, 0, 1);
@@ -767,7 +771,8 @@ void body_t::changeOrientation(joint_t jName, vertex_t delta){
 
 //! translate the given body
 void body_t::translateBody(double dx, double dy, double dz){
-  center.updateValue(dx, dy, dx);
+  //std::cout<<"tr "<<dx<<" "<<dy<<" "<<dz<<std::endl;
+  this->center.updateValue(dx, dy, dz);
 }
 
 //! translate the body in xz plane
@@ -775,7 +780,8 @@ void body_t::translateBodyXZ(double dist, double theta){
   double param = theta * M_PI / 180.0;
   double dx = dist * cos(param);
   double dz = dist * sin(param);
-  translateBody(dx, 0, dz);
+  translateBody(dx, 0, -dz);
+  //std::cout<<"dir "<<theta<<" "<<dx<<" "<<dz<<" "<<theta<<std::endl;
 }
 
 //! rotate the given body
