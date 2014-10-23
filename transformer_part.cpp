@@ -27,7 +27,7 @@
 #define AXLE1NUM 20
 #define AXLE2NUM 21
 
-#define TOT_PART 21
+#define TOT_PART 27
 
 
 #define OK  std::cout<<"ok"<<std::endl;

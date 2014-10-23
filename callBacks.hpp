@@ -77,6 +77,10 @@ namespace bot_t{
   extern int light0;
   extern int light1;
 
+  extern int camera1;
+  extern int camera2;
+  extern int camera3;
+
   void InitGL(void);
   
   //! GLFW callback

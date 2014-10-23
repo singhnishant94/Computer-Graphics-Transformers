@@ -345,31 +345,59 @@ namespace drawing_t{
  
   }
 
-  void drawGround(void){
+  void drawQuad(double side, double y_off){
+    glNewList(22, GL_COMPILE);
     glPushMatrix();
-    //glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    //glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-
     glEnable(GL_TEXTURE_2D);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
     glBindTexture(GL_TEXTURE_2D, texture[4]); 
+        glPushMatrix();
+        glBegin(GL_QUADS);
+        glNormal3f( 0.0f, -1.0f, 0.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f( side, -y_off,-side);      // Top Right Of The Quad (Top)
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(-side, -y_off,-side);      // Top Left Of The Quad (Top)
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(-side, -y_off, side);      // Bottom Left Of The Quad (Top)
+        glTexCoord2f(0.0f, 1.0f); glVertex3f( side, -y_off, side);      // Bottom Right Of The Quad (Top)
+        glEnd();
+        glPopMatrix();
+    glPopMatrix();
+    glEndList();
+  }
+
+  void drawGround(double side, double y_off, int l, int m){
+    glNewList(23, GL_COMPILE);
+    
+    
+    glPushMatrix();
+    glTranslatef(-side*l, 0, -side*m);
+    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+
+    
+
+    
     GLfloat col1[] = {0.0f,1.0f,0.0f, 1.f};
-    glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col1);
     glEnable(GL_COLOR_MATERIAL);
     glColor3f(0.0f,1.0f,0.0f);
-    glBegin(GL_QUADS);
-    glNormal3f( 0.0f, 1.0f, 0.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1000.0f, -0.8f,-1000.0f);      // Top Right Of The Quad (Top)
-    glTexCoord2f(100.0f, 0.0f); glVertex3f(-1000.0f, -0.8f,-1000.0f);      // Top Left Of The Quad (Top)
-    glTexCoord2f(100.0f, 100.0f); glVertex3f(-1000.0f, -0.8f, 1000.0f);      // Bottom Left Of The Quad (Top)
-    glTexCoord2f(0.0f, 100.0f); glVertex3f( 1000.0f, -0.8f, 1000.0f);      // Bottom Right Of The Quad (Top)
-    glEnd();
-    glDisable(GL_TEXTURE_2D);
+    for(int i = 0; i < l; i++)
+      for(int j = 0; j < m; j++){
+        glPushMatrix();
+        glTranslatef(i*side*2, 0, j*side*2);
+        glPushMatrix();
+        glCallList(22);
+        glPopMatrix();
+        glPopMatrix();
+      }
+
+    //glDisable(GL_TEXTURE_2D);
     glColor3f(1.0f, 1.0f, 1.0f);
     glPopMatrix();
+    glEndList();
   }
 
 
+  
   
   //! to draw a line -1, 1 along x axis
   void drawLine(void){
@@ -707,6 +735,15 @@ namespace drawing_t{
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
     glEnable(GL_COLOR_MATERIAL);
     glColor3f(0.0f,1.0f,0.0f);
+
+    
+    
+    
+    //GLfloat col3[] = {0.2f,0.2f,0.2f, 1.f};
+    //glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col3);
+    //glEnable(GL_COLOR_MATERIAL);
+    //glColor3f(0.2f,0.2f,0.2f);
+
     /*
     glBegin(GL_QUADS);
     glNormal3f( 0.0f, 1.0f, 0.0f);
@@ -843,6 +880,7 @@ namespace drawing_t{
     glColor3f(0.3f,0.3f,0.3f);
     drawChest();
     glPopMatrix();
+
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
     glEndList();
@@ -1343,6 +1381,12 @@ namespace drawing_t{
     glClearColor(0.0f, 0.0f, 1.0f, 0.0f); // Clear The Background Color To Blue 
     glClearDepth(1.0);        // Enables Clearing Of The Depth Buffer
 
+    int l = 100, m = 100;
+    double side = 0.05;
+    double y_off = 0.8;
+
+    drawQuad(side, y_off);
+    drawGround(side, y_off, l, m);
     
   }
 

@@ -385,15 +385,29 @@ namespace bot_t{
     }
     else if (key == GLFW_KEY_9 && action == GLFW_PRESS){
       if (light1 == 1) {
-	std::cout<<"Light 1 disabled"<<std::endl;
+	      std::cout<<"Light 1 disabled"<<std::endl;
         light1 = 0;
       }
       else{
-	std::cout<<"Light 1 Enabled"<<std::endl;
+	      std::cout<<"Light 1 Enabled"<<std::endl;
         light1 = 1;
       }
       //if(light1) glEnable(GL_LIGHT1);
       //else glDisable(GL_LIGHT1);
+    }
+    else if (key == GLFW_KEY_0 && action == GLFW_PRESS){
+      if(camera1) {
+        camera1 = 0;
+        camera2 = 1;
+      }
+      else if(camera2){
+        camera2 = 0;
+        camera3 = 1;
+      }
+      else if(camera3){
+        camera3 = 0;
+        camera1 = 1;
+      } 
     }
     else autoBots.performAction(key, action, mods);
   }
@@ -418,7 +432,7 @@ namespace bot_t{
   
   void transformBot(void){
     body_t* curr = autoBots.currentBody();
-    double speed = 2.0;
+    double speed = 5.0;
     if(!curr->state){
       autoBots.jName = ROOT;
       curr->state = 1;
