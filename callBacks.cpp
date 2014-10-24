@@ -481,6 +481,7 @@ namespace bot_t{
     body_t* curr = autoBots.currentBody();
     double speed = 5.0;
     if(!curr->state){
+
       curr->tPoint.setVertex(0, 0, 0);
       autoBots.jName = ROOT;
       curr->state = 1;
@@ -558,8 +559,10 @@ namespace bot_t{
       e.setValue(curr->axle2, 0, -15, 0, speed, "yzx");
       le.push_back(e);
       eventList.push_back(le);
+      spotlight = 1;
     }
     else{
+      spotlight = 0;
       //curr->tPoint.setVertex(0, 0, -1.0);
       curr->state = 0;
       event e;
