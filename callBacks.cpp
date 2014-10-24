@@ -141,16 +141,16 @@ void group_t::performAction(int key, int action, int mods){
 void group_t::untriggeredActions(void){
   body_t* currBody = currentBody();
   vertex_t theta; theta.setVertex(0, 0, 0);
-  double factor = 0.005; double rot_factor = 1.0;
+  double factor = 0.01; double rot_factor = 1.2;
   double dsx = 0, thx = 0;
   if (currBody->moveState & FORWARD){
     if (currBody->vstate <= 0){
       currBody->level += currBody->speed1;
       
       dsx = factor * currBody->speed1;
-      theta.setVertex(0, currBody->speed1, 0);
+      theta.setVertex(0, currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, -1 * currBody->speed1, 0);
+      theta.setVertex(0, -1 * currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
       
       if (currBody->level > currBody->level0) currBody->vstate = 1;
@@ -159,9 +159,9 @@ void group_t::untriggeredActions(void){
       currBody->level += currBody->speed1;
       
       dsx = factor * currBody->speed1;
-      theta.setVertex(0, currBody->speed1, 0);
+      theta.setVertex(0, currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, -1 * currBody->speed1, 0);
+      theta.setVertex(0, -1 * currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
 	  
       if (currBody->level > currBody->level1) currBody->vstate = 2;
@@ -173,9 +173,9 @@ void group_t::untriggeredActions(void){
       }
       dsx = factor * currBody->speed2;
       
-      theta.setVertex(0, currBody->speed2, 0);
+      theta.setVertex(0, currBody->speed2 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, -1 * currBody->speed2, 0);
+      theta.setVertex(0, -1 * currBody->speed2 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
     }
   }
@@ -185,9 +185,9 @@ void group_t::untriggeredActions(void){
       currBody->level -= 1;
       dsx = factor * currBody->speed0;
       
-      theta.setVertex(0, currBody->speed0, 0);
+      theta.setVertex(0, currBody->speed0 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, -1 * currBody->speed0, 0);
+      theta.setVertex(0, -1 * currBody->speed0 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
 	
       if (currBody->level <= currBody->level0){
@@ -202,9 +202,9 @@ void group_t::untriggeredActions(void){
       currBody->level -= currBody->speedm1;
       dsx = factor * currBody->speed1;
       
-      theta.setVertex(0, currBody->speed1, 0);
+      theta.setVertex(0, currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, -1 * currBody->speed1, 0);
+      theta.setVertex(0, -1 * currBody->speed1 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
       
       if (currBody->level < currBody->level0) currBody->vstate = -1;
@@ -215,9 +215,9 @@ void group_t::untriggeredActions(void){
       }
       dsx = factor * -currBody->speedm1;
       
-      theta.setVertex(0, -currBody->speedm1, 0);
+      theta.setVertex(0, -currBody->speedm1 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, currBody->speedm1, 0);
+      theta.setVertex(0, currBody->speedm1 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
     }
   }
@@ -227,9 +227,9 @@ void group_t::untriggeredActions(void){
       currBody->level += 1;
       dsx = factor * -currBody->speed0;
       
-      theta.setVertex(0, -currBody->speed0, 0);
+      theta.setVertex(0, -currBody->speed0 * rot_factor, 0);
       currBody->changeOrientation(WHEELFRONTPALMPER, theta);
-      theta.setVertex(0, currBody->speed0, 0);
+      theta.setVertex(0, currBody->speed0 * rot_factor, 0);
       currBody->changeOrientation(WHEELBACKLEG, theta);
       
       if (currBody->level >= currBody->level0){
@@ -241,9 +241,17 @@ void group_t::untriggeredActions(void){
   
   
   if (currBody->moveState & TLEFT){
-    if (currBody->tstate <= 0){
+    if (currBody->tstate < 0){
       currBody->tval+=currBody->rot;
-      thx =  currBody->rot;
+      thx = -currBody->rot;
+      theta.setVertex(0, 0, currBody->rot);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      if (currBody->tval >= currBody->tzero) currBody->tstate = 1; 
+    }
+    else if (currBody->tstate == 0){
+      currBody->tval+=currBody->rot;
+      thx = 0;
       theta.setVertex(0, 0, currBody->rot);
       currBody->changeOrientation(AXLE1PALMPER1, theta);
       currBody->changeOrientation(AXLE2PALMPER2, theta);
@@ -261,6 +269,7 @@ void group_t::untriggeredActions(void){
   }
   else{
     if (currBody->tstate == 1){
+      thx = currBody->rot;
       theta.setVertex(0, 0, -currBody->recoil);
       currBody->changeOrientation(AXLE1PALMPER1, theta);
       currBody->changeOrientation(AXLE2PALMPER2, theta);
@@ -273,9 +282,17 @@ void group_t::untriggeredActions(void){
   }
 
   if (currBody->moveState & TRIGHT){
-    if (currBody->tstate >= 0){
+    if (currBody->tstate > 0){
       currBody->tval -= currBody->rot;;      
-      thx =  -currBody->rot;
+      thx = currBody->rot;
+      theta.setVertex(0, 0, -currBody->rot);
+      currBody->changeOrientation(AXLE1PALMPER1, theta);
+      currBody->changeOrientation(AXLE2PALMPER2, theta);
+      if (currBody->tval <= currBody->tzero) currBody->tstate = -1; 
+    }
+    else if (currBody->tstate == 0){
+      currBody->tval -= currBody->rot;;      
+      thx = 0;
       theta.setVertex(0, 0, -currBody->rot);
       currBody->changeOrientation(AXLE1PALMPER1, theta);
       currBody->changeOrientation(AXLE2PALMPER2, theta);
@@ -293,6 +310,7 @@ void group_t::untriggeredActions(void){
   }
   else{
     if (currBody->tstate == -1){
+      thx = -currBody->rot;
       theta.setVertex(0, 0, currBody->recoil);
       currBody->changeOrientation(AXLE1PALMPER1, theta);
       currBody->changeOrientation(AXLE2PALMPER2, theta);
@@ -304,12 +322,14 @@ void group_t::untriggeredActions(void){
     }
   }
   if(dsx > 0){
-    currBody->theta_y += thx * rot_factor;;
-    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0); 
+    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0 + currBody->tval); 
+    double f = 0.6 * dsx / factor;
+    currBody->theta_y += f * thx;
   }
   else  if(dsx < 0){
-    currBody->theta_y += thx * -rot_factor;;
-    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0); 
+    currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0 + currBody->tval); 
+    double f = 0.6 * dsx / factor;
+    currBody->theta_y += thx * f;
   }
 }
 
@@ -321,9 +341,16 @@ void group_t::initListAfterContext(void){
   }
 }
 
+//! constructor
+event::event(void){
+  type = 0;
+  isRoot = 0;
+}
+
 
 //! setvalue
 void event::setValue(part_t* _part, double _t_x, double _t_y, double _t_z, double _speed, std::string _order){
+  isRoot = 0;
   part = _part;
   t_x = _t_x;
   t_y = _t_y;
@@ -332,9 +359,24 @@ void event::setValue(part_t* _part, double _t_x, double _t_y, double _t_z, doubl
   order = _order;
 }
 
+//! setting for the root
+void event::setValue(body_t *_body, double _para_x, double _para_y, double _para_z, double _speed, std::string _type){
+  isRoot = 1;
+  body = _body;
+  if (_type == "pos"){
+    p_x = _para_x;
+    p_y = _para_y;
+    p_z = _para_z;
+    pos_speed = _speed;
+    type += 1;
+  }
+}
+  
+
 //! execute Event and return the outcome
 int event::execute(void){
-  return part->setAngularOrientationT(t_x, t_y, t_z, speed, order);
+  if (!isRoot) return part->setAngularOrientationT(t_x, t_y, t_z, speed, order);
+  else if (type == 1) return body->setPosition(p_x, p_y, p_z, pos_speed); 
 }
 
 
@@ -354,12 +396,12 @@ namespace bot_t{
 
     // set up light number 1.
     /*
-    glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-    glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
-    glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);  // add lighting. (diffuse).
-    glLightfv(GL_LIGHT1, GL_POSITION,LightPosition); // set light position.
-    //glEnable(GL_LIGHT1);*/
+      glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+      glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+      glLightfv(GL_LIGHT1, GL_AMBIENT, LightAmbient);  // add lighting. (ambient)
+      glLightfv(GL_LIGHT1, GL_DIFFUSE, LightDiffuse);  // add lighting. (diffuse).
+      glLightfv(GL_LIGHT1, GL_POSITION,LightPosition); // set light position.
+      //glEnable(GL_LIGHT1);*/
   }
   
   void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -385,11 +427,11 @@ namespace bot_t{
     }
     else if (key == GLFW_KEY_9 && action == GLFW_PRESS){
       if (light1 == 1) {
-	      std::cout<<"Light 1 disabled"<<std::endl;
+	std::cout<<"Light 1 disabled"<<std::endl;
         light1 = 0;
       }
       else{
-	      std::cout<<"Light 1 Enabled"<<std::endl;
+	std::cout<<"Light 1 Enabled"<<std::endl;
         light1 = 1;
       }
       //if(light1) glEnable(GL_LIGHT1);
@@ -412,9 +454,8 @@ namespace bot_t{
     else if (key == GLFW_KEY_7 && action == GLFW_PRESS){
       if(spotlight) 
         spotlight = 0;
-       else spotlight = 1;
+      else spotlight = 1;
     }
-
     else autoBots.performAction(key, action, mods);
   }
   
@@ -440,6 +481,7 @@ namespace bot_t{
     body_t* curr = autoBots.currentBody();
     double speed = 5.0;
     if(!curr->state){
+      curr->tPoint.setVertex(0, 0, 0);
       autoBots.jName = ROOT;
       curr->state = 1;
       event e;
@@ -485,6 +527,8 @@ namespace bot_t{
       le.push_back(e);
       e.setValue(curr->thigh2, -90, 0, -90, speed, "zxy");
       le.push_back(e);
+      e.setValue(curr, curr->center.x, curr->center.y - 0.584, curr->center.z, speed * 0.004, "pos");
+      le.push_back(e);
       eventList.push_back(le);
       
       // turning the foot
@@ -516,6 +560,7 @@ namespace bot_t{
       eventList.push_back(le);
     }
     else{
+      //curr->tPoint.setVertex(0, 0, -1.0);
       curr->state = 0;
       event e;
       std::list<event> le;
@@ -550,6 +595,8 @@ namespace bot_t{
             
       // lifting the thighs
       le.clear();
+      e.setValue(curr, curr->center.x, curr->center.y + 0.584, curr->center.z, speed * 0.008, "pos");
+      le.push_back(e);
       e.setValue(curr->thigh1, 0, 0, -90, speed, "zxy");
       le.push_back(e);
       e.setValue(curr->thigh2, 0, 0, -90, speed, "zxy");

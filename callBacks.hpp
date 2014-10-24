@@ -52,6 +52,17 @@ struct group_t{
 
 //! the struct handles transformation of one part
 struct event{
+  
+  //! to differentiate event for root Root
+  int isRoot;
+  
+  int type;  // type of operation
+  
+  //! for the root
+  body_t *body;
+  double p_x, p_y, p_z, pos_speed;
+  
+  //! for the part_t case
   //! the parameters of the function
   double t_x, t_y, t_z, speed;
   std::string order;
@@ -59,8 +70,14 @@ struct event{
   //! the function to be called
   part_t* part;
   
-  //! setting the value
+  //! constructor
+  event(void);
+  
+  //! setting the value for part_t
   void setValue(part_t*, double, double, double, double, std::string);
+  
+  //! setting for the root. 1 = pos
+  void setValue(body_t*, double, double, double, double, std::string);
   
   //! execute Event and return the outcome
   int execute(void);
@@ -77,7 +94,7 @@ namespace bot_t{
   extern int light0;
   extern int light1;
   extern int spotlight;
-
+  
   extern int camera1;
   extern int camera2;
   extern int camera3;
