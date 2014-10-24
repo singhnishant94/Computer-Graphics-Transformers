@@ -8,6 +8,7 @@
 #include <string>
 #include <stdio.h>      // Header file for standard file i/o.
 #include <stdlib.h>     // Header file for malloc/free.
+#include <SOIL/SOIL.h>
 
 
 namespace drawing_t{
@@ -29,6 +30,8 @@ namespace drawing_t{
   GLuint texture[10];
 
   /* Image type - contains height, width, and data */
+
+  /*
   struct Image {
     unsigned long sizeX;
     unsigned long sizeY;
@@ -185,11 +188,14 @@ namespace drawing_t{
     if (!(ImageLoad("Data/lesson6/ground.bmp", image5))){
       exit(1);
     } 
+
+    */
     /*
     if (!(ImageLoad("Data/lesson6/sky.bmp", image6))){
       exit(1);
     } 
 */
+    /*
     glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
 
 
@@ -275,11 +281,100 @@ namespace drawing_t{
 
     // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
     // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image6->sizeX, image6->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image6->data);*/
+    glTexImage2D(GL_TEXTURE_2D, 0, 3, image6->sizeX, image6->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image6->data);
   }
 
+  */
 
+  int LoadGLTextures()                                    // Load Bitmaps And Convert To Textures
+  {
+      /* load an image file directly as a new OpenGL texture */
+      texture[0] = SOIL_load_OGL_texture
+          (
+          "Data/lesson6/chest.bmp",
+          SOIL_LOAD_AUTO,
+          SOIL_CREATE_NEW_ID,
+          SOIL_FLAG_INVERT_Y
+          );
+   
+      if(texture[0] == 0)
+          return false;
+  
+      // Typical Texture Generation Using Data From The Bitmap
+      glBindTexture(GL_TEXTURE_2D, texture[0]);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+   
+      /* load an image file directly as a new OpenGL texture */
+      texture[1] = SOIL_load_OGL_texture
+          (
+          "Data/lesson6/metal.bmp",
+          SOIL_LOAD_AUTO,
+          SOIL_CREATE_NEW_ID,
+          SOIL_FLAG_INVERT_Y
+          );
+   
+      if(texture[1] == 0)
+          return false;
+  
+      // Typical Texture Generation Using Data From The Bitmap
+      glBindTexture(GL_TEXTURE_2D, texture[1]);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
+      /* load an image file directly as a new OpenGL texture */
+      texture[2] = SOIL_load_OGL_texture
+          (
+          "Data/lesson6/tyre.bmp",
+          SOIL_LOAD_AUTO,
+          SOIL_CREATE_NEW_ID,
+          SOIL_FLAG_INVERT_Y
+          );
+   
+      if(texture[2] == 0)
+          return false;
+  
+      // Typical Texture Generation Using Data From The Bitmap
+      glBindTexture(GL_TEXTURE_2D, texture[2]);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+      /* load an image file directly as a new OpenGL texture */
+      texture[3] = SOIL_load_OGL_texture
+          (
+          "Data/lesson6/sky.bmp",
+          SOIL_LOAD_AUTO,
+          SOIL_CREATE_NEW_ID,
+          SOIL_FLAG_INVERT_Y
+          );
+   
+      if(texture[3] == 0)
+          return false;
+  
+      // Typical Texture Generation Using Data From The Bitmap
+      glBindTexture(GL_TEXTURE_2D, texture[3]);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+      /* load an image file directly as a new OpenGL texture */
+      texture[4] = SOIL_load_OGL_texture
+          (
+          "Data/lesson6/ground.bmp",
+          SOIL_LOAD_AUTO,
+          SOIL_CREATE_NEW_ID,
+          SOIL_FLAG_INVERT_Y
+          );
+   
+      if(texture[4] == 0)
+          return false;
+  
+      // Typical Texture Generation Using Data From The Bitmap
+      glBindTexture(GL_TEXTURE_2D, texture[4]);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+
+      return true;                                        // Return Success
+  }
 
 
   ///////////////////////////////////////////
