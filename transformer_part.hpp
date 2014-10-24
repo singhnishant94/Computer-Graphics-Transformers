@@ -192,6 +192,8 @@ struct body_t{
   double tmin, tmax, tval, tzero;
   double rot, recoil;
   
+  vertex_t tPoint;
+  
   //! for finding current movement
   int moveState;  
 
@@ -234,6 +236,9 @@ struct body_t{
   //! add the constraints to the various parts
   void addConstraints(void);
 
+  //! change the bot position to a given position
+  int setPosition(double, double, double, double);
+  
   //! changes the vehicle / bot
   void transformBot(void);
 };

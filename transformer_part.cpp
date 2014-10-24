@@ -376,6 +376,7 @@ int part_t::setAngularOrientationZT(double t_z, double speed){
 //! constructor for body
 body_t::body_t(void){
   center.setVertex(0, 0, 0);
+  tPoint.setVertex(0, 0, 0);
   theta_x = theta_y = theta_z = 0.0;
   state = 0;
   
@@ -463,7 +464,7 @@ body_t::body_t(void){
   hand2->setPartNum(HANDNUM);
   hand2->setLength(1.3f);
   
-  palm1 = new part_t();
+   palm1 = new part_t();
   palm1->setPartNum(PALMNUM);
   
   palm2 = new part_t();
@@ -726,10 +727,12 @@ float delt = 0.02f;
 void body_t::drawBody(void){
   //std::cout<<"center "<<center.x<<" "<<center.y<<" "<<center.z<<std::endl;
   glTranslatef(center.x, center.y, center.z);
-  glScalef(0.1, 0.1, 0.1);
+  //glTranslatef(-tPoint.x, -tPoint.y, -tPoint.z);
   glRotatef(theta_z, 0, 0, 1);
   glRotatef(theta_y, 0, 1, 0);
   glRotatef(theta_x, 1, 0, 0);
+  glTranslatef(tPoint.x, tPoint.y, tPoint.z);
+  glScalef(0.1, 0.1, 0.1);
   glPushMatrix();
   hip1->drawPart();
   glPopMatrix();
@@ -797,6 +800,53 @@ void body_t::rotateBody(double dx, double dy, double dz){
   theta_z += dz;
   if(theta_z >= 360) theta_z -= 360;
   else if(theta_z <= -360) theta_z += 360;
+}
+
+//! change the bot position to a given position
+int body_t::setPosition(double _x, double _y, double _z, double speed){
+  double x = center.x, y = center.y, z = center.z;
+  int indicator = 0;
+
+  if (x - _x > speed){
+    indicator = 1;
+    center.x -= speed;
+  }
+  else if (_x - x > speed){
+    indicator = 1;
+    center.x += speed;
+  }
+  else if (_x != x){
+    indicator = 1;
+    center.x = _x;
+  }
+  
+  if (y - _y > speed){
+    indicator = 1;
+    center.y -= speed;
+  }
+  else if (_y - y > speed){
+    indicator = 1;
+    center.y += speed;
+  }
+  else if (_y != y){
+    indicator = 1;
+    center.y = _y;
+  }
+  
+  if (z - _z > speed){
+    indicator = 1;
+    center.z -= speed;
+  }
+  else if (_z - z > speed){
+    indicator = 1;
+    center.z += speed;
+  }
+  else if (_z != z){
+    indicator = 1;
+    center.z = _z;
+  }
+  
+  return indicator;
 }
 
 //! changes the bot to vehicle

@@ -1381,8 +1381,8 @@ namespace drawing_t{
     glClearColor(0.0f, 0.0f, 1.0f, 0.0f); // Clear The Background Color To Blue 
     glClearDepth(1.0);        // Enables Clearing Of The Depth Buffer
 
-    int l = 100, m = 100;
-    double side = 0.05;
+    int l = 50, m = 50;
+    double side = 0.1;
     double y_off = 0.8;
 
     drawQuad(side, y_off);
