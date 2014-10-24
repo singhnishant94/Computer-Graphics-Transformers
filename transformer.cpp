@@ -14,6 +14,7 @@ double PI  = M_PI;
 
 int bot_t::light0 = 1, bot_t::light1 = 1;
 int bot_t::camera1 = 1, bot_t::camera2 = 0, bot_t::camera3 = 0;
+int bot_t::spotlight = 0;
 
 group_t bot_t::autoBots;
 std::list<std::list<event> > bot_t::eventList;          //! list of events to execute
@@ -177,15 +178,22 @@ void renderGL(GLFWwindow* window)
   else 
     glDisable(GL_LIGHT1);
 
-  //spot( 0.0,5.0,0,0.0,-1.0,0.0);
-  glEnable(GL_LIGHT2);
-  glEnable(GL_LIGHT3);
+  if(bot_t::spotlight){
+    glEnable(GL_LIGHT2);
+    glEnable(GL_LIGHT3);
+  }
+  else{
+  glDisable(GL_LIGHT2);
+  glDisable(GL_LIGHT3);
+  }
   //glutSolidSphere (2, 20, 20);
   //drawing_t::drawGround();
+
   glPushMatrix();
   glCallList(23);
   glPopMatrix();
   drawing_t::drawSky();
+  drawing_t::drawWalls();
   bot_t::autoBots.bodyList[0]->drawBody();
 }
 

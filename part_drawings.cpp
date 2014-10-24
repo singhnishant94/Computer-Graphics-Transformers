@@ -10,7 +10,7 @@
 #include <stdlib.h>     // Header file for malloc/free.
 #include <SOIL/SOIL.h>
 
-
+using namespace std;
 namespace drawing_t{
 
 
@@ -29,352 +29,120 @@ namespace drawing_t{
   /* storage for one texture  */
   GLuint texture[10];
 
-  /* Image type - contains height, width, and data */
-
-  /*
-  struct Image {
-    unsigned long sizeX;
-    unsigned long sizeY;
-    char *data;
-  };
-  typedef struct Image Image;
-
-  // quick and dirty bitmap loader...for 24 bit bitmaps with 1 plane only.  
-  // See http://www.dcs.ed.ac.uk/~mxr/gfx/2d/BMP.txt for more info.
-  int ImageLoad(const char *filename, Image *image) {
-    FILE *file;
-    unsigned long size;                 // size of the image in bytes.
-    unsigned long i;                    // standard counter.
-    unsigned short int planes;          // number of planes in image (must be 1) 
-    unsigned short int bpp;             // number of bits per pixel (must be 24)
-    char temp;                          // temporary color storage for bgr-rgb conversion.
-
-    // make sure the file is there.
-    if ((file = fopen(filename, "rb"))==NULL){
-    	printf("File Not Found : %s\n",filename);
-    	return 0;
-    }
-    
-    // seek through the bmp header, up to the width/height:
-    fseek(file, 18, SEEK_CUR);
-
-    // read the width
-    if ((i = fread(&image->sizeX, 4, 1, file)) != 1) {
-      printf("Error reading width from %s.\n", filename);
-      return 0;
-    }
-    printf("Width of %s: %lu\n", filename, image->sizeX);
-    
-    // read the height 
-    if ((i = fread(&image->sizeY, 4, 1, file)) != 1) {
-      printf("Error reading height from %s.\n", filename);
-      return 0;
-    }
-    printf("Height of %s: %lu\n", filename, image->sizeY);
-    
-    // calculate the size (assuming 24 bits or 3 bytes per pixel).
-    size = image->sizeX * image->sizeY * 3;
-
-    // read the planes
-    if ((fread(&planes, 2, 1, file)) != 1) {
-      printf("Error reading planes from %s.\n", filename);
-      return 0;
-    }
-    if (planes != 1) {
-      printf("Planes from %s is not 1: %u\n", filename, planes);
-      return 0;
-    }
-
-    // read the bpp
-    if ((i = fread(&bpp, 2, 1, file)) != 1) {
-      printf("Error reading bpp from %s.\n", filename);
-      return 0;
-    }
-    if (bpp != 24) {
-      printf("Bpp from %s is not 24: %u\n", filename, bpp);
-      return 0;
-    }
-  
-    // seek past the rest of the bitmap header.
-    fseek(file, 24, SEEK_CUR);
-
-    // read the data. 
-    image->data = (char *) malloc(size);
-    if (image->data == NULL) {
-      printf("Error allocating memory for color-corrected image data");
-      return 0; 
-    }
-
-    if ((i = fread(image->data, size, 1, file)) != 1) {
-      printf("Error reading image data from %s.\n", filename);
-      return 0;
-    }
-
-    for (i=0;i<size;i+=3) { // reverse all of the colors. (bgr -> rgb)
-      temp = image->data[i];
-      image->data[i] = image->data[i+2];
-      image->data[i+2] = temp;
-    }
-    
-    // we're done.
-    return 1;
-  }
-
-  // Load Bitmaps And Convert To Textures
-  void LoadGLTextures() { 
-    // Load Texture
-    Image *image1;
-    Image *image2;
-    Image *image3;
-    Image *image4;
-    Image *image5;
-    Image *image6;
-    // allocate space for texture
-    image1 = (Image *) malloc(sizeof(Image));
-    if (image1 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-
-    image2 = (Image *) malloc(sizeof(Image));
-    if (image2 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-
-    image3 = (Image *) malloc(sizeof(Image));
-    if (image3 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-
-    image4 = (Image *) malloc(sizeof(Image));
-    if (image4 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-
-    image5 = (Image *) malloc(sizeof(Image));
-    if (image5 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-    
-    image6 = (Image *) malloc(sizeof(Image));
-    if (image6 == NULL) {
-      printf("Error allocating space for image");
-      exit(0);
-    }
-
-    // Create Texture 
-    glGenTextures(6, texture);
-
-    if (!(ImageLoad("Data/lesson6/chest.bmp", image1))){
-      exit(1);
-    }     
-
-    if (!(ImageLoad("Data/lesson6/metal.bmp", image2))){
-      exit(1);
-    }   
-       
-    if (!(ImageLoad("Data/lesson6/tyre.bmp", image3))){
-      exit(1);
-    }  
-
-    if (!(ImageLoad("Data/lesson6/sky.bmp", image4))){
-      exit(1);
-    }  
-    
-    if (!(ImageLoad("Data/lesson6/ground.bmp", image5))){
-      exit(1);
-    } 
-
-    */
-    /*
-    if (!(ImageLoad("Data/lesson6/sky.bmp", image6))){
-      exit(1);
-    } 
-*/
-    /*
-    glBindTexture(GL_TEXTURE_2D, texture[0]);   // 2d texture (x and y size)
-
-
-    
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image1->sizeX, image1->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image1->data);
-
-
-    glBindTexture(GL_TEXTURE_2D, texture[1]);   // 2d texture (x and y size)
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image2->sizeX, image2->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image2->data);
-
-
-
-    glBindTexture(GL_TEXTURE_2D, texture[2]);   // 2d texture (x and y size)
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image3->sizeX, image3->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image3->data);
-
-
-
-
-    glBindTexture(GL_TEXTURE_2D, texture[3]);   // 2d texture (x and y size)
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image4->sizeX, image4->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image4->data);
-
-
-    glBindTexture(GL_TEXTURE_2D, texture[4]);   // 2d texture (x and y size)
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image5->sizeX, image5->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image5->data);
-
-    /*
-    glBindTexture(GL_TEXTURE_2D, texture[5]);   // 2d texture (x and y size)
-
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR); // scale linearly when image bigger than texture
-    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR); // scale linearly when image smalled than texture
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_S, GL_CLAMP );
-    //glTexParameteri( GL_TEXTURE_2D,GL_TEXTURE_WRAP_T, GL_REPEAT );
-
-    // 2d texture, level of detail 0 (normal), 3 components (red, green, blue), x size from image, y size from image, 
-    // border 0 (normal), rgb color data, unsigned byte data, and finally the data itself.
-    glTexImage2D(GL_TEXTURE_2D, 0, 3, image6->sizeX, image6->sizeY, 0, GL_RGB, GL_UNSIGNED_BYTE, image6->data);
-  }
-
-  */
-
   int LoadGLTextures()                                    // Load Bitmaps And Convert To Textures
-  {
-      /* load an image file directly as a new OpenGL texture */
-      texture[0] = SOIL_load_OGL_texture
-          (
-          "Data/lesson6/chest.bmp",
-          SOIL_LOAD_AUTO,
-          SOIL_CREATE_NEW_ID,
-          SOIL_FLAG_INVERT_Y
-          );
-   
-      if(texture[0] == 0)
-          return false;
-  
-      // Typical Texture Generation Using Data From The Bitmap
-      glBindTexture(GL_TEXTURE_2D, texture[0]);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
-   
-      /* load an image file directly as a new OpenGL texture */
-      texture[1] = SOIL_load_OGL_texture
-          (
-          "Data/lesson6/metal.bmp",
-          SOIL_LOAD_AUTO,
-          SOIL_CREATE_NEW_ID,
-          SOIL_FLAG_INVERT_Y
-          );
-   
-      if(texture[1] == 0)
-          return false;
-  
-      // Typical Texture Generation Using Data From The Bitmap
-      glBindTexture(GL_TEXTURE_2D, texture[1]);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+{
+    /* load an image file directly as a new OpenGL texture */
+    texture[0] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/chest.bmp",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[0] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[0]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+ 
+    // load an image file directly as a new OpenGL texture 
+    texture[1] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/metal.bmp",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[1] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[1]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    
+    // load an image file directly as a new OpenGL texture
+    texture[2] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/tyre.bmp",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[2] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[2]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-      /* load an image file directly as a new OpenGL texture */
-      texture[2] = SOIL_load_OGL_texture
-          (
-          "Data/lesson6/tyre.bmp",
-          SOIL_LOAD_AUTO,
-          SOIL_CREATE_NEW_ID,
-          SOIL_FLAG_INVERT_Y
-          );
-   
-      if(texture[2] == 0)
-          return false;
-  
-      // Typical Texture Generation Using Data From The Bitmap
-      glBindTexture(GL_TEXTURE_2D, texture[2]);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    // load an image file directly as a new OpenGL texture
+    texture[3] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/sky.bmp",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[3] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[3]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    
 
-      /* load an image file directly as a new OpenGL texture */
-      texture[3] = SOIL_load_OGL_texture
-          (
-          "Data/lesson6/sky.bmp",
-          SOIL_LOAD_AUTO,
-          SOIL_CREATE_NEW_ID,
-          SOIL_FLAG_INVERT_Y
-          );
-   
-      if(texture[3] == 0)
-          return false;
-  
-      // Typical Texture Generation Using Data From The Bitmap
-      glBindTexture(GL_TEXTURE_2D, texture[3]);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    // load an image file directly as a new OpenGL texture
+    texture[4] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/floor1.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[4] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[4]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-      /* load an image file directly as a new OpenGL texture */
-      texture[4] = SOIL_load_OGL_texture
-          (
-          "Data/lesson6/ground.bmp",
-          SOIL_LOAD_AUTO,
-          SOIL_CREATE_NEW_ID,
-          SOIL_FLAG_INVERT_Y
-          );
-   
-      if(texture[4] == 0)
-          return false;
-  
-      // Typical Texture Generation Using Data From The Bitmap
-      glBindTexture(GL_TEXTURE_2D, texture[4]);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    // load an image file directly as a new OpenGL texture
+    texture[5] = SOIL_load_OGL_texture
+        (
+        "Data/lesson6/bricks.jpg",
+        SOIL_LOAD_AUTO,
+        SOIL_CREATE_NEW_ID,
+        SOIL_FLAG_INVERT_Y
+        );
+ 
+    if(texture[5] == 0)
+        return false;
+ 
+ 
+    // Typical Texture Generation Using Data From The Bitmap
+    glBindTexture(GL_TEXTURE_2D, texture[5]);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_LINEAR);
 
-      return true;                                        // Return Success
-  }
+    return true;                                        // Return Success
+    
+}
 
 
   ///////////////////////////////////////////
@@ -388,12 +156,13 @@ namespace drawing_t{
   void drawSky(void){
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0f,1.0f,1.0f);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
     glBindTexture(GL_TEXTURE_2D, texture[3]); 
     //GLfloat col1[] = {0.0f,0.0f,1.0f, 1.f};
     //glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
-    glEnable(GL_COLOR_MATERIAL);
-    glColor3f(0.4f,0.8f,0.95f);
+    //glEnable(GL_COLOR_MATERIAL);
+    //glColor3f(0.4f,0.8f,0.95f);
     glScalef(1000.0f, 1000.0f, 1000.0f);
     glBegin(GL_QUADS);            // Draw The Cube Using quads
     //glColor3f(_r,_g,_b);
@@ -410,27 +179,27 @@ namespace drawing_t{
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Bottom)
     //glColor3f(1.0f,0.0f,0.0f);  // Color Red
     glNormal3f( 0.0f, 0.0f, 1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Front)
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
+    glTexCoord2f(0.25f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Front)
+    glTexCoord2f(0.5f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Front)
+    glTexCoord2f(0.5f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Front)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Front)
     //glColor3f(1.0f,1.0f,0.0f);  // Color Yellow
     glNormal3f( 0.0f, 0.0f,-1.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Top Right Of The Quad (Back)
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
-    glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Bottom Right Of The Quad (Back)
+    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Top Right Of The Quad (Back)
+    glTexCoord2f(0.75f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Top Left Of The Quad (Back)
+    glTexCoord2f(0.75f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Bottom Left Of The Quad (Back)
+    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Bottom Right Of The Quad (Back)
     //glColor3f(1.0f,1.0f,1.0f);  // Color white
     glNormal3f( -1.0f, 0.0f, 0.0f);
-    glTexCoord2f(0.0f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
-    glTexCoord2f(1.0f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
-    glTexCoord2f(1.0f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
+    glTexCoord2f(0.5f, 0.0f); glVertex3f(-1.0f, 1.0f, 1.0f);      // Top Right Of The Quad (Left)
+    glTexCoord2f(0.75f, 0.0f); glVertex3f(-1.0f, 1.0f,-1.0f);      // Top Left Of The Quad (Left)
+    glTexCoord2f(0.75f, 1.0f); glVertex3f(-1.0f,-1.0f,-1.0f);      // Bottom Left Of The Quad (Left)
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,-1.0f, 1.0f);      // Bottom Right Of The Quad (Left)
     //glColor3f(1.0f,0.0f,1.0f);  // Color Violet
     glNormal3f( 1.0f, 0.0f, 0.0f);
     glTexCoord2f(0.0f, 0.0f); glVertex3f( 1.0f, 1.0f,-1.0f);      // Top Right Of The Quad (Right)
-    glTexCoord2f(1.0f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Right)
-    glTexCoord2f(1.0f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Right)
+    glTexCoord2f(0.25f, 0.0f); glVertex3f( 1.0f, 1.0f, 1.0f);      // Top Left Of The Quad (Right)
+    glTexCoord2f(0.25f, 1.0f); glVertex3f( 1.0f,-1.0f, 1.0f);      // Bottom Left Of The Quad (Right)
     glTexCoord2f(0.0f, 1.0f); glVertex3f( 1.0f,-1.0f,-1.0f);      // Bottom Right Of The Quad (Right)
     //glColor3f(1.0f,0.0f,0.0f);
     glEnd();                      // End Drawing The Cube
@@ -440,10 +209,73 @@ namespace drawing_t{
  
   }
 
+  void drawWall(void){
+    glPushMatrix();
+    glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0f,1.0f,1.0f);
+    glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
+    glBindTexture(GL_TEXTURE_2D, texture[5]); 
+    //GLfloat col1[] = {0.0f,0.0f,1.0f, 1.f};
+    //glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
+    //glEnable(GL_COLOR_MATERIAL);
+    //glColor3f(0.4f,0.8f,0.95f);
+    //glScalef(1000.0f, 1000.0f, 1000.0f);
+    int height = 2, width = 25;
+    double s = 0.2;
+    for (int i = 0; i < height; ++i)
+      for (int j = 0; j < width; ++j)
+      {
+        glPushMatrix();
+        glTranslatef(j*s*2, i*2*s, 0);
+        glBegin(GL_QUADS);            // Draw The Cube Using quads
+        //glColor3f(_r,_g,_b);
+        glNormal3f( 0.0f, 1.0f, 0.0f);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f( s, s, 0);      // Top Right Of The Quad (Top)
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(-s, s, 0);      // Top Left Of The Quad (Top)
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(-s, -s, 0);      // Bottom Left Of The Quad (Top)
+        glTexCoord2f(0.0f, 1.0f); glVertex3f( s, -s, 0);      // Bottom Right Of The Quad (Top)
+        glEnd();
+        glPopMatrix();
+      
+      }
+    //glColor3f(1.0f,0.0f,0.0f);
+                          // End Drawing The Cube
+    glDisable(GL_TEXTURE_2D);
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPopMatrix();
+ 
+  }
+
+  void drawWalls(void){
+    glPushMatrix();
+      glTranslatef(-4.95,-0.6,-4.95);
+      drawWall();
+    glPopMatrix();
+
+    glPushMatrix();
+      glTranslatef(-4.95,-0.6,4.85);
+      drawWall();
+    glPopMatrix();
+
+    glPushMatrix();
+      glTranslatef(4.85,-0.6,4.85);
+      glRotatef(90, 0, 1, 0);
+      drawWall();
+    glPopMatrix();
+
+    glPushMatrix();
+      glTranslatef(-4.95,-0.6,4.85);
+      glRotatef(90, 0, 1, 0);
+      drawWall();
+    glPopMatrix();
+
+  }
+
   void drawQuad(double side, double y_off){
     glNewList(22, GL_COMPILE);
     glPushMatrix();
     glEnable(GL_TEXTURE_2D);
+    glColor3f(1.0f,1.0f,1.0f);
     glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,  GL_MODULATE);
     glBindTexture(GL_TEXTURE_2D, texture[4]); 
         glPushMatrix();
@@ -455,6 +287,7 @@ namespace drawing_t{
         glTexCoord2f(0.0f, 1.0f); glVertex3f( side, -y_off, side);      // Bottom Right Of The Quad (Top)
         glEnd();
         glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     glEndList();
   }
@@ -745,17 +578,17 @@ namespace drawing_t{
     for(int ii = 0; ii <= num_segments+1; ii++)
       {
 
-      GLfloat col1[] = {ii%2,ii%2,ii%2, 1.f};
-      glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
-    	glColor3f(ii%2,ii%2,ii%2);
+      GLfloat col1[] = {ii%2,ii%2,ii%2, 1.0f};
+      glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, col1);
+    	glColor3f(ii%2, ii%2, ii%2);
     	float theta = 2.0f * 3.1415926f * float(ii) / float(num_segments);//get the current angle
 
     	float x = r * cosf(theta);//calculate the x component
     	float y = r * sinf(theta);//calculate the y component
-    	if(ii==0) glVertex2f(cx, cy);
+    	if(ii == 0) glVertex2f(cx, cy);
     	else glVertex2f(x + cx, y + cy);//output vertex
 
-      }
+    }
     glEnd();
     glPopMatrix();
   }
@@ -771,6 +604,7 @@ namespace drawing_t{
     glPushMatrix();
     glTranslatef(0.0f,0.0f,0.0f);
     glNormal3f( 0.0f, 0.0f, -1.0f);
+    //glColor3f(1.0f,0.0f,0.0f);
     DrawCircle(cx, cy, r, num_segments);
     glPopMatrix();
     /*
@@ -781,11 +615,12 @@ namespace drawing_t{
       DrawCircle(cx, cy, r, num_segments);
       glPopMatrix();
       }*/
+    glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texture[2]);   // choose the texture to use.
     glPushMatrix();
-    GLfloat col1[] = {0.4f,0.4f,0.4f, 1.f};
+    GLfloat col1[] = {0.4f,0.4f,0.4f, 1.0f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col1);
-    glColor3f(0.4f,0.4f,0.4f);
+    glColor3f(0.4f, 0.4f,0.4f);
     glBegin(GL_TRIANGLE_STRIP);
     for(int ii = 0; ii <= num_segments + 1; ii++)
       {
@@ -799,6 +634,7 @@ namespace drawing_t{
 
       }
     glEnd();
+    glDisable(GL_TEXTURE_2D); 
     glPopMatrix();
 
 
@@ -1374,9 +1210,9 @@ namespace drawing_t{
     GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
     glColor3f(0.2f,0.2,0.2f);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
@@ -1394,11 +1230,10 @@ namespace drawing_t{
     GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
     glColor3f(0.2f,0.2,0.2f);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);    
     
@@ -1414,9 +1249,9 @@ namespace drawing_t{
     GLfloat col2[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col2);
     glColor3f(0.2f,0.2,0.2f);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.6f);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
     glColor3f(1.0f,1.0f,1.0f);
@@ -1434,9 +1269,9 @@ namespace drawing_t{
     GLfloat col3[] = {0.2f,0.2,0.2f, 1.f};
     glMaterialfv(GL_FRONT, GL_DIFFUSE, col3);
     glColor3f(0.2f,0.2,0.2f);
-    glEnable(GL_TEXTURE_2D);
+    //glEnable(GL_TEXTURE_2D);
     DrawCylinder(0.0f,0.0f,1.0f,50,0.8f);
-    glDisable(GL_TEXTURE_2D);
+    //glDisable(GL_TEXTURE_2D);
     glPopMatrix();
     
     glMaterialfv(GL_FRONT, GL_DIFFUSE, white);
@@ -1476,8 +1311,8 @@ namespace drawing_t{
     glClearColor(0.0f, 0.0f, 1.0f, 0.0f); // Clear The Background Color To Blue 
     glClearDepth(1.0);        // Enables Clearing Of The Depth Buffer
 
-    int l = 100, m = 100;
-    double side = 0.05;
+    int l = 50, m = 50;
+    double side = 0.1;
     double y_off = 0.8;
 
     drawQuad(side, y_off);

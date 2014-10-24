@@ -76,6 +76,7 @@ namespace bot_t{
 
   extern int light0;
   extern int light1;
+  extern int spotlight;
 
   extern int camera1;
   extern int camera2;

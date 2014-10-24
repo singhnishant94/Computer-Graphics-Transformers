@@ -3,6 +3,12 @@
 
 namespace drawing_t{
 
+  //! to draw 4 walls
+  void drawWalls(void);
+
+  //! to draw the wall
+  void drawWall(void);
+
   //! to draw the sky
   void drawSky(void);
 

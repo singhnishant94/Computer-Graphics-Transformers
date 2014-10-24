@@ -409,6 +409,12 @@ namespace bot_t{
         camera1 = 1;
       } 
     }
+    else if (key == GLFW_KEY_7 && action == GLFW_PRESS){
+      if(spotlight) 
+        spotlight = 0;
+       else spotlight = 1;
+    }
+
     else autoBots.performAction(key, action, mods);
   }
   
