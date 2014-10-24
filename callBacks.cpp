@@ -324,12 +324,14 @@ void group_t::untriggeredActions(void){
   if(dsx > 0){
     currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0 + currBody->tval); 
     double f = 0.6 * dsx / factor;
-    currBody->theta_y += f * thx;
+    if (currBody->checkBound(thx * f))
+      currBody->theta_y += f * thx;
   }
   else  if(dsx < 0){
     currBody->translateBodyXZ(dsx, currBody->theta_y + 90.0 + currBody->tval); 
     double f = 0.6 * dsx / factor;
-    currBody->theta_y += thx * f;
+    if (currBody->checkBound(thx * f))
+      currBody->theta_y += thx * f;
   }
 }
 

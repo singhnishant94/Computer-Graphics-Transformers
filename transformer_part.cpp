@@ -54,7 +54,6 @@ void vertex_t::scaleValue(double m){
   z *= m;
 }
 
-
 //! constructor initialize the current part to unit length along x axis
 part_t::part_t(void){
   end_A.setVertex(-1, 0, 0);
@@ -379,6 +378,10 @@ body_t::body_t(void){
   tPoint.setVertex(0, 0, 0);
   theta_x = theta_y = theta_z = 0.0;
   state = 0;
+
+  boxL = 1.0, boxW = 2.0;
+  X1 = -5; X2 = 5;
+  Z1 = -5; Z2 = 5;
   
   // wheel vaiables for forward back movements
   vstate = 0;
@@ -774,8 +777,8 @@ void body_t::changeOrientation(joint_t jName, vertex_t delta){
 
 //! translate the given body
 void body_t::translateBody(double dx, double dy, double dz){
-  //std::cout<<"tr "<<dx<<" "<<dy<<" "<<dz<<std::endl;
-  this->center.updateValue(dx, dy, dz);
+  if (checkBound(dx, dz))
+    this->center.updateValue(dx, dy, dz);
 }
 
 //! translate the body in xz plane
@@ -848,6 +851,39 @@ int body_t::setPosition(double _x, double _y, double _z, double speed){
   
   return indicator;
 }
+
+//! check the bound current
+int body_t::checkBound(double dx, double dz){
+  double x = center.x + dx, z = center.z + dz, th = (theta_y + 90) * M_PI / 180.0;
+  double tx, tz;
+  for (int i = -1; i <= 1; i += 2){
+    for (int j = -1; j <= 1; j += 2){
+      double tx1 = x + i * boxL / 2.0;
+      double tz1 = z + i * boxW / 2.0;
+      tx = tx1 * cos(th) - tz1 * sin(th);
+      tz = tx1 * sin(th) + tz1 * cos(th);
+      if (tx < X1 || tx > X2 || tz < Z1 || tz > Z2) return 0; 
+    }
+  }
+  return 1;
+}
+
+//! checkBound angle
+int body_t::checkBound(double dy){
+  double x = center.x, z = center.z, th = (theta_y + dy + 90) * M_PI / 180.0;
+  double tx, tz;
+  for (int i = -1; i <= 1; i += 2){
+    for (int j = -1; j <= 1; j += 2){
+      double tx1 = x + i * boxL / 2.0;
+      double tz1 = z + i * boxW / 2.0;
+      tx = tx1 * cos(th) - tz1 * sin(th);
+      tz = tx1 * sin(th) + tz1 * cos(th);
+      if (tx < X1 || tx > X2 || tz < Z1 || tz > Z2) return 0; 
+    }
+  }
+  return 1;
+}
+  
 
 //! changes the bot to vehicle
 void body_t::transformBot(void){

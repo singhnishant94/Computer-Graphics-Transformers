@@ -19,6 +19,7 @@ struct vertex_t{
   void scaleValue(double);
 };
 
+
 struct part_t{
   
   int partNum;                             //! the part number for denoting the list numebr
@@ -160,6 +161,7 @@ enum joint_t{
   ROOT
 };
 
+
 struct body_t{
   //! the various parts of a transformer
   part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
@@ -178,6 +180,10 @@ struct body_t{
   //! body parameters
   vertex_t center;                        // the center of entire body
   double theta_x, theta_y, theta_z;       // orientation
+  
+  //! the length and width of the bound
+  double boxL, boxW;
+  double X1, X2, Z1, Z2;
   
   //! state , 0 -> bot, 1 -> vehice
   int state;
@@ -202,7 +208,7 @@ struct body_t{
   
   //! the renderPart is the renderGL function pointer. body denotes the struct it is in 
   void (*renderBody)(GLFWwindow*);
-
+  
   //!constructor
   body_t(void);
   
@@ -241,7 +247,13 @@ struct body_t{
   
   //! changes the vehicle / bot
   void transformBot(void);
+  
+  //! check the bound current
+  int checkBound(double, double);
+  
+  //! checkBound angle
+  int checkBound(double);
+  
 };
-
 
 #endif
