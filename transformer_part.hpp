@@ -77,9 +77,9 @@ struct part_t{
   //! Print the part position and orientation details and children
   void printPartDetails(void);
 
-  
+  //! set the values of the frame
+  void setPartFromFrame(std::vector<double>&, int&);
 
-  
   //! draw part function to draw it and the children
   void drawPart(void);
   
@@ -273,6 +273,9 @@ struct body_t{
   
   //! checkBound angle
   int checkBound(double);
+  
+  //! set the frame values
+  void setBodyFromFrame(std::vector<double>&, int&);
   
 };
 

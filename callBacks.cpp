@@ -1,6 +1,7 @@
 #include "callBacks.hpp"
 #include <math.h>
 #include <iostream>
+#include <vector>
 
 
 using namespace std;
@@ -406,10 +407,15 @@ namespace bot_t{
 
   extern int light0;
   extern int light1;
-
+  extern int spotlight;
+  
+  extern int camera1;
+  extern int camera2;
+  extern int camera3;
+  extern vector<vector<double> > animationFrames;
+  
   void InitGL(void){
     
-
     // set up light number 1.
     /*
       glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
@@ -667,7 +673,49 @@ namespace bot_t{
     }
   }
   
+  
   void interpolateFrames(void){
+    animationFrames.clear();
+    vector<vector<double> > kFrames;
+    ifstream kfile;
+    kfile.open("keyFrames.txt");
+    int FRAMECOUNT = 27 * 3 + 3 + 3;
+    vector<double> tkey(FRAMECOUNT);
     
+    while(kfile.good()){
+      for(int i = 0; i < FRAMECOUNT; i++) kfile>>tkey[i];
+      kFrames.push_back(tkey);
+    }
+    
+    int l = kFrames.size();
+    animationFrames.push_back(kFrames[0]);
+    for(int i = 0; i < l - 1; i++){
+      interpolateBetweenFrames(kFrames[i], kFrames[i + 1]);
+    }
+  }
+  
+  
+  //! creates necessary animation between 2 frames
+  void interpolateBetweenFrames(std::vector<double>& start, std::vector<double>& end){
+    int NFRAMES = 100;
+    double dt = 1 / (1.0 * NFRAMES);
+    int t = dt;
+    int l = start.size();
+    vector<double> tframe(l);
+    for(int i = 1; i < NFRAMES; i++){
+      for(int j = 0; j < l; j++){
+	tframe[j] = t * start[j] + (1 - t) * end[j];
+      }
+      t += dt;
+      animationFrames.push_back(tframe);
+    }
+    
+  }
+  
+  //!  sets the values of one frame
+  void setFrameValues(vector<double> &frame){
+    int start = 0;
+    body_t *curr = autoBots.currentBody();
+    curr->setBodyFromFrame(frame, start);
   }
 };

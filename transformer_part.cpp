@@ -149,9 +149,19 @@ void part_t::printPartDetails(void){
   for(int i = 0; i < l; i++){
     children[i]->printPartDetails();
   }
-  //keyFramesFile<<anchorRemote->x<<" "<<anchorRemote->y<<" "<<anchorRemote->z;
   keyFramesFile<<theta_x<<" "<<theta_y<<" "<<theta_z<<" ";
-  //keyFramesFile<<anchorLocal->x<<" "<<anchorLocal->y<<" "<<anchorLocal->z<<" ";
+}
+
+//! set the values of the frame
+void part_t::setPartFromFrame(std::vector<double> &frame, int &start){
+  int l = children.size();
+  for(int i = 0; i < l; i++){
+    children[i]->setPartFromFrame(frame, start);
+  }
+  theta_x = frame[start]; 
+  theta_y = frame[start + 1];
+  theta_z = frame[start + 2];
+  start += 3;
 }
 
 
@@ -963,6 +973,17 @@ int body_t::checkBound(double dy){
     }
   }
   return 1;
+}
+
+//! set the frame values
+void body_t::setBodyFromFrame(std::vector<double> &frame, int &start){
+  hip1->setPartFromFrame(frame, start);
+  center.setVertex(frame[start], frame[start + 1], frame[start + 2]);
+  start += 3;
+  theta_x = frame[start];
+  theta_y = frame[start + 1];
+  theta_z = frame[start + 2];
+  start += 3;
 }
   
 

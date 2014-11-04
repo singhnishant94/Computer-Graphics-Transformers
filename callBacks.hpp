@@ -1,8 +1,10 @@
 #ifndef _CALLBACKS_HPP_
 #define _CALLBACKS_HPP_
 
-#include <list>
 #include "transformer_part.hpp"
+
+#include <list>
+#include <vector>
 
 struct group_t{
   
@@ -100,7 +102,10 @@ namespace bot_t{
   extern int camera1;
   extern int camera2;
   extern int camera3;
-  extern vector<vector<double> > aniFrames;
+  
+  extern int playIndicator;
+
+  extern vector<vector<double> > animationFrames;
 
   void InitGL(void);
   
@@ -115,6 +120,13 @@ namespace bot_t{
 
   //! create the animation frames
   void interpolateFrames(void);
+
+  //! creates necessary animation between 2 frames
+  void interpolateBetweenFrames(vector<double>&, vector<double>&);
+
+  //!  sets the values of one frame
+  void setFrameValues(vector<double> &);
+  
 };
 
 #endif

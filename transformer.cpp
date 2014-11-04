@@ -3,7 +3,7 @@
 #include <iostream>
 #include <math.h>
 #include <string>
-
+#include <vector>
 
 
 #include "callBacks.hpp"
@@ -15,9 +15,11 @@ double PI  = M_PI;
 int bot_t::light0 = 1, bot_t::light1 = 1;
 int bot_t::camera1 = 1, bot_t::camera2 = 0, bot_t::camera3 = 0;
 int bot_t::spotlight = 0;
+int bot_t::playIndicator = 0;
 
 group_t bot_t::autoBots;
 std::list<std::list<event> > bot_t::eventList;          //! list of events to execute
+vector<vector<double> > bot_t::animationFrames;
 GLFWwindow* bot_t::window;
 void (*bot_t::renderGL)(GLFWwindow*);
 
