@@ -17,6 +17,8 @@ int bot_t::camera1 = 1, bot_t::camera2 = 0, bot_t::camera3 = 0;
 int bot_t::spotlight = 0;
 int bot_t::playIndicator = 0;
 
+int count = 0;
+
 group_t bot_t::autoBots;
 std::list<std::list<event> > bot_t::eventList;          //! list of events to execute
 vector<vector<double> > bot_t::animationFrames;
@@ -196,6 +198,14 @@ void renderGL(GLFWwindow* window)
   glPopMatrix();
   drawing_t::drawSky();
   drawing_t::drawWalls();
+  if(bot_t::playIndicator){
+    if(count < bot_t::animationFrames.size()){
+      bot_t::setFrameValues(bot_t::animationFrames[count]);
+      count++;
+      cout<<"IN "<<count<<endl;
+    }
+
+  }
   bot_t::autoBots.bodyList[0]->drawBody();
 }
 

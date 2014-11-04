@@ -413,6 +413,7 @@ namespace bot_t{
   extern int camera2;
   extern int camera3;
   extern vector<vector<double> > animationFrames;
+  extern int playIndicator;
   
   void InitGL(void){
     
@@ -490,6 +491,19 @@ namespace bot_t{
     }
     else if (key == GLFW_KEY_P && action == GLFW_PRESS){
       if(recordMode) autoBots.printKeyframe();
+    }
+    else if (key == GLFW_KEY_2 && action == GLFW_PRESS){
+      if(!recordMode){
+        if(playIndicator){
+          playIndicator = 0;
+          cout<<"Animation Mode Ended"<<endl;
+        }
+        else{
+          playIndicator = 1;
+          interpolateFrames();
+          cout<<"Animation Mode Enabled"<<endl;
+        }
+      }
     }
     else autoBots.performAction(key, action, mods);
   }
