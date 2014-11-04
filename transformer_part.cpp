@@ -145,9 +145,13 @@ void part_t::drawPart(void){
 //! Print the part position and orientation details and children
 void part_t::printPartDetails(void){
   //keyFramesFile<<partNum<<" "<<parts[partNum-1]<<endl;
-  keyFramesFile<<"RA "<<anchorRemote->x<<" "<<anchorRemote->y<<" "<<anchorRemote->z<<endl;
-  keyFramesFile<<"O "<<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
-  keyFramesFile<<"LA "<<anchorLocal->x<<" "<<anchorLocal->y<<" "<<anchorLocal->z<<endl;
+  int l = children.size();
+  for(int i = 0; i < l; i++){
+    children[i]->printPartDetails();
+  }
+  //keyFramesFile<<anchorRemote->x<<" "<<anchorRemote->y<<" "<<anchorRemote->z;
+  keyFramesFile<<theta_x<<" "<<theta_y<<" "<<theta_z<<" ";
+  //keyFramesFile<<anchorLocal->x<<" "<<anchorLocal->y<<" "<<anchorLocal->z<<" ";
 }
 
 
@@ -786,8 +790,10 @@ part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
 
 //! Print the Body position and orientation details and children
 void body_t::printBodyDetails(void){
-  keyFramesFile <<"BC "<<center.x<<" "<<center.y<<" "<<center.z<<endl;
-  keyFramesFile <<"BO "<<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
+  hip1->printPartDetails();
+  keyFramesFile <<center.x<<" "<<center.y<<" "<<center.z<<" ";
+  keyFramesFile <<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
+  /*
   hip1->printPartDetails();
   hip2->printPartDetails();
   hipmid->printPartDetails();
@@ -814,7 +820,7 @@ void body_t::printBodyDetails(void){
   wheelBack1->printPartDetails();
   wheelBack2->printPartDetails();
   axle1->printPartDetails();
-  axle2->printPartDetails();
+  axle2->printPartDetails();*/
 }
 
 //! function to move the joint
