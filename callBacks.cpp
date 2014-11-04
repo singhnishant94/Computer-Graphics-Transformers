@@ -3,10 +3,18 @@
 #include <iostream>
 
 
+using namespace std;
+
+
 #define FORWARD 1
 #define BACK 2
 #define TLEFT 4
 #define TRIGHT 8
+
+// (recordMode = 1) => Record mode on  
+int recordMode = 0; 
+
+
 
 //! constructor
 group_t::group_t(void){
@@ -134,6 +142,12 @@ void group_t::performAction(int key, int action, int mods){
       }
     }
   }
+}
+
+void group_t::printKeyframe(void){
+  body_t* currBody = currentBody();
+  currBody->printBodyDetails();
+
 }
 
 
@@ -457,6 +471,19 @@ namespace bot_t{
       if(spotlight) 
         spotlight = 0;
       else spotlight = 1;
+    }
+    else if(key == GLFW_KEY_5 && action == GLFW_PRESS){
+      if(recordMode){
+        recordMode = 0;
+        cout<<"Record Mode OFF"<<endl;
+      }
+      else{
+        recordMode = 1;
+        cout<<"Record Mode ON"<<endl;
+      }
+    }
+    else if (key == GLFW_KEY_P && action == GLFW_PRESS){
+      if(recordMode) autoBots.printKeyframe();
     }
     else autoBots.performAction(key, action, mods);
   }

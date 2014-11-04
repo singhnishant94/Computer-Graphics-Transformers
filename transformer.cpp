@@ -200,6 +200,8 @@ void renderGL(GLFWwindow* window)
 int main (int argc, char *argv[]) 
 {
   
+  
+  openFile();
   //! The pointer to the GLFW window
   GLFWwindow* window;
 
@@ -270,5 +272,6 @@ int main (int argc, char *argv[])
 
   glfwDestroyWindow(window);
   glfwTerminate();
+  
   return 0;
 }

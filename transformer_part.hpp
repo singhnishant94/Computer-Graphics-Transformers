@@ -4,6 +4,14 @@
 #include <vector>
 #include <string.h>
 #include "gl_framework.hpp"
+#include <fstream>
+using namespace std;
+
+
+
+void openFile(void);
+
+void closeFile(void);
 
 // helper class to  
 struct vertex_t{
@@ -65,6 +73,12 @@ struct part_t{
   
   //! connect dependent parts here
   void addConnPart(part_t*);
+
+  //! Print the part position and orientation details and children
+  void printPartDetails(void);
+
+  
+
   
   //! draw part function to draw it and the children
   void drawPart(void);
@@ -163,6 +177,9 @@ enum joint_t{
 
 
 struct body_t{
+ 
+
+
   //! the various parts of a transformer
   part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
   part_t *torso;
@@ -223,6 +240,9 @@ struct body_t{
   
   //! doing dfs to make the given object
   void drawBody(void);
+
+  //! Print the Body position and orientation details and children
+  void printBodyDetails(void);
 
   //! translate the entire body
   void translateBody(double, double, double);

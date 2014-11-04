@@ -29,6 +29,9 @@ struct group_t{
   //!Perform Action
   void performAction(int, int, int);
 
+  //!Print orientation and position
+  void printKeyframe(void);
+
   //! for actions which are not triggered by keys
   void untriggeredActions(void);
   

@@ -4,6 +4,9 @@
 #include <math.h>
 #include <iostream>
 
+
+using namespace std;
+
 // these numbers correspond to the various part numbers
 #define HIPNUM  1
 #define TORSONUM 2
@@ -31,6 +34,19 @@
 
 
 #define OK  std::cout<<"ok"<<std::endl;
+
+ofstream keyFramesFile;
+void openFile(void){
+  keyFramesFile.open("keyFrames.txt");
+}
+
+void closeFile(void){
+  keyFramesFile.close();
+}
+
+string parts[27] = {"Hip","Torso","Shoulder","Neck","Arm","Hand","Thigh",
+                    "Leg1","Foot","Palm","Chestcover","Leg2","HipMid","PalmPer1","PalmPer2","WheelFront1",
+                    "WheelFront2","wheelBack1","WheelBack2","Axle1","Axle2"};
 
 //! sets the vertex
 void vertex_t::setVertex(double _x, double _y, double _z){
@@ -125,6 +141,15 @@ void part_t::drawPart(void){
   glPopMatrix();
   glPopMatrix();
 }
+
+//! Print the part position and orientation details and children
+void part_t::printPartDetails(void){
+  //keyFramesFile<<partNum<<" "<<parts[partNum-1]<<endl;
+  keyFramesFile<<"RA "<<anchorRemote->x<<" "<<anchorRemote->y<<" "<<anchorRemote->z<<endl;
+  keyFramesFile<<"O "<<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
+  keyFramesFile<<"LA "<<anchorLocal->x<<" "<<anchorLocal->y<<" "<<anchorLocal->z<<endl;
+}
+
 
 //! function to change theta_x
 void part_t::change_theta_x(double delta){
@@ -740,6 +765,58 @@ void body_t::drawBody(void){
   hip1->drawPart();
   glPopMatrix();
   delt += 0.02f;
+}
+
+/*
+part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
+  part_t *torso;
+  part_t *thigh1, *thigh2, *leg1, *leg2, *foot1, *foot2;
+  part_t *shoulder;
+  part_t *neck;
+  part_t *arm1, *arm2, *hand1, *hand2;
+  part_t *palm1, *palm2;
+  part_t *chestCover;
+  part_t *palmPer1, *palmPer2;
+  part_t *wheelFront, *wheelBack;
+  part_t *wheelFront1, *wheelFront2, *wheelBack1, *wheelBack2;
+  part_t *axle1, *axle2;
+
+*/
+
+
+//! Print the Body position and orientation details and children
+void body_t::printBodyDetails(void){
+  keyFramesFile <<"BC "<<center.x<<" "<<center.y<<" "<<center.z<<endl;
+  keyFramesFile <<"BO "<<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
+  
+  hip1->printPartDetails();
+  hip2->printPartDetails();
+  hipmid->printPartDetails();
+  torso->printPartDetails();
+  thigh1->printPartDetails();
+  thigh2->printPartDetails();
+  leg1->printPartDetails();
+  leg2->printPartDetails();
+  foot1->printPartDetails();
+  foot2->printPartDetails();
+  shoulder->printPartDetails();
+  neck->printPartDetails();
+  arm1->printPartDetails();
+  arm2->printPartDetails();
+  hand1->printPartDetails();
+  hand2->printPartDetails();
+  palm1->printPartDetails();
+  palm2->printPartDetails();
+  chestCover->printPartDetails();
+  palmPer1->printPartDetails();
+  palmPer2->printPartDetails();
+  wheelFront1->printPartDetails();
+  wheelFront2->printPartDetails();
+  wheelBack1->printPartDetails();
+  wheelBack2->printPartDetails();
+  axle1->printPartDetails();
+  axle2->printPartDetails();
+  keyFramesFile<<"########################################"<<endl<<endl;
 }
 
 //! function to move the joint
