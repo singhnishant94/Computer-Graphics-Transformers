@@ -86,7 +86,6 @@ struct event{
   int execute(void);
 };
 
-
 namespace bot_t{
   
   extern group_t autoBots;
@@ -101,6 +100,7 @@ namespace bot_t{
   extern int camera1;
   extern int camera2;
   extern int camera3;
+  extern vector<vector<double> > aniFrames;
 
   void InitGL(void);
   
@@ -113,6 +113,8 @@ namespace bot_t{
   //! append the list of events corresponding to the events related to moving bot
   void transformBot(void);
 
+  //! create the animation frames
+  void interpolateFrames(void);
 };
 
 #endif

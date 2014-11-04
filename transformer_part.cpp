@@ -788,7 +788,6 @@ part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
 void body_t::printBodyDetails(void){
   keyFramesFile <<"BC "<<center.x<<" "<<center.y<<" "<<center.z<<endl;
   keyFramesFile <<"BO "<<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
-  
   hip1->printPartDetails();
   hip2->printPartDetails();
   hipmid->printPartDetails();
@@ -816,7 +815,6 @@ void body_t::printBodyDetails(void){
   wheelBack2->printPartDetails();
   axle1->printPartDetails();
   axle2->printPartDetails();
-  keyFramesFile<<"########################################"<<endl<<endl;
 }
 
 //! function to move the joint

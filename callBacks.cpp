@@ -666,4 +666,8 @@ namespace bot_t{
       eventList.push_back(le);
     }
   }
+  
+  void interpolateFrames(void){
+    
+  }
 };
