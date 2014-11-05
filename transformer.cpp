@@ -10,6 +10,15 @@
 #include "part_drawings.hpp"
 using namespace std;
 
+int win_width=512;
+int win_height=512;
+
+int SCREEN_WIDTH = 512;
+int SCREEN_HEIGHT = 512;
+
+unsigned int framenum=0;
+unsigned char *pRGB;
+
 double PI  = M_PI;
 
 int bot_t::light0 = 1, bot_t::light1 = 1;
@@ -43,6 +52,32 @@ GLfloat mat_shininess[] = { 100.0 };
 GLfloat light_position[] = { 0.0, 10.0, 0.0, 1.0};
 
 GLfloat  spotDir[] = { 0.0f, -1.0f, 0.0f };
+
+
+void capture_frame(unsigned int framenum)
+{
+  //global pointer float *pRGB
+  pRGB = new unsigned char [3 * (SCREEN_WIDTH+1) * (SCREEN_HEIGHT + 1) ];
+
+
+  // set the framebuffer to read
+  //default for double buffered
+  glReadBuffer(GL_BACK);
+
+  glPixelStoref(GL_PACK_ALIGNMENT,1);//for word allignment
+  
+  glReadPixels(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT, GL_RGB, GL_UNSIGNED_BYTE, pRGB);
+  char filename[200];
+  sprintf(filename,"./frames/frame_%04d.ppm",framenum);
+  std::ofstream out(filename, std::ios::out);
+  out<<"P6"<<std::endl;
+  out<<SCREEN_WIDTH<<" "<<SCREEN_HEIGHT<<" 255"<<std::endl;
+  out.write(reinterpret_cast<char const *>(pRGB), (3 * (SCREEN_WIDTH+1) * (SCREEN_HEIGHT + 1)) * sizeof(int));
+  out.close();
+
+  //function to store pRGB in a file named count
+  delete pRGB;
+}
 
 
 int spot(double a, double b, double c, double d, double e, double f){
@@ -207,13 +242,14 @@ void renderGL(GLFWwindow* window)
 
   }
   bot_t::autoBots.bodyList[0]->drawBody();
+  capture_frame(framenum++);
 }
 
 int main (int argc, char *argv[]) 
 {
   
   
-  openFile();
+  
   //! The pointer to the GLFW window
   GLFWwindow* window;
 
@@ -224,8 +260,7 @@ int main (int argc, char *argv[])
   if (!glfwInit())
     return -1;
 
-  int win_width=512;
-  int win_height=512;
+  
 
   //! Create a windowed mode window and its OpenGL context
   window = glfwCreateWindow(win_width, win_height, "Transformer", NULL, NULL);
