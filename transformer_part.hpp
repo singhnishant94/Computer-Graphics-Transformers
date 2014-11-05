@@ -1,11 +1,11 @@
 #ifndef _TRANSFORMER_PART_
 #define _TRANSFORMER_PART_
-
 #include <vector>
 #include <string.h>
 #include "gl_framework.hpp"
 #include <fstream>
 using namespace std;
+
 
 
 
@@ -75,7 +75,7 @@ struct part_t{
   void addConnPart(part_t*);
 
   //! Print the part position and orientation details and children
-  void printPartDetails(void);
+  void printPartDetails(ofstream&);
 
   //! set the values of the frame
   void setPartFromFrame(std::vector<double>&, int&);
@@ -242,7 +242,7 @@ struct body_t{
   void drawBody(void);
 
   //! Print the Body position and orientation details and children
-  void printBodyDetails(void);
+  void printBodyDetails(ofstream&);
 
   //! translate the entire body
   void translateBody(double, double, double);

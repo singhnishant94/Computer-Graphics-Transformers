@@ -4,6 +4,7 @@
 #include <math.h>
 #include <string>
 #include <vector>
+#include <fstream>
 
 
 #include "callBacks.hpp"
@@ -30,7 +31,9 @@ int bot_t::stop = 0;
 int bot_t::moveUp = 0, bot_t::moveDown = 0, 
     bot_t::moveLeft = 0, bot_t::moveRight = 0, bot_t::moveIn = 0, bot_t::moveOut = 0; 
 
-double camX = 0.0, camY = 0.0, camZ = 4.0;
+double bot_t::camX = 0.0, bot_t::camY = 0.0, bot_t::camZ = 4.0;
+
+ofstream bot_t::keyFramesFile;
 
 int count = 0;
 
@@ -152,9 +155,10 @@ void renderGL(GLFWwindow* window)
   float theta_y = bot_t::autoBots.bodyList[0]->theta_y;
   float theta_z = bot_t::autoBots.bodyList[0]->theta_z;
 
-  int radius = sqrt(camX*camX + camY*camY + camZ*camZ);
+  
   //cout<<theta_x<<endl;
   if(bot_t::camera1){
+    /*
     if(bot_t::moveUp){
       camY += 0.2f;
       bot_t::moveUp = 0;
@@ -178,8 +182,8 @@ void renderGL(GLFWwindow* window)
     if(bot_t::moveOut){
       camZ += 0.2f;
       bot_t::moveOut = 0;
-    }
-    gluLookAt( camX, camY, camZ,
+    }*/
+    gluLookAt( bot_t::camX, bot_t::camY, bot_t::camZ,
       0,0,0,
       0.0f, 1.0f,  0.0f);
   }

@@ -35,14 +35,8 @@ using namespace std;
 
 #define OK  std::cout<<"ok"<<std::endl;
 
-ofstream keyFramesFile;
-void openFile(void){
-  keyFramesFile.open("keyFrames.txt");
-}
 
-void closeFile(void){
-  keyFramesFile.close();
-}
+
 
 string parts[27] = {"Hip","Torso","Shoulder","Neck","Arm","Hand","Thigh",
                     "Leg1","Foot","Palm","Chestcover","Leg2","HipMid","PalmPer1","PalmPer2","WheelFront1",
@@ -143,11 +137,11 @@ void part_t::drawPart(void){
 }
 
 //! Print the part position and orientation details and children
-void part_t::printPartDetails(void){
+void part_t::printPartDetails(ofstream &keyFramesFile){
   //keyFramesFile<<partNum<<" "<<parts[partNum-1]<<endl;
   int l = children.size();
   for(int i = 0; i < l; i++){
-    children[i]->printPartDetails();
+    children[i]->printPartDetails(keyFramesFile);
   }
   keyFramesFile<<theta_x<<" "<<theta_y<<" "<<theta_z<<" ";
 }
@@ -799,10 +793,11 @@ part_t *hip1, *hip2, *hipmid;    // the hip1 is the root
 
 
 //! Print the Body position and orientation details and children
-void body_t::printBodyDetails(void){
-  hip1->printPartDetails();
+void body_t::printBodyDetails(ofstream &keyFramesFile){
+  hip1->printPartDetails(keyFramesFile);
   keyFramesFile <<center.x<<" "<<center.y<<" "<<center.z<<" ";
-  keyFramesFile <<theta_x<<" "<<theta_y<<" "<<theta_z<<endl;
+  keyFramesFile <<theta_x<<" "<<theta_y<<" "<<theta_z<<" ";
+
   /*
   hip1->printPartDetails();
   hip2->printPartDetails();

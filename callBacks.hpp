@@ -5,6 +5,7 @@
 
 #include <list>
 #include <vector>
+#include <fstream>
 
 struct group_t{
   
@@ -32,7 +33,7 @@ struct group_t{
   void performAction(int, int, int);
 
   //!Print orientation and position
-  void printKeyframe(void);
+  void printKeyframe(ofstream&);
 
   //! for actions which are not triggered by keys
   void untriggeredActions(void);
@@ -109,11 +110,19 @@ namespace bot_t{
   extern int moveLeft;
   extern int moveIn;
   extern int moveOut;
+
+  extern ofstream keyFramesFile;
+
+  extern double camX, camY, camZ;
   
   extern int playIndicator;
 
   extern vector<vector<double> > animationFrames;
   extern int stop;
+
+  void openFile(void);
+  void closeFile(void);
+
   void InitGL(void);
   
   //! GLFW callback

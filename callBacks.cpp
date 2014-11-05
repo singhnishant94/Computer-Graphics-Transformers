@@ -148,9 +148,11 @@ void group_t::performAction(int key, int action, int mods){
   }
 }
 
-void group_t::printKeyframe(void){
+void group_t::printKeyframe(ofstream &keyFramesFile){
   body_t* currBody = currentBody();
-  currBody->printBodyDetails();
+  currBody->printBodyDetails(keyFramesFile);
+  keyFramesFile <<bot_t::camX<<" "<<bot_t::camY<<" "<<bot_t::camZ<<" ";
+  keyFramesFile <<bot_t::light0<<" "<<bot_t::light1<<" "<<bot_t::spotlight<<endl;
 
 }
 
@@ -423,9 +425,22 @@ namespace bot_t{
   extern int moveIn;
   extern int moveOut;
 
+  extern double camX, camY, camZ;
+
+  extern ofstream keyFramesFile;
+
   extern vector<vector<double> > animationFrames;
   extern int playIndicator;
   extern int stop;
+
+  void openFile(void){
+  keyFramesFile.open("keyFrames.txt");
+  }
+
+  void closeFile(void){
+    keyFramesFile.close();
+  }
+
   void InitGL(void){
     
     // set up light number 1.
@@ -502,7 +517,7 @@ namespace bot_t{
       }
     }
     else if (key == GLFW_KEY_P && action == GLFW_PRESS){
-      if(recordMode) autoBots.printKeyframe();
+      if(recordMode) autoBots.printKeyframe(keyFramesFile);
     }
     else if (key == GLFW_KEY_2 && action == GLFW_PRESS){
       if(!recordMode){
@@ -529,21 +544,27 @@ namespace bot_t{
     }
     else if(key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT) ){
       moveUp = 1;
+      camY += 0.2;
     }
     else if(key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
       moveLeft = 1;
+      camX -= 0.2;
     }
     else if(key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
       moveRight = 1;
+      camX += 0.2;
     }
     else if(key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
       moveDown = 1;
+      camY -= 0.2;
     }
     else if(key == GLFW_KEY_KP_1 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
       moveIn = 1;
+      camZ -= 0.2;
     }
     else if(key == GLFW_KEY_KP_3 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
       moveOut = 1;
+      camZ += 0.2;
     }
 
     else autoBots.performAction(key, action, mods);
@@ -731,7 +752,7 @@ namespace bot_t{
     vector<vector<double> > kFrames;
     ifstream kfile;
     kfile.open("keyFrames.txt");
-    int FRAMECOUNT = 27 * 3 + 3 + 3;
+    int FRAMECOUNT = 27 * 3 + 3 + 3 + 3 + 3;
     vector<double> tkey(FRAMECOUNT);
     
     while(kfile.good()){
@@ -752,12 +773,21 @@ namespace bot_t{
   void interpolateBetweenFrames(std::vector<double>& start, std::vector<double>& end){
     int NFRAMES = 100;
     double dt = 1.0 / (1.0 * NFRAMES);
+    int EL = 3*27 + 3 + 3 + 3;
     double t = dt;
     int l = start.size();
     vector<double> tframe(l);
     for(int i = 1; i < NFRAMES; i++){
-      for(int j = 0; j < l; j++){
+      for(int j = 0; j < EL; j++){
 	       tframe[j] = (1 - t) * start[j] + t * end[j];
+      }
+     
+      for (int j = EL; j < l; ++j)
+      {
+        if((1 - t) * start[j] + t * end[j] < 0.5){
+          tframe[j] = 0;
+        }
+        else tframe[j] = 1;
       }
       t += dt;
       animationFrames.push_back(tframe);
@@ -770,5 +800,18 @@ namespace bot_t{
     int start = 0;
     body_t *curr = autoBots.currentBody();
     curr->setBodyFromFrame(frame, start);
+    int fLen = frame.size();
+    camX = frame[start];
+    camY = frame[start + 1];
+    camZ = frame[start + 2];
+    start+=3;
+
+    if(frame[start] == 0) light0 = 0;
+    else light0 = 1;
+    if(frame[start + 1] == 0) light1 = 0;
+    else light1 = 1;
+    if(frame[start + 2] == 0) spotlight = 0;
+    else spotlight = 1;
+    start+=3;
   }
 };
