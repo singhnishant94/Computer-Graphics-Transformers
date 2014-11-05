@@ -113,7 +113,7 @@ namespace bot_t{
   extern int playIndicator;
 
   extern vector<vector<double> > animationFrames;
-
+  extern int stop;
   void InitGL(void);
   
   //! GLFW callback

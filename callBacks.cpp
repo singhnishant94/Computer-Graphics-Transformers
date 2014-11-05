@@ -425,7 +425,7 @@ namespace bot_t{
 
   extern vector<vector<double> > animationFrames;
   extern int playIndicator;
-  
+  extern int stop;
   void InitGL(void){
     
     // set up light number 1.
@@ -442,10 +442,9 @@ namespace bot_t{
   {
     //!Close the window if the ESC key was pressed
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) glfwSetWindowShouldClose(window, GL_TRUE);
-    else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) autoBots.nextBody();
+    else if (key == GLFW_KEY_TAB && action == GLFW_PRESS) stop = !stop;
     else if (key == GLFW_KEY_ENTER && action == GLFW_PRESS){
       transformBot();
-      executeList();
     }
     else if (key == GLFW_KEY_8 && action == GLFW_PRESS){
       if (light0 == 1) {
@@ -552,19 +551,16 @@ namespace bot_t{
   
   //! execute event list
   void executeList(void){
-    std::list<std::list<event> >::iterator itr;
-    std::list<event>::iterator itr_in;
-    itr = eventList.begin();
-    while(!eventList.empty()){
+    if(!eventList.empty()){
+      std::list<std::list<event> >::iterator itr;
+      std::list<event>::iterator itr_in;
+      itr = eventList.begin();
+      
       int indicator = 0;
       for(itr_in = itr->begin(); itr_in != itr->end(); itr_in++){
 	indicator |= itr_in->execute();
       }
-      renderGL(window);
-      glfwSwapBuffers(window);
-      glfwPollEvents();
-
-      if(!indicator) itr = eventList.erase(itr);
+      if(!indicator) eventList.erase(itr);
     }
   }
   
