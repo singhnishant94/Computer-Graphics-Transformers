@@ -15,6 +15,9 @@ using namespace std;
 // (recordMode = 1) => Record mode on  
 int recordMode = 0; 
 
+//! Num lock pressed
+int numLock = 0;
+
 
 
 //! constructor
@@ -412,6 +415,14 @@ namespace bot_t{
   extern int camera1;
   extern int camera2;
   extern int camera3;
+
+  extern int moveUp;
+  extern int moveDown;
+  extern int moveRight;
+  extern int moveLeft;
+  extern int moveIn;
+  extern int moveOut;
+
   extern vector<vector<double> > animationFrames;
   extern int playIndicator;
   
@@ -481,10 +492,12 @@ namespace bot_t{
     }
     else if(key == GLFW_KEY_5 && action == GLFW_PRESS){
       if(recordMode){
+        closeFile();
         recordMode = 0;
         cout<<"Record Mode OFF"<<endl;
       }
       else{
+        openFile();
         recordMode = 1;
         cout<<"Record Mode ON"<<endl;
       }
@@ -505,6 +518,35 @@ namespace bot_t{
         }
       }
     }
+    else if(key == GLFW_KEY_NUM_LOCK && action == GLFW_PRESS){
+      if(numLock){
+        cout<<"numlock now off"<<endl;
+        numLock = 0;
+      }
+      else{
+        cout<<"numlock now on"<<endl;
+        numLock = 1;
+      }
+    }
+    else if(key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT) ){
+      moveUp = 1;
+    }
+    else if(key == GLFW_KEY_KP_4 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
+      moveLeft = 1;
+    }
+    else if(key == GLFW_KEY_KP_6 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
+      moveRight = 1;
+    }
+    else if(key == GLFW_KEY_KP_2 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
+      moveDown = 1;
+    }
+    else if(key == GLFW_KEY_KP_1 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
+      moveIn = 1;
+    }
+    else if(key == GLFW_KEY_KP_3 && (action == GLFW_PRESS || action == GLFW_REPEAT)){
+      moveOut = 1;
+    }
+
     else autoBots.performAction(key, action, mods);
   }
   
@@ -700,8 +742,9 @@ namespace bot_t{
       for(int i = 0; i < FRAMECOUNT; i++) kfile>>tkey[i];
       kFrames.push_back(tkey);
     }
-    
+    kfile.close();
     int l = kFrames.size();
+    cout<<"LSIZE "<<l<<endl;
     animationFrames.push_back(kFrames[0]);
     for(int i = 0; i < l - 1; i++){
       interpolateBetweenFrames(kFrames[i], kFrames[i + 1]);
@@ -712,13 +755,13 @@ namespace bot_t{
   //! creates necessary animation between 2 frames
   void interpolateBetweenFrames(std::vector<double>& start, std::vector<double>& end){
     int NFRAMES = 100;
-    double dt = 1 / (1.0 * NFRAMES);
-    int t = dt;
+    double dt = 1.0 / (1.0 * NFRAMES);
+    double t = dt;
     int l = start.size();
     vector<double> tframe(l);
     for(int i = 1; i < NFRAMES; i++){
       for(int j = 0; j < l; j++){
-	tframe[j] = t * start[j] + (1 - t) * end[j];
+	       tframe[j] = (1 - t) * start[j] + t * end[j];
       }
       t += dt;
       animationFrames.push_back(tframe);

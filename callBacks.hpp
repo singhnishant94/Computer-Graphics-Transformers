@@ -102,6 +102,13 @@ namespace bot_t{
   extern int camera1;
   extern int camera2;
   extern int camera3;
+
+  extern int moveUp;
+  extern int moveDown;
+  extern int moveRight;
+  extern int moveLeft;
+  extern int moveIn;
+  extern int moveOut;
   
   extern int playIndicator;
 

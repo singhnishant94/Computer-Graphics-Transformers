@@ -26,6 +26,12 @@ int bot_t::camera1 = 1, bot_t::camera2 = 0, bot_t::camera3 = 0;
 int bot_t::spotlight = 0;
 int bot_t::playIndicator = 0;
 
+
+int bot_t::moveUp = 0, bot_t::moveDown = 0, 
+    bot_t::moveLeft = 0, bot_t::moveRight = 0, bot_t::moveIn = 0, bot_t::moveOut = 0; 
+
+double camX = 0.0, camY = 0.0, camZ = 4.0;
+
 int count = 0;
 
 group_t bot_t::autoBots;
@@ -145,11 +151,38 @@ void renderGL(GLFWwindow* window)
   float theta_x = bot_t::autoBots.bodyList[0]->theta_x;
   float theta_y = bot_t::autoBots.bodyList[0]->theta_y;
   float theta_z = bot_t::autoBots.bodyList[0]->theta_z;
+
+  int radius = sqrt(camX*camX + camY*camY + camZ*camZ);
   //cout<<theta_x<<endl;
-  if(bot_t::camera1)
-    gluLookAt( 0, 0, 4.0f,
+  if(bot_t::camera1){
+    if(bot_t::moveUp){
+      camY += 0.2f;
+      bot_t::moveUp = 0;
+    }
+    if(bot_t::moveDown){
+      camY -= 0.2f;
+      bot_t::moveDown = 0;
+    }
+    if(bot_t::moveRight){
+      camX += 0.2f;
+      bot_t::moveRight = 0;
+    }
+    if(bot_t::moveLeft){
+      camX -= 0.2f;
+      bot_t::moveLeft = 0;
+    }
+    if(bot_t::moveIn){
+      camZ -= 0.2f;
+      bot_t::moveIn = 0;
+    }
+    if(bot_t::moveOut){
+      camZ += 0.2f;
+      bot_t::moveOut = 0;
+    }
+    gluLookAt( camX, camY, camZ,
       0,0,0,
       0.0f, 1.0f,  0.0f);
+  }
   else if(bot_t::camera2)
     gluLookAt(center.x - 2.0f*sin(theta_y*PI/180) , center.y,  center.z - 2.0f*cos(theta_y*PI/180),
       center.x - 4.0f*sin(theta_y*PI/180) , center.y,  center.z - 4.0f*cos(theta_y*PI/180),//0,-0.7f,0,
