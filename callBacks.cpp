@@ -427,6 +427,8 @@ namespace bot_t{
 
   extern double camX, camY, camZ;
 
+  extern int recMovie;
+
   extern ofstream keyFramesFile;
 
   extern vector<vector<double> > animationFrames;
@@ -517,7 +519,10 @@ namespace bot_t{
       }
     }
     else if (key == GLFW_KEY_P && action == GLFW_PRESS){
-      if(recordMode) autoBots.printKeyframe(keyFramesFile);
+      if(recordMode) {
+        autoBots.printKeyframe(keyFramesFile);
+        cout<<"Frame Captured"<<endl;
+      }
     }
     else if (key == GLFW_KEY_2 && action == GLFW_PRESS){
       if(!recordMode){
@@ -540,6 +545,16 @@ namespace bot_t{
       else{
         cout<<"numlock now on"<<endl;
         numLock = 1;
+      }
+    }
+    else if(key == GLFW_KEY_3 && action == GLFW_PRESS){
+      if(recMovie == 0){
+        recMovie = 1;
+        cout<<"Recording Movie"<<endl;
+      }
+      else{
+        recMovie = 0;
+        cout<<"Movie recording turned off"<<endl;
       }
     }
     else if(key == GLFW_KEY_KP_8 && (action == GLFW_PRESS || action == GLFW_REPEAT) ){

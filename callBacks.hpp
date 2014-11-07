@@ -114,6 +114,7 @@ namespace bot_t{
   extern ofstream keyFramesFile;
 
   extern double camX, camY, camZ;
+  extern int recMovie;
   
   extern int playIndicator;
 

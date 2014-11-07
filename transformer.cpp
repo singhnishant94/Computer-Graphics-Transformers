@@ -27,6 +27,7 @@ int bot_t::camera1 = 1, bot_t::camera2 = 0, bot_t::camera3 = 0;
 int bot_t::spotlight = 0;
 int bot_t::playIndicator = 0;
 int bot_t::stop = 0;
+int bot_t::recMovie = 0;
 
 int bot_t::moveUp = 0, bot_t::moveDown = 0, 
     bot_t::moveLeft = 0, bot_t::moveRight = 0, bot_t::moveIn = 0, bot_t::moveOut = 0; 
@@ -280,7 +281,8 @@ void renderGL(GLFWwindow* window)
   }
   bot_t::autoBots.bodyList[0]->drawBody();
   if (!bot_t::stop) bot_t::executeList();
-  capture_frame(framenum++);
+  if (bot_t::playIndicator) 
+    if (bot_t::recMovie) capture_frame(framenum++);
 }
 
 int main (int argc, char *argv[]) 
