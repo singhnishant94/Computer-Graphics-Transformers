@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Graphics Assignment3</title>
+<style>
+  #content, img
+  {
+    box-shadow:5px 2px 2px #888888;
+  }
+  </style>
+</head>
+
+<body>
+<center>
+<h1>Transformers - Rendering<br>
+CS 475 Assignment 2, Part 3</h1>
+</center>
+<br>
+
+<div id="content" style="margin-left:13%;margin-right:13%;border:1px solid black;padding:3%;margin-top:2%;margin-bottom:2%">
+  <h2>Introduction</h2>
+  <p>
+  Transformers are robots that can transform into various kinds of vehicles,
+  like cars, planes and helicopters.<br>
+  The overall aim of this entire assignment is to create a short Film with
+  a tansformer of your own design. In this part of the assignment we
+  model the transformer. The report contains brief description of various concepts used in creation
+  of the model.
+  </p>
+
+  <h2>Team</h2>
+  <p> Aditya Kumar Akash  120050046</p>
+  <p> Nishant Kumar Singh  120050043</p>
+<h2>The Vehicle</h2>
+
+  
+<p>
+  Controls have been added to move the vehicle appropriately.<br>
+  1. <b>Up arrow</b> - move the vehicle forward.<br>
+  2. <b>Down arrow</b> - move the vehicle in reverse direction.<br>
+  3. <b>Left arrow</b> - turn the vehicle left (while the up arrow is pressed)<br>
+  4. <b>Right arrow</b> - turn the vehicle right (while the up arrow is pressed)<br>
+  5. <b>5</b> - Record Mode on, After turning this mode on, we can capture keyframes<br>
+  6. <b>P</b> - On pressing this keyframes get recorded into a file named keyframes.txt<br>
+  7. <b>2</b> - Play the recorded keyframes<br>
+  8. <b>3</b> - While play mode is on, on pressing this button pictures will get stored into a folder named frames<br>
+
+
+<h2>Linear Interpolation</h2>
+
+<p>
+  We have used linear interpolation to generate frames in between keyframes, both for angles and position.
+For lights we have used the following protocol: If the light is off in one keyframe and on in the next, 
+then in the first half of the frames it is off and in the second half it is on. <br><br>
+<b>Controls</b><br>
+1. <b>8</b> - Turns the first light on/off.<br>
+2. <b>9</b> - Turns the second light on/off.<br>
+3. <b>7</b> - Turns the headlight on/off.<br>
+
+
+</p>
+
+<h2>Linux commands and tools used to create the movie</h2>
+<em>mogrify -flip -format jpg -quality 100 frame_*.ppm</em>
+- This command is run in the folder where the images have been stored. It flips the images 
+vertically.
+<br>
+<em>ffmpeg -framerate 60 -i frame_%04d.jpg -codec copy input.mkv</em>
+- This command creates the movie from the jpg images<br>
+<em>
+<em>ffmpeg -i input.mkv -i final_track.mp3 -c copy -map 0:0 -map 1:0 output2.mkv
+</em>- This command adds sound track to the movie<br>
+
+<h2>Camera</h2>
+Numpad keys 8,4,6,and 2 have been used to move the camera around the scene.
+
+<h2>Screenshots from the movie</h2><br>
+<center>
+  <img src = "./pictures/31.png" width="75%" ><br>
+  <br><br>
+  <img src = "./pictures/32.png" width="75%"><br>
+  <br><br>
+  <img src = "./pictures/33.png" width="75%"><br>
+  <br><br>
+  <img src = "./pictures/34.png" width="75%"><br>
+  <br><br>
+  <img src = "./pictures/35.png" width="75%"><br>
+  <br><br>
+  
+</center>
+
+
+<h2>Solitary Transformer</h2><br>
+<center>
+ <iframe width="420" height="315"
+src="https://www.youtube.com/embed/QpFbQN7q-Xo">
+</iframe> 
+</center>
+</div>
+</body> </html>
+
